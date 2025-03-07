@@ -13,7 +13,7 @@ export default function Header(){
         <header>
             <div className="container-header">
                 <nav>
-                    <span>PhoneStore</span>
+                    <span>Tv Store</span>
                     <div className='profile-menu'>
                         <i className="fa-solid fa-user"></i>
                         { isAuthenticated ? 

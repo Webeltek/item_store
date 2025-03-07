@@ -4,8 +4,8 @@ import App from './App.jsx'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Catalog from './components/Catalog.jsx'
 import About from './components/About.jsx'
-import Login from './components/Login.jsx'
-import Register from './components/Register.jsx'
+import Login from './components/Login/Login.jsx'
+import Register from './components/Register/Register.jsx'
 import Home from './components/Home.jsx'
 
 createRoot(document.getElementById('root')).render(
