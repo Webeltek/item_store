@@ -9,8 +9,8 @@ export default function Login(){
     let navigate = useNavigate();
 
     const loginHandler = async (formData) =>{
-        const email = formData.get('email');
-        const password = formData.get('password');
+        const { email, password } = Object.fromEntries(formData)
+        
         try {
             const user =  await userService.login(email, password);
             console.log({user});

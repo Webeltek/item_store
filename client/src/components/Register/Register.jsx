@@ -1,11 +1,11 @@
 import { useState } from "react";
 import userService from "../../services/userService";
 import { Link, useNavigate } from "react-router-dom";
-import SubmitBtn from "./SubmitBtn";
 import './Register.css'
 
 export default function Register() {
     const [errorMsg, setErrorMsg] = useState();
+    const [pending , setPending] = useState();
     const [values, setValues] = useState({
         username: '',
         email: '',
@@ -15,15 +15,18 @@ export default function Register() {
     let navigate = useNavigate();
 
 
-    const registerHandler = async (formData)=> {
-        
+    const registerHandler = async (e)=> {
+        e.preventDefault();
+        setPending(true);
         const { username, email , password , rePassword} = values;
                 try {
                     const user =  await userService.register(username, email, password, rePassword);
                     console.log({user});
+                    setPending(false);
                     navigate('/items');
                     
                 } catch (err) {
+                    //e.target.reset();
                     console.error(err.message);
                     
                 }
@@ -47,7 +50,7 @@ export default function Register() {
 
         <section className="register-form">
             <div className="container">
-                <form  action={registerHandler}>
+                <form  onSubmit={registerHandler}>
                     <div className="form-group">
                         <label htmlFor="username">Username:</label>
                         <input 
@@ -108,7 +111,7 @@ export default function Register() {
                                     </p>
                             </div>
                     </div>
-                    <SubmitBtn />
+                    <button className="btn" disabled={pending} >Register</button>
                     <p>Already have an account? <Link to="/login">Login</Link></p>
                 </form>
             </div>
