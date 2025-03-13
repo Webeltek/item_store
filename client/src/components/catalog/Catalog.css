@@ -1,0 +1,48 @@
+.catalog-hero {
+    padding: 50px 0;
+    text-align: center;
+    color: #fff;
+    margin-top: 80px;
+  }
+  
+  .catalog-hero h2 {
+    margin: 0 0 10px;
+    font-size: 3rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #ff9900;
+  }
+  
+  .catalog-hero p {
+    margin: 0 0 20px;
+    font-size: 1.2rem;
+    color: #0073e6;
+    font-weight: bold;
+  }
+  
+  .catalog .product-grid {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+  
+  
+  
+  .product-grid .no-post {
+    margin: 6.75rem;
+    font-size: 40px;
+  }
+  
+  .btn {
+    background: #0073e6;
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+  
+  .btn:hover {
+    background: #005bb5;
+    transform: translateY(-5px);
+  }

@@ -2,11 +2,16 @@
   
   
   .hero {
-    background: url("/home_csm_Hisense.jpg")
+    background: url("/home_banner.jpg")
       no-repeat center center/cover;
     padding: 280px 0 100px;
     text-align: center;
     color: #fff;
+    font-weight: bold;
+  }
+
+  .hero .container {
+    background: rgb(0, 0, 0, 0.3);
   }
   
   .hero h2 {

@@ -44,7 +44,7 @@ export default function Register() {
         <section className="register-hero">
             <div className="container">
                 <h2>Create Your Account</h2>
-                <p>Join us to get the best deals on phones and accessories.</p>
+                <p>Join us to get the best deals on TVs and accessories.</p>
             </div>
         </section>
 

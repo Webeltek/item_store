@@ -2,8 +2,10 @@ import { useState } from 'react';
 import { NavLink } from 'react-router';
 import './Header.css'
 
-export default function Header(){
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
+export default function Header({
+    isAuthenticated
+}){
+    
 
     const logoutHandler = () => {
 
@@ -17,7 +19,7 @@ export default function Header(){
                     <div className='profile-menu'>
                         <i className="fa-solid fa-user"></i>
                         { isAuthenticated ? 
-                        <NavLink className='profile' to="/profile">Username: {'get username!!!'}</NavLink>
+                        <NavLink className='profile' to="/profile">Username: {isAuthenticated?.username}</NavLink>
                         :
                         <NavLink className='profile-guest' to="/login">Profile</NavLink>
                         }
@@ -28,7 +30,7 @@ export default function Header(){
                 </nav>
                 <nav>
                     <ul>
-                        <li><NavLink to="/home" className={( { isActive })=>
+                        <li><NavLink to="/" className={( { isActive })=>
                             isActive ? 'active-link' : ''}>Home</NavLink></li>
                         <li><NavLink to="/items" className={( { isActive })=>
                             isActive ? 'active-link' : ''}>Catalog</NavLink></li>
@@ -39,7 +41,7 @@ export default function Header(){
                             <li><NavLink to="/profile" className={( { isActive })=>
                                 isActive ? 'active-link' : ''}>Profile</NavLink></li>
                             <li><NavLink to="/add-phone" className={( { isActive })=>
-                                isActive ? 'active-link' : ''}>Add Phone</NavLink></li>
+                                isActive ? 'active-link' : ''}>Add TV</NavLink></li>
                             <li><NavLink onClick={logoutHandler}>Logout</NavLink></li>
                             </>
                         )

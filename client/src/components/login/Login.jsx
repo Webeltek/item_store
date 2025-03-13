@@ -4,7 +4,9 @@ import SubmitBtn from "./SubmitBtn";
 import userService from "../../services/userService";
 import './Login.css'
 
-export default function Login(){
+export default function Login({
+    onLogin
+}){
     const [errorMsg, setErrorMsg] = useState();
     let navigate = useNavigate();
 
@@ -15,7 +17,7 @@ export default function Login(){
             const user =  await userService.login(email, password);
             console.log({user});
             navigate('/items');
-            
+            onLogin(user)
         } catch (err) {
             console.error(err.message);
             
