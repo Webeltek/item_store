@@ -11,5 +11,8 @@ export default {
     },
     getOne(itemId){
         return request.get(`${baseUrl}/${itemId}`);
+    },
+    create(data){
+        return request.post(baseUrl, data);
     }
 }

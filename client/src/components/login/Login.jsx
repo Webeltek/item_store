@@ -15,7 +15,7 @@ export default function Login({
         
         try {
             const user =  await userService.login(email, password);
-            console.log({user});
+            // console.log({user});
             navigate('/items');
             onLogin(user)
         } catch (err) {

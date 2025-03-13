@@ -1,5 +1,6 @@
 const { userModel, messageModel, itemModel } = require('../models');
 const { formidable } = require('formidable');
+const { log } = require('node:console');
 const  fs  = require('node:fs')
 const path = require('path');
 
@@ -70,8 +71,19 @@ function getOrderedItems(req,res, next){
 
 function createItem(req, res, next) {
     const { _id: userId } = req.user;
+
     //unused using formidable form.parse instead
     const itemData = req.body;
+    const { model, screenSize, description, price,image} = itemData;
+
+    if(itemData){
+        return itemModel.create({ model, screenSize, description, price: Number(price),image, owner: userId })
+                    .then(item => {
+                        res.status(200).json(item)
+                    })
+                    .catch(next)
+    }
+
     const uploadDir = path.join(__dirname, '../uploads');
 
     if (!fs.existsSync(uploadDir)) {
@@ -88,6 +100,9 @@ function createItem(req, res, next) {
             next(err);
             return;
         }
+        console.log({itemControllerFields: fields});
+        
+
         const [ model] = fields.model;
         const [screenSize] = fields.screenSize;
         const [ price] = fields.price;

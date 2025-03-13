@@ -40,7 +40,7 @@ export default function Header({
                             <>
                             <li><NavLink to="/profile" className={( { isActive })=>
                                 isActive ? 'active-link' : ''}>Profile</NavLink></li>
-                            <li><NavLink to="/add-phone" className={( { isActive })=>
+                            <li><NavLink to="/add-item" className={( { isActive })=>
                                 isActive ? 'active-link' : ''}>Add TV</NavLink></li>
                             <li><NavLink onClick={logoutHandler}>Logout</NavLink></li>
                             </>

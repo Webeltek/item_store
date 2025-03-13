@@ -4,6 +4,7 @@ export default {
     async login(email,password){
         try {
             const response = await fetch(`${baseUrl}/login`,{
+                credentials: "include",
                 method: 'post',
                 headers : {
                     'Content-Type': 'application/json'
@@ -27,6 +28,7 @@ export default {
     async register(username, email,password, rePassword){
         try {
             const response = await fetch(`${baseUrl}/register`,{
+                credentials: "include",
                 method: 'post',
                 headers : {
                     'Content-Type': 'application/json'
