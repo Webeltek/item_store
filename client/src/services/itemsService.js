@@ -14,5 +14,11 @@ export default {
     },
     create(data){
         return request.post(baseUrl, data);
+    },
+    getOwned(){
+        return request.getAuth(`${baseUrl}/owned`);
+    },
+    getOrdered(){
+        return request.getAuth(`${baseUrl}/ordered`);
     }
 }

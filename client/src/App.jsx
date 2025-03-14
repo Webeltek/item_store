@@ -8,6 +8,7 @@ import Login from './components/login/Login'
 import Register from './components/register/Register'
 import { useState } from 'react'
 import AddItem from './components/add-item/AddItem'
+import Profile from './components/profile/Profile'
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(null);
@@ -29,6 +30,7 @@ function App() {
           <Route path="/register" element={ <Register />} />
           <Route path="/add-item" element={ <AddItem />} />
           <Route path="/catalog" element={ <Catalog />}  />
+          <Route path="/profile" element={ <Profile />}  />
       </Route>
     </Routes>
   )

@@ -35,6 +35,7 @@ const request = async (hasCredential, method ,url,data ) =>{
 export default {
     //get : (...params)=> request('GET',...params)
     get: request.bind(null,false, 'GET'),
+    getAuth: request.bind(null, true, 'GET'), 
     post: request.bind(null, true, 'POST'),
     put: request.bind(null, true, 'PUT'),
     delete: request.bind(null, true, 'DELETE')
