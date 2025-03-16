@@ -9,7 +9,7 @@ const config = {
     production: {
         port: process.env.PORT || 3100,
         dbURL: process.env.DB_URL_CREDENTIALS,
-        origin: ['']
+        origin: ['https://item-store-wlyi.onrender.com']
     }
 };
 
