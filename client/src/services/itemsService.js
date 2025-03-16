@@ -1,6 +1,7 @@
 import request from "../utils/request"
 
-const baseUrl = 'http://localhost:3100/api/items'
+const apiUrl = import.meta.env.VITE_API_URL;
+const baseUrl = `${apiUrl}/items`;
 
 export default {
     getAll(){

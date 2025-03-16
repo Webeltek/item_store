@@ -1,4 +1,6 @@
-const baseUrl = 'http://localhost:3100/api';
+
+
+const baseUrl = import.meta.env.VITE_API_URL;
 
 export default {
     async login(email,password){

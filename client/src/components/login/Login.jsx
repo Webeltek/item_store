@@ -77,7 +77,7 @@ export default function Login({
                         </div>
                     
                     <SubmitBtn />
-                    <p>Don&:apost have an account? <Link to="/register">Register</Link></p>
+                    <p>Don&apos;t have an account? <Link to="/register">Register</Link></p>
                 </form>
             </div>
         </section>
