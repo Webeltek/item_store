@@ -21,13 +21,16 @@ function register(req, res, next) {
             createdUser = removePassword(createdUser);
 
             const token = utils.jwt.createToken({ id: createdUser._id });
-            if (process.env.NODE_ENV === 'production') {
-                res.cookie(authCookieName, token, { httpOnly: true, sameSite: 'none', secure: true })
-            } else {
-                res.cookie(authCookieName, token, { httpOnly: true })
-            }
+//using authorization header instead of cookie
+
+            // if (process.env.NODE_ENV === 'production') {
+            //     res.cookie(authCookieName, token, { httpOnly: true, sameSite: 'none', secure: true })
+            // } else {
+            //     res.cookie(authCookieName, token, { httpOnly: true })
+            // }
+
             res.status(200)
-                .send(createdUser);
+                .send({createdUser, accessToken: token});
         })
         .catch(err => {
             if (err.name === 'MongoError' && err.code === 11000) {
@@ -61,13 +64,14 @@ function login(req, res, next) {
 
             const token = utils.jwt.createToken({ id: user._id });
 
-            if (process.env.NODE_ENV === 'production') {
-                res.cookie(authCookieName, token, { httpOnly: true, sameSite: 'none', secure: true })
-            } else {
-                res.cookie(authCookieName, token, { httpOnly: true })
-            }
+            // if (process.env.NODE_ENV === 'production') {
+            //     res.cookie(authCookieName, token, { httpOnly: true, sameSite: 'none', secure: true })
+            // } else {
+            //     res.cookie(authCookieName, token, { httpOnly: true })
+            // }
+
             res.status(200)
-                .send(user);
+                .send({ ...user, accessToken: token});
         })
         .catch(next);
 }

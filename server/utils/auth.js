@@ -8,7 +8,11 @@ const {
 function auth(redirectUnauthenticated = true) {
 
     return function (req, res, next) {
-        const token = req.cookies[authCookieName] || '';
+
+// using         
+        // const token = req.cookies[authCookieName] || '';
+
+        const token = req.get('X-Authorization');
         
         Promise.all([
             jwt.verifyToken(token),
