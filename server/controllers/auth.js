@@ -77,13 +77,14 @@ function login(req, res, next) {
 }
 
 function logout(req, res) {
-    const token = req.cookies[authCookieName];
+    // const token = req.cookies[authCookieName];
+    const token = req.get('X-Authorization');
 
     tokenBlacklistModel.create({ token })
         .then(() => {
-            res.clearCookie(authCookieName)
-                .status(204)
-                .send({ message: 'Logged out!' });
+            //res.clearCookie(authCookieName)
+                res.status(204)
+                .send();
         })
         .catch(err => res.send(err));
 }
