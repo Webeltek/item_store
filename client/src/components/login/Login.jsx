@@ -16,13 +16,12 @@ export default function Login(){
         const { email, password } = Object.fromEntries(formData)
         
         try {
-
             const authData = await login(email, password);
-            console.log(authData);
+            // console.log(authData);
             userLoginHandler(authData);
             navigate('/items');
         } catch (err) {
-            console.error(err.message);
+            setErrorMsg(err.message);
             
         }
     }

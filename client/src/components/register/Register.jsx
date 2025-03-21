@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import userService from "../../services/userService";
 import { Link, useNavigate } from "react-router-dom";
 import './Register.css'
+import { useRegister } from "../../api/authApi";
+import { UserContext } from "../../contexts/UserContext";
 
 export default function Register() {
     const [errorMsg, setErrorMsg] = useState();
@@ -12,24 +14,38 @@ export default function Register() {
         password: '',
         rePassword: ''
     })
-    let navigate = useNavigate();
+    const navigate = useNavigate();
+    const { register } = useRegister();
+    const { userLoginHandler } = useContext(UserContext);
 
 
     const registerHandler = async (e)=> {
         e.preventDefault();
         setPending(true);
         const { username, email , password , rePassword} = values;
-                try {
-                    const user =  await userService.register(username, email, password, rePassword);
-                    console.log({user});
-                    setPending(false);
-                    navigate('/items');
-                    
-                } catch (err) {
-                    //e.target.reset();
-                    console.error(err.message);
-                    
-                }
+
+        if(password !== rePassword){
+            setErrorMsg('Password missmatch');
+            return;
+        }
+
+        try {
+            const authData =  await register(username, email, password, rePassword);
+            setPending(false);
+            userLoginHandler(authData);
+            navigate('/items');
+            
+        } catch (err) {
+            setPending(false);
+            setValues({
+                username: '',
+                email: '',
+                password: '',
+                rePassword: ''
+            });
+            setErrorMsg(err.message);
+            
+        }
     }
 
     const changeHandler = (e) =>{

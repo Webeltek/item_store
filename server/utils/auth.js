@@ -9,7 +9,7 @@ function auth(redirectUnauthenticated = true) {
 
     return function (req, res, next) {
 
-// using         
+// using  authorization header instead    
         // const token = req.cookies[authCookieName] || '';
 
         const token = req.get('X-Authorization');

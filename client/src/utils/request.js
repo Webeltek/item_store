@@ -1,8 +1,7 @@
 
-const request = async ( method ,url,data ) =>{
-    let options = {};
+const request = async ( method ,url,data,options = {} ) =>{
 
-//TODO remove credentials: "include" ( authentication with httpOnly cookie) and replace with X-Authorization header
+// Removed -  credentials: "include" ( authentication with httpOnly cookie) and replaced with X-Authorization header
     // if(hasCredential){
     //     options = {
     //         credentials: "include"
@@ -26,10 +25,22 @@ const request = async ( method ,url,data ) =>{
         }
     }
 
-    
-    const response = await fetch(url, options);
-    const result = await response.json();
-    return result;
+    try {
+        const response = await fetch(url, options);
+        if(!response.ok){
+            const err = await response.json();
+            throw new Error(err.message)
+        }
+        if(response.status == 204){
+            return response;
+        } else {
+            return response.json();
+        }
+    } catch (err){
+        throw err;
+    }
+
+
 
 }
 
@@ -38,5 +49,6 @@ export default {
     get: request.bind(null, 'GET'),
     post: request.bind(null, 'POST'),
     put: request.bind(null, 'PUT'),
-    delete: request.bind(null, 'DELETE')
+    delete: request.bind(null, 'DELETE'),
+    baseRequest: request
 }

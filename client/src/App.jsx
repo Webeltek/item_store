@@ -12,6 +12,7 @@ import Profile from './components/profile/Profile'
 import Footer from './components/footer/Footer'
 import Header from './components/header/Header'
 import { UserContext } from './contexts/UserContext'
+import Logout from './components/logout/Logout'
 
 function App() {
   const [authData, setAuthData] = useState({});
@@ -35,6 +36,7 @@ function App() {
           <Route path="/items" element={ <Catalog />} />
           <Route path="/about" element={ <About />} />
           <Route path="/login" element={ <Login />} />
+          <Route path="/logout" element={ <Logout /> }  />
           <Route path="/register" element={ <Register />} />
           <Route path="/add-item" element={ <AddItem />} />
           <Route path="/catalog" element={ <Catalog />}  />

@@ -6,10 +6,6 @@ import { UserContext } from '../../contexts/UserContext';
 export default function Header(){
     const { email } = useContext(UserContext);
 
-    const logoutHandler = () => {
-
-    }
-
     return (
         <header>
             <div className="container-header">
@@ -41,7 +37,7 @@ export default function Header(){
                                 isActive ? 'active-link' : ''}>Profile</NavLink></li>
                             <li><NavLink to="/add-item" className={( { isActive })=>
                                 isActive ? 'active-link' : ''}>Add TV</NavLink></li>
-                            <li><NavLink onClick={logoutHandler}>Logout</NavLink></li>
+                            <li><NavLink to='/logout'>Logout</NavLink></li>
                             </>
                         )
                         : (

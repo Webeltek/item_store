@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { environment } from '../../environments/environment';
 import './Home.css'
 import itemsService from "../../services/itemsService";
 import Loader from "../shared/Loader";
@@ -8,7 +7,7 @@ import Loader from "../shared/Loader";
 export default function Home(){
     const [ items, setItems] = useState([]);
     const [isPending, setIspending] = useState(false);
-    const imagesUrl = environment.IMAGES_URL;
+    const imagesUrl = import.meta.env.VITE_IMAGES_URL;
 
     useEffect(()=>{
         setIspending(true);
