@@ -3,19 +3,11 @@ import './Catalog.css'
 import CatalogItem from './catalog-item/CatalogItem';
 import itemsService from '../../services/itemsService';
 import Loader from '../shared/Loader';
+import { useItems } from '../../api/itemApi';
 
 export default function Catalog(){
-    const [ isPending, setIsPending ] = useState(false);
-    const [items, setItems] = useState([]);
+    const { items , isPending} = useItems();
 
-    useEffect(()=>{
-        setIsPending(true);
-        itemsService.getAll()
-        .then( result => {
-            setIsPending(false);
-            setItems(result);
-        })
-    },[])
     return (
         <>
         <section className="catalog-hero">
