@@ -9,9 +9,9 @@ export default function Layout({
 }) {
     return (
     <>
-      <Header isAuthenticated={isAuth} />
+      
       <Outlet />
-      <Footer />
+      
     </>
     );
 }

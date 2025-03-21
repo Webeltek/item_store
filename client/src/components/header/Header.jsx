@@ -1,11 +1,10 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { NavLink } from 'react-router';
 import './Header.css'
+import { UserContext } from '../../contexts/UserContext';
 
-export default function Header({
-    isAuthenticated
-}){
-    
+export default function Header(){
+    const { email } = useContext(UserContext);
 
     const logoutHandler = () => {
 
@@ -18,8 +17,8 @@ export default function Header({
                     <span>Tv Store</span>
                     <div className='profile-menu'>
                         <i className="fa-solid fa-user"></i>
-                        { isAuthenticated ? 
-                        <NavLink className='profile' to="/profile">Username: {isAuthenticated?.username}</NavLink>
+                        { email ? 
+                        <NavLink className='profile' to="/profile">Username: {email}</NavLink>
                         :
                         <NavLink className='profile-guest' to="/login">Profile</NavLink>
                         }
@@ -36,7 +35,7 @@ export default function Header({
                             isActive ? 'active-link' : ''}>Catalog</NavLink></li>
                         <li><NavLink to="/about" className={( { isActive })=>
                             isActive ? 'active-link' : ''}>About</NavLink></li>
-                        { isAuthenticated ? (
+                        { email ? (
                             <>
                             <li><NavLink to="/profile" className={( { isActive })=>
                                 isActive ? 'active-link' : ''}>Profile</NavLink></li>

@@ -1,28 +1,30 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { Link, useNavigate } from 'react-router'
 import SubmitBtn from "./SubmitBtn";
 import userService from "../../services/userService";
 import './Login.css'
+import { useLogin } from "../../api/authApi";
+import { UserContext } from "../../contexts/UserContext";
 
-export default function Login({
-    onLogin
-}){
+export default function Login(){
     const [errorMsg, setErrorMsg] = useState();
+    const { userLoginHandler } = useContext(UserContext);
     let navigate = useNavigate();
+    const { login } = useLogin();
 
     const loginHandler = async (formData) =>{
         const { email, password } = Object.fromEntries(formData)
         
         try {
-            const user =  await userService.login(email, password);
-            // console.log({user});
+
+            const authData = await login(email, password);
+            console.log(authData);
+            userLoginHandler(authData);
             navigate('/items');
-            onLogin(user)
         } catch (err) {
             console.error(err.message);
             
         }
-    
     }
 
     return (

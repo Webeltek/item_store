@@ -1,12 +1,13 @@
 
-const request = async (hasCredential, method ,url,data ) =>{
+const request = async ( method ,url,data ) =>{
     let options = {};
 
-    if(hasCredential){
-        options = {
-            credentials: "include"
-        }
-    }
+//TODO remove credentials: "include" ( authentication with httpOnly cookie) and replace with X-Authorization header
+    // if(hasCredential){
+    //     options = {
+    //         credentials: "include"
+    //     }
+    // }
 
     if(method !== 'GET' ){
         options = {
@@ -34,9 +35,8 @@ const request = async (hasCredential, method ,url,data ) =>{
 
 export default {
     //get : (...params)=> request('GET',...params)
-    get: request.bind(null,false, 'GET'),
-    getAuth: request.bind(null, true, 'GET'), 
-    post: request.bind(null, true, 'POST'),
-    put: request.bind(null, true, 'PUT'),
-    delete: request.bind(null, true, 'DELETE')
+    get: request.bind(null, 'GET'),
+    post: request.bind(null, 'POST'),
+    put: request.bind(null, 'PUT'),
+    delete: request.bind(null, 'DELETE')
 }
