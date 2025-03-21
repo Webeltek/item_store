@@ -75,22 +75,23 @@ export const useItem = (itemId) => {
 
 
 
-export const useLatestItems = () => {
-    const PAGE_SIZE = 3;
+export const useLatestItems = (size) => {
+    const [ isPending, setIsPending ] = useState(false);
     const [latestItems, setLatestItems] = useState([]);
 
     useEffect(()=>{
         const searchParams = new URLSearchParams({
-            sortBy: '_createdOn desc',
-            pageSize: PAGE_SIZE,
-            select: '_id,imageUrl,title'
+            limit: size
+        })
+        setIsPending(true);
+        request.get(`${baseUrl}/latest?${searchParams.toString()}`)
+        .then(result => {
+            setIsPending(false);
+            setLatestItems(result);
         });
 
-        request.get(`${baseUrl}?${searchParams.toString()}`)
-        .then(setLatestItems);
+    },[size])
 
-    },[])
-
-    return { latestItems }
+    return { latestItems, isPending }
 }
 

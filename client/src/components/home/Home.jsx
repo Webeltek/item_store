@@ -3,24 +3,13 @@ import { Link } from "react-router-dom";
 import './Home.css'
 import itemsService from "../../services/itemsService";
 import Loader from "../shared/Loader";
+import { useLatestItems } from "../../api/itemApi";
 
 export default function Home(){
-    const [ items, setItems] = useState([]);
-    const [isPending, setIspending] = useState(false);
+    const PAGE_SIZE = 3;
+    const { latestItems : items , isPending} = useLatestItems(PAGE_SIZE);
     const imagesUrl = import.meta.env.VITE_IMAGES_URL;
 
-    useEffect(()=>{
-        setIspending(true);
-        itemsService.getLatest(5)
-        .then( result => {
-            setIspending(false);
-            setItems(result);
-        })
-        .catch( err =>{
-            console.log({errMsg: err.message});
-            
-        })
-    },[])
 
     const isItemsNotEmpty = () =>{
         return items && items.length > 0;
@@ -60,7 +49,7 @@ export default function Home(){
                         }
                         
                     { isItemsNotEmpty() || 
-                        <p className="no-post">There haven&apos;t been any devices posted yet.</p>
+                        <p className="no-post">There haven&apos;t been any tvs posted yet.</p>
                     }
                     
                 </div>
