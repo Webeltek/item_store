@@ -12,7 +12,7 @@ export default function Catalog(){
         <section className="catalog-hero">
             <div className="container">
                 <h2>Tv Catalog</h2>
-                <p>Explore our extensive range of phones and accessories.</p>
+                <p>Explore our extensive range of TVs and accessories.</p>
             </div>
         </section>
 

@@ -3,10 +3,11 @@ import { IMAGES_URL } from "../../constants";
 import { Link } from 'react-router'
 import './Profile.css'
 import { useOrderedItems, useOrderItem, useOwnedItems } from "../../api/itemApi";
+import useAuth from "../../hooks/useAuth";
 
 export default function Profile() {
     const [isEditMode, setEditMode] = useState(false);
-    const [profileDetails, setProfileDetails] = useState({});
+    const { email, username } = useAuth();
     const  { ownedItems , isPending}  = useOwnedItems();
     const { orderedItems } = useOrderedItems();
 
@@ -29,11 +30,11 @@ export default function Profile() {
                     <>
                         <div className="flex-prof">
                             <p>Username: </p>
-                            <p>{profileDetails.username}</p>
+                            <p>{username}</p>
                         </div>
                         <div className="flex-prof">
                             <p>Email: </p>
-                            <p>{profileDetails.email}</p>
+                            <p>{email}</p>
                         </div>
                         <div style={ { marginTop: '0px' }}>
                             <button className="edit-button" onClick={toggleEditMode}>Edit</button>

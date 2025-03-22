@@ -122,7 +122,7 @@ export const useOwnedItems = ()=> {
             setOwnedItems(result);
         });
 
-    },[request])
+    },[])  // TODO fix missing dependency request making endless cycle
 
     return {
         ownedItems,
@@ -142,7 +142,7 @@ export const useOrderedItems = ()=> {
             setOrderedItems(result);
         });
 
-    },[request])
+    },[])
 
     return {
         orderedItems,
