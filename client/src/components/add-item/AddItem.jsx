@@ -1,14 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import itemsService from "../../services/itemsService";
 import SubmitBtn from "./SubmitBtn";
 import './AddItem.css'
+import { useCreateItem } from "../../api/itemApi";
 
 export default function AddItem() {
     const navigate = useNavigate();
+    const { create } = useCreateItem()
 
     const submitHandler = async (formData)=>{
         const data = Object.fromEntries(formData);
-        await itemsService.create(data);
+        await create(data);
 
         navigate('/catalog');
     }

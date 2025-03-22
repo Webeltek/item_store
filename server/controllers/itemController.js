@@ -245,8 +245,10 @@ function order(req, res, next) {
 
     console.log('order')
 
-    itemModel.updateOne({ _id: itemId }, { $addToSet: { orderList: userId } }, { new: true })
-        .then(() => res.status(200).json({ message: 'Order successful!' }))
+    itemModel.findOneAndUpdate({ _id: itemId }, 
+        { $addToSet: { orderList: userId } }, 
+        { new: true })
+        .then((orderedItem) => res.status(200).json(orderedItem))
         .catch(next)
 }
 

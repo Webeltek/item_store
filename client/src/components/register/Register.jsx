@@ -1,5 +1,4 @@
 import { useContext, useState } from "react";
-import userService from "../../services/userService";
 import { Link, useNavigate } from "react-router-dom";
 import './Register.css'
 import { useRegister } from "../../api/authApi";

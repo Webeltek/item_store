@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import './Catalog.css'
 import CatalogItem from './catalog-item/CatalogItem';
-import itemsService from '../../services/itemsService';
 import Loader from '../shared/Loader';
 import { useItems } from '../../api/itemApi';
 
@@ -30,7 +29,7 @@ export default function Catalog(){
                             )
                         )
                         :
-                        <p className="no-post">There haven&apos;t been any devices posted yet.</p>
+                        <p className="no-post">There haven&apos;t been any tvs posted yet.</p>
                     }
                 </div>
                 }

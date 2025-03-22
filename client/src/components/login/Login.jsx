@@ -1,7 +1,6 @@
 import { useContext, useState } from "react"
 import { Link, useNavigate } from 'react-router'
 import SubmitBtn from "./SubmitBtn";
-import userService from "../../services/userService";
 import './Login.css'
 import { useLogin } from "../../api/authApi";
 import { UserContext } from "../../contexts/UserContext";
@@ -22,7 +21,6 @@ export default function Login(){
             navigate('/items');
         } catch (err) {
             setErrorMsg(err.message);
-            
         }
     }
 

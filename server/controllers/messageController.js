@@ -1,10 +1,10 @@
 const { userModel, phoneModel, messageModel } = require('../models');
 
-function newMessage(text, userId, phoneId) {
-    return messageModel.create({ text, authorId: userId, phoneId })
+function newMessage(text, userId, itemId) {
+    return messageModel.create({ text, authorId: userId, itemId })
         .then(message => {
             
-            return phoneModel.findByIdAndUpdate({ _id: phoneId }, { $push: { msgList: message._id }}, { new: true })
+            return phoneModel.findByIdAndUpdate({ _id: itemId }, { $push: { msgList: message._id }}, { new: true })
         })
 }
 
@@ -22,8 +22,8 @@ function getLatestMessages(req, res, next) {
 }
 
 function getMessages(req, res, next){
-    const phoneId = req.params.phoneId;
-    messageModel.find({ phoneId})
+    const itemId = req.params.itemId;
+    messageModel.find({ itemId})
     .then(messages =>{
         res.status(200).json(messages)
     })
@@ -31,12 +31,12 @@ function getMessages(req, res, next){
 }
 
 function createMessage(req, res, next) {
-    const { phoneId } = req.params;
+    const { itemId } = req.params;
     const { _id: userId } = req.user;
     const { messageText } = req.body;
     
 
-    newMessage(messageText, userId, phoneId)
+    newMessage(messageText, userId, itemId)
         .then(( updatedMsg) => res.status(200).json(updatedMsg))
         .catch(next);
 }
@@ -60,13 +60,13 @@ function editMessage(req, res, next) {
 }
 
 function deleteMessage(req, res, next) {
-    const { messageId, phoneId } = req.params;
+    const { messageId, itemId } = req.params;
     const { _id: userId } = req.user;
 
     Promise.all([
         messageModel.findOneAndDelete({ _id: messageId, userId }),
         userModel.findOneAndUpdate({ _id: userId }, { $pull: { messages: messageId } }),
-        phoneModel.findOneAndUpdate({ _id: phoneId }, { $pull: { messages: messageId } }),
+        phoneModel.findOneAndUpdate({ _id: itemId }, { $pull: { messages: messageId } }),
     ])
         .then(([deletedOne, _, __]) => {
             if (deletedOne) {

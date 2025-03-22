@@ -9,16 +9,14 @@ const request = async ( method ,url,data,options = {} ) =>{
     // }
 
     if(method !== 'GET' ){
-        options = {
-            ...options,
-            method
-        }
+        options.method = method;
     }
 
     if (data) {
         options = {
             ...options,
             headers: {
+                ...options.headers,
                 'Content-Type': 'application/json',
             },
             body : JSON.stringify(data)

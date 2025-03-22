@@ -41,6 +41,16 @@ export const useDeleteItem = ()=> {
     }
 }
 
+export const useOrderItem = () => {
+    const { request } = useAuth();
+
+    const orderItem = (itemId)=> {
+        return request.put(`${baseUrl}/${itemId}/order`);
+    }
+
+    return { orderItem };
+}
+
 export const useItems = ()=> {
     const [ isPending, setIsPending ] = useState(false);
     const [items, setItems] = useState([]);
@@ -65,11 +75,16 @@ export const useItem = (itemId) => {
 
     useEffect(()=> {
         request.get(`${baseUrl}/${itemId}`)
-        .then(setItem)
+        .then(result => {
+            console.log(result);
+            
+            setItem(result)
+        })
     },[itemId]);
 
     return {
         item,
+        setItem
     }
 }
 
@@ -93,5 +108,45 @@ export const useLatestItems = (size) => {
     },[size])
 
     return { latestItems, isPending }
+}
+
+export const useOwnedItems = ()=> {
+    const { request} = useAuth();
+    const [ isPending, setIsPending ] = useState(false);
+    const [ownedItems, setOwnedItems] = useState([]);
+    useEffect(()=>{
+        setIsPending(true);
+        request.get(`${baseUrl}/owned`)
+        .then( result =>{
+            setIsPending(false);
+            setOwnedItems(result);
+        });
+
+    },[request])
+
+    return {
+        ownedItems,
+        isPending
+    }
+}
+
+export const useOrderedItems = ()=> {
+    const { request} = useAuth();
+    const [ isPending, setIsPending ] = useState(false);
+    const [orderedItems, setOrderedItems] = useState([]);
+    useEffect(()=>{
+        setIsPending(true);
+        request.get(`${baseUrl}/owned`)
+        .then( result =>{
+            setIsPending(false);
+            setOrderedItems(result);
+        });
+
+    },[request])
+
+    return {
+        orderedItems,
+        isPending
+    }
 }
 

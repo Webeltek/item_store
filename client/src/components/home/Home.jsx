@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import './Home.css'
-import itemsService from "../../services/itemsService";
 import Loader from "../shared/Loader";
 import { useLatestItems } from "../../api/itemApi";
+
+const imagesUrl = import.meta.env.VITE_IMAGES_URL;
 
 export default function Home(){
     const PAGE_SIZE = 3;
     const { latestItems : items , isPending} = useLatestItems(PAGE_SIZE);
-    const imagesUrl = import.meta.env.VITE_IMAGES_URL;
 
 
     const isItemsNotEmpty = () =>{
@@ -43,7 +43,7 @@ export default function Home(){
                                 <p>Added: {item.created_at }</p>
                                 <h3> {item.model}</h3>
                                 <p>${item.price}</p>
-                                <Link to={`/items/${item._id}`} className="btn">View Details</Link>
+                                <Link to={`/items/${item._id}/details`} className="btn">View Details</Link>
                             </div>
                         )
                         }

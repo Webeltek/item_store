@@ -1,23 +1,14 @@
 import { useEffect, useState } from "react"
 import { IMAGES_URL } from "../../constants";
 import { Link } from 'react-router'
-import itemsService from "../../services/itemsService";
 import './Profile.css'
+import { useOrderedItems, useOrderItem, useOwnedItems } from "../../api/itemApi";
 
 export default function Profile() {
     const [isEditMode, setEditMode] = useState(false);
     const [profileDetails, setProfileDetails] = useState({});
-    const [createdItems, setCreatedItems] = useState([]);
-    const [orderedItems, setOrderedItems] = useState([]);
-
-    useEffect(() => {
-        itemsService.getOwned()
-        .then(setCreatedItems)
-
-        itemsService.getOrdered()
-        .then(setOrderedItems)
-
-    },[])
+    const  { ownedItems , isPending}  = useOwnedItems();
+    const { orderedItems } = useOrderedItems();
 
     const toggleEditMode = () => {
         setEditMode( state=> !state);
@@ -97,8 +88,8 @@ export default function Profile() {
             <div className="container">
                 <h3>Added Phones</h3>
                 <div className="laptop-list">
-                    { createdItems.length >0 ?
-                        createdItems.map( item => 
+                    { ownedItems.length >0 ?
+                        ownedItems.map( item => 
                             <div key={item._id} className="laptop-item">
                                 { item.imageFile &&
                                     <img src={`${IMAGES_URL}${item.imageFile}`} alt="Phone" />
