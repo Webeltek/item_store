@@ -69,7 +69,11 @@ export default function Register() {
                     <div className="form-group">
                         <label htmlFor="username">Username:</label>
                         <input 
-                         type="text" id="username" name="username" value={values.username} onChange={changeHandler} />
+                         type="text" 
+                         id="username" 
+                         name="username" 
+                         value={values.username} 
+                         onChange={changeHandler} />
                     </div>
                         <div>
                                 <p className="error">

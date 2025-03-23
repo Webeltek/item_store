@@ -14,6 +14,7 @@ import Header from './components/header/Header'
 import { UserContext } from './contexts/UserContext'
 import Logout from './components/logout/Logout'
 import ItemDetails from './components/item-details/ItemDetails'
+import EditItem from './components/edit-item/EditItem'
 
 function App() {
   const [authData, setAuthData] = useState({});
@@ -36,6 +37,7 @@ function App() {
           <Route index element={ <Home />} />
           <Route path="/items" element={ <Catalog />} />
           <Route path="/items/:itemId/details" element={ <ItemDetails />} />
+          <Route path="/items/:itemId/edit" element={ <EditItem />} />
           <Route path="/about" element={ <About />} />
           <Route path="/login" element={ <Login />} />
           <Route path="/logout" element={ <Logout /> }  />
