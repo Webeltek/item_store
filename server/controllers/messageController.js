@@ -4,7 +4,7 @@ function newMessage(text, userId, itemId) {
     return messageModel.create({ text, authorId: userId, itemId })
         .then(message => {
 
-            return itemModel.findByIdAndUpdate(
+            return itemModel.findOneAndUpdate(
                 { _id: itemId }, 
                 { $push: { msgList: message._id }}, 
                 { new: true }

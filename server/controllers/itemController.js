@@ -70,19 +70,21 @@ function getOrderedItems(req,res, next){
 }
 
 function createItem(req, res, next) {
+    const contentType = req.headers['content-type'];
+    
     const { _id: userId } = req.user;
 
-    //unused using formidable form.parse instead
     const itemData = req.body;
     const { model, screenSize, description, price,image} = itemData;
-
-    if(itemData){
+    //using appliaction/json body
+    if(itemData && contentType==='application/json'){
         return itemModel.create({ model, screenSize, description, price: Number(price),image, owner: userId })
-                    .then(item => {
-                        res.status(200).json(item)
-                    })
-                    .catch(next)
+        .then(item => {
+            res.status(200).json(item)
+        })
+        .catch(next)
     }
+    //using formidable form.parse from multipart/form-data
 
     const uploadDir = path.join(__dirname, '../uploads');
 
@@ -137,9 +139,24 @@ function createItem(req, res, next) {
 }
 
 function editItem(req, res, next) {
+    const contentType = req.headers['content-type'];
+
     const { itemId } = req.params;
-    const itemData = req.body;
     const { _id: userId } = req.user;
+
+    const itemData = req.body;
+    const { model, screenSize, description, price,image} = itemData;
+    //using appliaction/json body
+    if(itemData && contentType==='application/json'){
+        return itemModel.findOneAndUpdate(
+            { _id: itemId },
+            { model, screenSize, description, price: Number(price),image, owner: userId },
+            { new: true })
+        .then(item => {
+            res.status(200).json(item)
+        })
+        .catch(next)
+    }
 
     const uploadDir = path.join(__dirname, '../uploads');
     
