@@ -39,6 +39,8 @@ export default function ItemDetails() {
     }
 
     const commentCreateHandler = ( newComment )=>{
+        // console.log({newComment});
+        
         setComments( state => [...state, newComment]);
     }
 

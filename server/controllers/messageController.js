@@ -3,8 +3,12 @@ const { userModel, itemModel, messageModel } = require('../models');
 function newMessage(text, userId, itemId) {
     return messageModel.create({ text, authorId: userId, itemId })
         .then(message => {
-            
-            return itemModel.findByIdAndUpdate({ _id: itemId }, { $push: { msgList: message._id }}, { new: true })
+
+            return itemModel.findByIdAndUpdate(
+                { _id: itemId }, 
+                { $push: { msgList: message._id }}, 
+                { new: true }
+            ).then(()=> messageModel.findById(message._id).populate('authorId'))
         })
 }
 
@@ -14,7 +18,7 @@ function getLatestMessages(req, res, next) {
     messageModel.find()
         .sort({ created_at: -1 })
         .limit(limit)
-        .populate('userId')
+        .populate('authorId')
         .then(messages => {
             res.status(200).json(messages)
         })
@@ -24,6 +28,7 @@ function getLatestMessages(req, res, next) {
 function getMessages(req, res, next){
     const itemId = req.params.itemId;
     messageModel.find({ itemId})
+    .populate('authorId')
     .then(messages =>{
         res.status(200).json(messages)
     })

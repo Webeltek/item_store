@@ -6,7 +6,7 @@ export default function useAuth(){
     const authData = useContext(UserContext);
 
     const requestWrapper = (method, url,data,options = {}) =>{
-        console.log('authData.accessToken', authData.accessToken);
+        // console.log('authData.accessToken', authData.accessToken);
         
         const authOptions = {
             ...options,
@@ -16,8 +16,7 @@ export default function useAuth(){
             }
         }
 
-        console.log('authOptions', authOptions);
-        
+        //console.log('authOptions', authOptions);
 
         return request.baseRequest(method,url, data, authData.accessToken ? authOptions : options)
     }
