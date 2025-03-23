@@ -30,7 +30,7 @@ function register(req, res, next) {
             // }
 
             res.status(200)
-                .send({createdUser, accessToken: token});
+                .send({...createdUser, accessToken: token});
         })
         .catch(err => {
             if (err.name === 'MongoError' && err.code === 11000) {
