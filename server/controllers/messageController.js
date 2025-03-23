@@ -1,10 +1,10 @@
-const { userModel, phoneModel, messageModel } = require('../models');
+const { userModel, itemModel, messageModel } = require('../models');
 
 function newMessage(text, userId, itemId) {
     return messageModel.create({ text, authorId: userId, itemId })
         .then(message => {
             
-            return phoneModel.findByIdAndUpdate({ _id: itemId }, { $push: { msgList: message._id }}, { new: true })
+            return itemModel.findByIdAndUpdate({ _id: itemId }, { $push: { msgList: message._id }}, { new: true })
         })
 }
 
@@ -66,7 +66,7 @@ function deleteMessage(req, res, next) {
     Promise.all([
         messageModel.findOneAndDelete({ _id: messageId, userId }),
         userModel.findOneAndUpdate({ _id: userId }, { $pull: { messages: messageId } }),
-        phoneModel.findOneAndUpdate({ _id: itemId }, { $pull: { messages: messageId } }),
+        itemModel.findOneAndUpdate({ _id: itemId }, { $pull: { messages: messageId } }),
     ])
         .then(([deletedOne, _, __]) => {
             if (deletedOne) {

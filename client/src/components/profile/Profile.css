@@ -52,7 +52,7 @@
     font-size: 1.5rem;
 }
 
-.created-laptops, .preferred-laptops {
+.created-tvs, .preferred-tvs {
     padding: 2rem 0;
     background-color: #fff;
     margin-top: 20px;
@@ -62,16 +62,16 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
-.created-laptops:hover, .preferred-laptops:hover {
+.created-tvs:hover, .preferred-tvs:hover {
     transform: translateY(-10px);
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
-.created-laptops .container, .preferred-laptops .container {
+.created-tvs .container, .preferred-tvs .container {
     max-width: 1000px;
 }
 
-.created-laptops h3, .preferred-laptops h3 {
+.created-tvs h3, .preferred-tvs h3 {
     font-size: 2.5rem;
     margin-bottom: 20px;
     color: #333;
@@ -81,7 +81,7 @@
     position: relative;
 }
 
-.created-laptops h3::after, .preferred-laptops h3::after {
+.created-tvs h3::after, .preferred-tvs h3::after {
     content: '';
     width: 50px;
     height: 3px;
@@ -92,43 +92,11 @@
     transform: translateX(-50%);
 }
 
-.laptop-list {
+.tv-list {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
-}
-
-.laptop-item {
-    background: #fff;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 300px;
-    text-align: center;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.laptop-item:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-}
-
-.laptop-item img {
-    max-width: 100%;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    transition: transform 0.3s ease;
-}
-
-.laptop-item:hover img {
-    transform: scale(1.05);
-}
-
-.laptop-item p {
-    font-size: 1.2rem;
-    color: #333;
-    margin: 0 0 15px;
 }
 
 .edit-button {

@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react"
-import { IMAGES_URL } from "../../constants";
 import { Link } from 'react-router'
 import './Profile.css'
 import { useOrderedItems, useOrderItem, useOwnedItems } from "../../api/itemApi";
 import useAuth from "../../hooks/useAuth";
+import ProfileItem from "./profile-item/ProfileItem";
+
+const IMAGES_URL  = import.meta.env.VITE_IMAGES_URL;
 
 export default function Profile() {
     const [isEditMode, setEditMode] = useState(false);
@@ -85,22 +87,13 @@ export default function Profile() {
             </div>
         </section>
 
-        <section className="created-laptops">
+        <section className="created-tvs">
             <div className="container">
-                <h3>Added Phones</h3>
-                <div className="laptop-list">
+                <h3>Added TVs</h3>
+                <div className="tv-list">
                     { ownedItems.length >0 ?
                         ownedItems.map( item => 
-                            <div key={item._id} className="laptop-item">
-                                { item.imageFile &&
-                                    <img src={`${IMAGES_URL}${item.imageFile}`} alt="Phone" />
-                                }
-                                <img src={item.image}
-                                    alt="Laptop" />
-                                <p><strong>Price:</strong> {item.price}</p>
-                                <p><strong>Model:</strong> {item.model}</p>
-                                <Link to={`/items/${item._id}`} className="btn">View Details</Link>
-                            </div>
+                            <ProfileItem key={item._id} item={item} />
                         ) 
                             
                     :
@@ -110,21 +103,13 @@ export default function Profile() {
             </div>
         </section>
 
-        <section className="preferred-laptops">
+        <section className="preferred-tvs">
             <div className="container">
                 <h3>Ordered Tv&apos;s</h3>
-                <div className="laptop-list">
+                <div className="tv-list">
                     { orderedItems.length >0 ?
                         orderedItems.map( item => 
-                            <div key={item._key} className="laptop-item">
-                                { item.imageFile && 
-                                    <img src={`${IMAGES_URL}${item.imageFile}`} alt="Phone" />
-                                }
-                                <img src="{{item.image}}" alt="Laptop" />
-                                <p><strong>Price:</strong> {item.price}</p>
-                                <p><strong>Model:</strong> {item.model}</p>
-                                <Link to={`/items/${item._id}` } className="btn">View Details</Link>
-                            </div>
+                            <ProfileItem key={item._id} item={item} />
                         ) 
                     :
                     <p className="no-post">You haven&apos;t ordered any Tv&apos;s yet</p>

@@ -133,7 +133,7 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.comment header p {
+.comment .header p {
   padding: 0.5em;
   
   background-color: #0073e6;

@@ -87,13 +87,13 @@ export default function ItemDetails() {
                     
                 { comments.length > 0 
                 ? comments.map( msg => (
-                    <div key={msg.id} className="comment">
-                        <header className="header">
+                    <div key={msg._id} className="comment">
+                        <section className="header">
                             <p>
-                                <span>{msg.authorId._id === item.owner._id ? 'Owner::': ''} </span>
-                                <span>{msg.authorId.username}</span> posted <time>{msg.created_at }</time>
+                                <span>{msg.authorId?._id === item.owner?._id ? 'Owner::': ''} </span>
+                                <span>{msg.authorId?.username}</span> posted <time>{msg.created_at }</time>
                             </p>
-                        </header>
+                        </section>
                         <div className="comment-main">
                             <div className="userdetails">
                                 <img src="/profile.png" alt="avatar" />

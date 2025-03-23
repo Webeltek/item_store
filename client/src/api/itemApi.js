@@ -76,7 +76,7 @@ export const useItem = (itemId) => {
     useEffect(()=> {
         request.get(`${baseUrl}/${itemId}`)
         .then(result => {
-            console.log(result);
+            // console.log(result);
             
             setItem(result)
         })
@@ -111,18 +111,26 @@ export const useLatestItems = (size) => {
 }
 
 export const useOwnedItems = ()=> {
-    const { request} = useAuth();
+    const { accessToken } = useAuth();
     const [ isPending, setIsPending ] = useState(false);
     const [ownedItems, setOwnedItems] = useState([]);
     useEffect(()=>{
         setIsPending(true);
-        request.get(`${baseUrl}/owned`)
+        if(!accessToken){
+            return;
+        }
+
+        const options = { 
+            headers: { 'X-Authorization': accessToken}
+        };
+
+        request.get(`${baseUrl}/owned`,null,options)
         .then( result =>{
             setIsPending(false);
             setOwnedItems(result);
         });
 
-    },[])  // TODO fix missing dependency request making endless cycle
+    },[accessToken])  // TODO fix missing dependency request making endless cycle
 
     return {
         ownedItems,
@@ -131,18 +139,27 @@ export const useOwnedItems = ()=> {
 }
 
 export const useOrderedItems = ()=> {
-    const { request} = useAuth();
+    const { accessToken} = useAuth();
     const [ isPending, setIsPending ] = useState(false);
     const [orderedItems, setOrderedItems] = useState([]);
     useEffect(()=>{
         setIsPending(true);
-        request.get(`${baseUrl}/owned`)
+        if(!accessToken){
+            return;
+        }
+
+        const options = { 
+            headers: { 'X-Authorization': accessToken}
+        };
+
+
+        request.get(`${baseUrl}/ordered`,null,options)
         .then( result =>{
             setIsPending(false);
             setOrderedItems(result);
         });
 
-    },[])
+    },[accessToken])
 
     return {
         orderedItems,
