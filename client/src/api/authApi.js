@@ -51,10 +51,21 @@ export const useLogout = () => {
     },[accessToken, userLogoutHandler]);
 
     // console.log(accessToken);
-    
-
     return {
         isLoggedIn: accessToken  // TODO is better to return the actual isLoggetOut state from context instead of derived value !!accessToken because !!accessToken is not updated to latest value 
     }
+}
 
+export const useEditProfile = ()=>{
+    const { accessToken} = useContext(UserContext);
+
+    const options = { 
+        headers: { 'X-Authorization': accessToken}
+    };
+
+    const editProfile = (username, email)=>{
+        return request.put(`${baseUrl}/users/profile`, {username, email}, options)
+    }
+
+    return { editProfile};
 }

@@ -4,21 +4,26 @@ import './Profile.css'
 import { useOrderedItems, useOrderItem, useOwnedItems } from "../../api/itemApi";
 import useAuth from "../../hooks/useAuth";
 import ProfileItem from "./profile-item/ProfileItem";
+import { useEditProfile } from "../../api/authApi";
 
 const IMAGES_URL  = import.meta.env.VITE_IMAGES_URL;
 
 export default function Profile() {
     const [isEditMode, setEditMode] = useState(false);
-    const { email, username } = useAuth();
+    const { email, username, userLoginHandler } = useAuth();
     const  { ownedItems , isPending}  = useOwnedItems();
     const { orderedItems } = useOrderedItems();
+    const { editProfile} = useEditProfile();
 
     const toggleEditMode = () => {
         setEditMode( state=> !state);
     }
 
-    const handleSaveProfile = () => {
-
+    const handleSaveProfile = async (formData) => {
+        const { username, email} = Object.fromEntries(formData);
+        const authData = await editProfile(username, email);
+        userLoginHandler(authData);
+        toggleEditMode();
     }
 
     return (
