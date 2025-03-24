@@ -101,8 +101,14 @@ function editProfileInfo(req, res, next) {
     const { _id: userId } = req.user;
     const { username, email } = req.body;
 
+    const token = req.get('X-Authorization');
+
     userModel.findOneAndUpdate({ _id: userId }, { username, email }, { runValidators: true, new: true })
-        .then(x => { res.status(200).json(x) })
+        .then(user => {
+            user = bsonToJson(user);
+            user = removePassword(user);
+             
+            res.status(200).json({ ...user, accessToken: token}) })
         .catch(next);
 }
 
