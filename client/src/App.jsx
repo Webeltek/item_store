@@ -15,9 +15,10 @@ import { UserContext } from './contexts/UserContext'
 import Logout from './components/logout/Logout'
 import ItemDetails from './components/item-details/ItemDetails'
 import EditItem from './components/edit-item/EditItem'
+import usePersistedState from './hooks/usePersitedState'
 
 function App() {
-  const [authData, setAuthData] = useState({});
+  const [authData, setAuthData] = usePersistedState('auth', {});
 
   const userLoginHandler = (resultData) => {
     setAuthData(resultData);
