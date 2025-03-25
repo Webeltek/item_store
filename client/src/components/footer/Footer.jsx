@@ -4,7 +4,7 @@ export default function Footer(){
     return (
         <footer>
             <div className="container-footer">
-                <p>&copy; 2025 ItemStore</p>
+                <p>&copy; 2025 TvStore</p>
             </div>
         </footer>
     )

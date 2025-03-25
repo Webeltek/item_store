@@ -92,8 +92,8 @@ export default function ItemDetails() {
                     <div key={msg._id} className="comment">
                         <section className="header">
                             <p>
-                                <span>{msg.authorId?._id === item.owner?._id ? 'Owner::': ''} </span>
-                                <span>{msg.authorId?.username}</span> posted <time>{msg.created_at }</time>
+                                <span><strong>{msg.authorId?._id === item.owner?._id ? 'Owner:': ''} </strong></span>
+                                <span>{msg.authorId?.username}</span> posted on <time>{msg.created_at }</time>
                             </p>
                         </section>
                         <div className="comment-main">
