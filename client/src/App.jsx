@@ -14,6 +14,7 @@ import Logout from './components/logout/Logout'
 import ItemDetails from './components/item-details/ItemDetails'
 import EditItem from './components/edit-item/EditItem'
 import UserProvider from './providers/UserProvider'
+import AuthGuard from './components/guards/AuthGuard'
 
 function App() {
   
@@ -27,14 +28,16 @@ function App() {
             <Route index element={ <Home />} />
             <Route path="/items" element={ <Catalog />} />
             <Route path="/items/:itemId/details" element={ <ItemDetails />} />
-            <Route path="/items/:itemId/edit" element={ <EditItem />} />
+            <Route element={ <AuthGuard />}>
+              <Route path="/items/:itemId/edit" element={ <EditItem />} />
+              <Route path="/logout" element={ <Logout /> }  />
+              <Route path="/add-item" element={ <AddItem />} />
+              <Route path="/profile" element={ <Profile />}  />
+            </Route>
             <Route path="/about" element={ <About />} />
             <Route path="/login" element={ <Login />} />
-            <Route path="/logout" element={ <Logout /> }  />
             <Route path="/register" element={ <Register />} />
-            <Route path="/add-item" element={ <AddItem />} />
             <Route path="/catalog" element={ <Catalog />}  />
-            <Route path="/profile" element={ <Profile />}  />
       </Routes>
 
       <Footer />
