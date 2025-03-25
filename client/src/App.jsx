@@ -29,10 +29,10 @@ function App() {
             <Route path="/items" element={ <Catalog />} />
             <Route path="/items/:itemId/details" element={ <ItemDetails />} />
             <Route element={ <AuthGuard />}>
-              <Route path="/items/:itemId/edit" element={ <EditItem />} />
-              <Route path="/logout" element={ <Logout /> }  />
               <Route path="/add-item" element={ <AddItem />} />
+              <Route path="/items/:itemId/edit" element={ <EditItem />} />
               <Route path="/profile" element={ <Profile />}  />
+              <Route path="/logout" element={ <Logout /> }  />
             </Route>
             <Route path="/about" element={ <About />} />
             <Route path="/login" element={ <Login />} />

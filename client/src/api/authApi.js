@@ -50,9 +50,8 @@ export const useLogout = () => {
         
     },[accessToken, userLogoutHandler]);
 
-    // console.log(accessToken);
     return {
-        isLoggedIn: accessToken  // TODO is better to return the actual isLoggetOut state from context instead of derived value !!accessToken because !!accessToken is not updated to latest value 
+        isLoggedOut: !!accessToken  // TODO is better to return the actual isLoggetOut state from context instead of derived value !!accessToken because !!accessToken is not updated to latest value 
     }
 }
 

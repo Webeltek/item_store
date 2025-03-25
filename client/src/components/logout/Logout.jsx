@@ -4,16 +4,17 @@ import Loader from "../shared/Loader";
 import './Logout.css'
 
 export default function Logout() {
-    const { isLoggedIn } = useLogout();
-    
+    const { isLoggedOut } = useLogout();
 
     return (
-        <div className="loader-container">
-        {
-            isLoggedIn 
-           ? <Loader />
-           : <Navigate to="/" />
-        }
-        </div>
+        <>
+           { isLoggedOut ? 
+                <Navigate to="/" />
+                : 
+                <div className="loader-container">
+                    <Loader />
+                </div>
+            }
+        </>
     )
 }
