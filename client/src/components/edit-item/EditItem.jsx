@@ -1,9 +1,11 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useEditItem, useItem } from "../../api/itemApi";
 import { useActionState } from "react";
 import './EditItem.css'
+import useAuth from "../../hooks/useAuth";
 
 export default function EditItem() {
+    const { _id: userId} = useAuth()
     const navigate = useNavigate();
     const { edit } = useEditItem();
     const { itemId } = useParams();
@@ -25,6 +27,12 @@ export default function EditItem() {
         imageFile: null,
         description: ''
     })
+
+    const isOwner = userId === item.owner?._id;
+
+    if(!isOwner){
+        return <Navigate to="/items" />
+    }
 
     return (
         <>
