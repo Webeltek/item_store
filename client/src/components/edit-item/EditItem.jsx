@@ -28,11 +28,14 @@ export default function EditItem() {
         description: ''
     })
 
-    const isOwner = userId === item.owner?._id;
-
-    if(!isOwner){
+    
+    const isOwner = userId === item.owner; 
+    if(item.owner !== undefined  && !isOwner){ 
+        // console.log("evalIsOwner", isOwner);
         return <Navigate to="/items" />
     }
+    
+
 
     return (
         <>
@@ -108,7 +111,7 @@ export default function EditItem() {
                                     Image address must start with https://!
                                 </p>
                         </div>
-                    <div className="form-group">
+                    {/* <div className="form-group">
                         <label htmlFor="imageFile">Image File:</label>
                         <input
                         defaultValue={item.imageFile}
@@ -123,7 +126,7 @@ export default function EditItem() {
                                         set File error message
                                     </p>
                             </div>
-                    </div>
+                    </div> */}
                     <div className="new-theme-content">
                         <label htmlFor="phoneText">Description <span className="red">*</span></label>
                         <textarea

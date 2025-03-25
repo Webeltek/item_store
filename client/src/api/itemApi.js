@@ -76,14 +76,13 @@ export const useItem = (itemId) => {
         request.get(`${baseUrl}/${itemId}`)
         .then(result => {
             // console.log(result);
-            
             setItem(result)
         })
     },[itemId]);
 
     return {
         item,
-        setItem
+        setItem,
     }
 }
 

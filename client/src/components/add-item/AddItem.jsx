@@ -81,7 +81,7 @@ export default function AddItem() {
                                 Image address must start with https:// !
                             </p>
                     </div>
-                <div className="form-group">
+                {/* <div className="form-group">
                     <label htmlFor="imageFile">Image File:</label>
                     <input
                     className="input-error" 
@@ -94,7 +94,7 @@ export default function AddItem() {
                                 Set fileError msg
                             </p>
                     </div>
-                </div>
+                </div> */}
                 <div className="new-theme-content">
                     <label htmlFor="phoneText">Description <span className="red">*</span></label>
                     <textarea

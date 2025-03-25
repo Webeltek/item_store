@@ -25,7 +25,6 @@ function getItem(req,res, next){
             path: 'authorId'
         }
     })
-    .populate({ path: 'owner'})
     .then(result => {
         
         if(result === null){

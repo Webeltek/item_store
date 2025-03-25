@@ -15,6 +15,7 @@ import ItemDetails from './components/item-details/ItemDetails'
 import EditItem from './components/edit-item/EditItem'
 import UserProvider from './providers/UserProvider'
 import AuthGuard from './components/guards/AuthGuard'
+import GuestGuard from './components/guards/GuestGuard'
 
 function App() {
   
@@ -34,10 +35,11 @@ function App() {
               <Route path="/profile" element={ <Profile />}  />
               <Route path="/logout" element={ <Logout /> }  />
             </Route>
+            <Route element={ <GuestGuard />}>
+              <Route path="/login" element={ <Login />} />
+              <Route path="/register" element={ <Register />} />
+            </Route>
             <Route path="/about" element={ <About />} />
-            <Route path="/login" element={ <Login />} />
-            <Route path="/register" element={ <Register />} />
-            <Route path="/catalog" element={ <Catalog />}  />
       </Routes>
 
       <Footer />

@@ -16,7 +16,7 @@ export default function ItemDetails() {
     const { orderItem } = useOrderItem();
     const { comments, setComments } = useComments(itemId);
 
-    const isOwner = userId === item.owner?._id;
+    const isOwner = userId === item.owner;
     const isOrdered = item.orderList?.some( orderUserId =>
         orderUserId === userId
     )
