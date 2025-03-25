@@ -2,9 +2,10 @@ import { useContext, useState } from 'react';
 import { NavLink } from 'react-router';
 import './Header.css'
 import { UserContext } from '../../contexts/UserContext';
+import useAuth from '../../hooks/useAuth';
 
 export default function Header(){
-    const { email } = useContext(UserContext);
+    const { email, isAuthenticated } = useAuth();
 
     return (
         <header>
@@ -13,7 +14,7 @@ export default function Header(){
                     <span>Tv Store</span>
                     <div className='profile-menu'>
                         <i className="fa-solid fa-user"></i>
-                        { email ? 
+                        { isAuthenticated ? 
                         <NavLink className='profile' to="/profile">Username: {email}</NavLink>
                         :
                         <NavLink className='profile-guest' to="/login">Profile</NavLink>
