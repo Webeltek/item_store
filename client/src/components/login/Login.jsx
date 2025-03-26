@@ -1,22 +1,36 @@
 import { useContext, useState } from "react"
 import { Link, useNavigate } from 'react-router'
-import SubmitBtn from "./SubmitBtn";
 import './Login.css'
 import { useLogin } from "../../api/authApi";
 import { UserContext } from "../../contexts/UserContext";
+import { useLoginValidation } from "./useLoginValidation";
 
 export default function Login(){
     const [errorMsg, setErrorMsg] = useState();
     const { userLoginHandler } = useContext(UserContext);
     let navigate = useNavigate();
     const { login } = useLogin();
+    const {refs, errors, handleBlur, validateField} = useLoginValidation();
+    const [pending, setPending] = useState();
 
     const loginHandler = async (formData) =>{
-        const { email, password } = Object.fromEntries(formData)
+        const data = Object.fromEntries(formData)
+        // Validate all fields before submitting
+        Object.keys(data).forEach((key) => {
+            validateField(key, data[key]);
+        });
+        
+
+        if (Object.values(errors).some((error) => error)) {
+            // form is automatically reset since loginHandler is client action
+            return;
+        }
         
         try {
-            const authData = await login(email, password);
+            setPending(true);
+            const authData = await login(data.email, data.password);
             // console.log(authData);
+            setPending(false);
             userLoginHandler(authData);
             navigate('/items');
         } catch (err) {
@@ -44,38 +58,36 @@ export default function Login(){
                         <input
                         type="email" 
                         id="email" 
-                        name="email" />
+                        name="email"
+                        ref={refs['email']}
+                        onBlur={handleBlur} />
                     </div>
+                    {errors.email &&
                         <div>
-                                <p className="error">
-                                    Email is required!
-                                </p>
-                                <p className="error">
-                                    Email is not valid!
-                                </p>
+                                <p className="error">{errors.email}</p>
                         </div>
-                    
+                    }
                     
                     <div className="form-group">
                         <label htmlFor="password">Password:</label>
                         <input
                         type="password" 
                         id="password" 
-                        name="password" />
+                        name="password"
+                        ref={refs['password']}
+                        onBlur={handleBlur} />
                     </div>
+                    {errors.password &&
                         <div>
-                                <p className="error">
-                                    Password is required!
-                                </p>
-                                <p className="error">
-                                    Password must be at least 5 characters!
-                                </p>
-                                <p className="error">
-                                    Password must contains only latin letters and digits!
-                                </p>
+                                <p className="error">{errors.password}</p>
                         </div>
+                    }
                     
-                    <SubmitBtn />
+                    <button disabled={pending} 
+                        className="btn" 
+                        style={ {backgroundColor: pending ? 'grey':'#0073e6' }}
+                        >Login
+                    </button>
                     <p>Don&apos;t have an account? <Link to="/register">Register</Link></p>
                 </form>
             </div>

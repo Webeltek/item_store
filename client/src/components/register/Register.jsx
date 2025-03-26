@@ -24,7 +24,6 @@ export default function Register() {
         Object.keys(values).forEach((key) => {
             validateField(key, values[key]);
         });
-        console.log({regHandlerErrObject: errors});
         
         if (Object.values(errors).some((error) => error)) {
             return;
