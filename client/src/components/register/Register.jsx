@@ -3,32 +3,36 @@ import { Link, useNavigate } from "react-router-dom";
 import './Register.css'
 import { useRegister } from "../../api/authApi";
 import { UserContext } from "../../contexts/UserContext";
+import { useRegisterValidation } from "./useRegisterValidation";
+
 
 export default function Register() {
     const [errorMsg, setErrorMsg] = useState();
     const [pending , setPending] = useState();
-    const [values, setValues] = useState({
-        username: '',
-        email: '',
-        password: '',
-        rePassword: ''
-    })
+    
+    
     const navigate = useNavigate();
     const { register } = useRegister();
     const { userLoginHandler } = useContext(UserContext);
-
-
+    const { errors, setErrors, handleBlur, validateField, values, setValues } = useRegisterValidation();
+        
+        
     const registerHandler = async (e)=> {
         e.preventDefault();
-        setPending(true);
-        const { username, email , password , rePassword} = values;
-
-        if(password !== rePassword){
-            setErrorMsg('Password missmatch');
+        
+        // Validate all fields before submitting
+        Object.keys(values).forEach((key) => {
+            validateField(key, values[key]);
+        });
+        console.log({regHandlerErrObject: errors});
+        
+        if (Object.values(errors).some((error) => error)) {
             return;
         }
-
+        
+        const { username, email , password , rePassword} = values;
         try {
+            setPending(true);
             const authData =  await register(username, email, password, rePassword);
             setPending(false);
             userLoginHandler(authData);
@@ -46,10 +50,19 @@ export default function Register() {
             
         }
     }
-
+    
     const changeHandler = (e) =>{
+        //clear errors
+        setErrors({ 
+            username: '', 
+            email: '', 
+            password: '', 
+            rePassword: ''});
         setValues( state => ( {...state, [e.target.name] : e.target.value}))
     }
+        
+         
+
     return (
         <>
         { errorMsg && 
@@ -73,64 +86,68 @@ export default function Register() {
                          id="username" 
                          name="username" 
                          value={values.username} 
-                         onChange={changeHandler} />
+                         onChange={changeHandler}
+                         onBlur={handleBlur} />
                     </div>
+                        {errors.username &&  
                         <div>
-                                <p className="error">
-                                    Username is required!
-                                </p>
-                                <p className="error">
-                                    Username must be at least 5 characters!
-                                </p>
-                                <p className="error">
-                                    Username must contain only latin letters and digits!
-                                </p>
+                            <p className="error">{errors.username}</p>
                         </div>
+                        }
                     
                     <div className="form-group">
                         <label htmlFor="email">Email:</label>
                         <input
-                        type="email" id="email" name="email" value={values.email} onChange={changeHandler}/>
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        value={values.email} 
+                        onChange={changeHandler}
+                        onBlur={handleBlur}/>
                     </div>
+                    {errors.email &&  
                         <div>
-                                <p className="error">
-                                    Email is required!
-                                </p>
-                            
-                                <p className="error">
-                                    Email is not valid!
-                                </p>
+                            <p className="error">{errors.email}</p>
                         </div>
+                    }
                     {/* <!--password--> */}
                     <div >
                         <div className="form-group">
                             <label htmlFor="password">Password:</label>
                             <input
-                            type="password" id="password" name="password" value={values.password} onChange={changeHandler} />
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            value={values.password} 
+                            onChange={changeHandler} 
+                            onBlur={handleBlur}/>
                         </div>
+                        {errors.password &&  
                             <div>
-                                    <p className="error">
-                                        Password is required!
-                                    </p>
-                                    <p className="error">
-                                        Password must be at least 5 characters!
-                                    </p>
-                                    <p className="error">
-                                        Password must contain only latin letters and digits!
-                                    </p>
+                                <p className="error">{errors.password}</p>
                             </div>
+                        }
                         <div className="form-group">
                             <label htmlFor="confirm-password">Confirm Password:</label>
                             <input
-                            type="password" id="confirm-password" name="rePassword" value={values.rePassword} onChange={changeHandler} />
+                            type="password" 
+                            id="confirm-password" 
+                            name="rePassword" 
+                            value={values.rePassword} 
+                            onChange={changeHandler}
+                            onBlur={handleBlur} />
                         </div>
+                        {errors.rePassword &&  
                             <div>
-                                    <p className="error">
-                                        Repeat Password does not match password!
-                                    </p>
+                                <p className="error">{errors.rePassword}</p>
                             </div>
+                        }
                     </div>
-                    <button className="btn" disabled={pending} >Register</button>
+                    <button 
+                    className="btn" 
+                    disabled={pending} 
+                    style={ {backgroundColor: pending ? 'grey':'#0073e6' }}
+                    >Register</button>
                     <p>Already have an account? <Link to="/login">Login</Link></p>
                 </form>
             </div>

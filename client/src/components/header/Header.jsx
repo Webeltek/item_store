@@ -15,7 +15,7 @@ export default function Header(){
                     <div className='profile-menu'>
                         <i className="fa-solid fa-user"></i>
                         { isAuthenticated ? 
-                        <NavLink className='profile' to="/profile">Username: {email}</NavLink>
+                        <NavLink className='profile' to="/profile">User: {email}</NavLink>
                         :
                         <NavLink className='profile-guest' to="/login">Profile</NavLink>
                         }
