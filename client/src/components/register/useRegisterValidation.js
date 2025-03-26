@@ -13,20 +13,7 @@ export const useRegisterValidation = (initialErrors = {
             rePassword: ''
         });
         const [errors, setErrors] = useState(initialErrors);
-    
-        // in case of uncontrolled form
-        const usernameRef = useRef(null);
-        const emailRef = useRef(null);
-        const passwordRef = useRef(null);
-        const rePasswordRef = useRef(null);
-        const refs = {
-            username: usernameRef,
-            email:emailRef,
-            password: passwordRef,
-            rePassword: rePasswordRef 
-        }
 
-        const passRePass = {};
 
         // Validation function
         const validateField = (name, value) => {
@@ -75,5 +62,5 @@ export const useRegisterValidation = (initialErrors = {
         };
 
         //returns refs in case of uncontrolled form
-        return { refs, errors, setErrors, handleBlur, validateField , values, setValues};
+        return { errors, setErrors, handleBlur, validateField , values, setValues};
     }
