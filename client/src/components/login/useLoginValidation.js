@@ -15,8 +15,6 @@ export const useLoginValidation = (initialErrors = {
             password: passwordRef,
         }
 
-        const passRePass = {};
-
         // Validation function
         const validateField = (name, value) => {
             const emailPrefixLength = import.meta.env.VITE_EMAIL_PREFIX_LENGTH;
@@ -46,14 +44,11 @@ export const useLoginValidation = (initialErrors = {
         //Validate on blur
         const handleBlur = (e) => {
             // in case of uncontrolled form
-            const { name } = e.target;
+            const { name, value } = e.target;
 
-            // used in case of uncontrolled form
-            const value = refs[name].current?.value;
 
             validateField(name, value);
         };
 
-        //returns refs in case of uncontrolled form
-        return { refs, errors, handleBlur, validateField };
+        return { errors, handleBlur, validateField };
     }

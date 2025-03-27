@@ -10,7 +10,7 @@ export default function Login(){
     const { userLoginHandler } = useContext(UserContext);
     let navigate = useNavigate();
     const { login } = useLogin();
-    const {refs, errors, handleBlur, validateField} = useLoginValidation();
+    const {errors, handleBlur, validateField} = useLoginValidation();
     const [pending, setPending] = useState();
 
     const loginHandler = async (formData) =>{
@@ -59,7 +59,6 @@ export default function Login(){
                         type="email" 
                         id="email" 
                         name="email"
-                        ref={refs['email']}
                         onBlur={handleBlur} />
                     </div>
                     {errors.email &&
@@ -74,7 +73,6 @@ export default function Login(){
                         type="password" 
                         id="password" 
                         name="password"
-                        ref={refs['password']}
                         onBlur={handleBlur} />
                     </div>
                     {errors.password &&
