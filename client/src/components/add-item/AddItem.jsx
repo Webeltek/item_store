@@ -2,20 +2,38 @@ import { useNavigate } from "react-router-dom";
 import SubmitBtn from "./SubmitBtn";
 import './AddItem.css'
 import { useCreateItem } from "../../api/itemApi";
+import { useForm } from "react-hook-form";
+import { useState } from "react";
 
 export default function AddItem() {
+		const [errorMsg, setErrorMsg] = useState();
+		const [pending, setPending] = useState();
     const navigate = useNavigate();
-    const { create } = useCreateItem()
+    const { create } = useCreateItem();
+    const { register, handleSubmit, formState: { errors },} = useForm({
+			mode: 'onBlur'
+		});
 
-    const submitHandler = async (formData)=>{
-        const data = Object.fromEntries(formData);
+    const submitHandler = async (data)=>{
+			// using react hook form - data parameter contains form values;
+
+			try {
+				setPending(true);
         await create(data);
-
-        navigate('/catalog');
+				setPending(false);
+        navigate('/items');
+				
+			} catch (err) {
+				setPending(false);
+				setErrorMsg(err.message);
+			}
     }
 
     return (
     <>
+		{ errorMsg && (
+				<p className="notification error-message">{errorMsg}</p>
+		)}
     <section className="create-hero">
         <div className="container">
             <h2>Add New Tv</h2>
@@ -25,62 +43,90 @@ export default function AddItem() {
 
     <section className="create-form">
         <div className="container">
-            <form action={submitHandler}> 
+            <form onSubmit={handleSubmit(submitHandler)}> 
                 <div className="form-group">
                     <label htmlFor="model">Model:<span className="red">*</span></label>
-                    <input
+                    <input		
+                    {...register('model',{
+                        required: 'Model is required!',
+                        minLength: { 
+                            value: 5,
+                            message: 'Model must be at least 5 characters!'}
+                    })}
                     className='input-error' 
                     type="text" id="model" name="model" />
                 </div>
+                { errors.model && 
                     <div>
-                            <p className="error">
-                                Model is required!
-                            </p>
-                            <p className="error">
-                                Model must be at least 5 characters!
-                            </p>
+                        <p className="error">
+                            {errors.model.message}
+                        </p>
                     </div>
+                }    
                 <div className="form-group">
                     <label htmlFor="screen-size">Screen Size:<span className="red">*</span></label>
                     <input
                     className='input-error'
-                    type="text" id="screen-size" name="screenSize" />
+                    type="text" id="screen-size" name="screenSize"
+                    {...register('screenSize',{
+                        required: 'Screen size is required!',
+                        minLength : {
+                            value : 2,
+                            message: 'Screen size must be at least 2 characters!'
+                        }
+                    })} />
                 </div>
-                    <div>
-                            <p className="error">
-                                Screen size is required!
-                            </p>
-                            <p className="error">
-                                Screen size must be at least 2 characters!
-                            </p>
-                    </div>
+                { errors.screenSize &&
+                <div>
+                        <p className="error">
+                            {errors.screenSize.message}
+                        </p>
+                </div>
+                }
+                    
                 <div className="form-group">
                     <label htmlFor="price">Price:<span className="red">*</span></label>
                     <input
                     className="'input-error" 
                     type="number" 
                     id="price" 
-                    name="price" />
+                    name="price"
+                    {...register('price',{
+                        min : {
+                            value : 0,
+                            message: 'Price must be positive number!'
+                        },
+                    })} />
                 </div>
-                    <div>
-                            <p className="error">
-                                Price must be positive number!
-                            </p>
-                    </div>
+                { errors.price && 
+                <div>
+                        <p className="error">
+                            {errors.price.message}
+                        </p>
+                </div>
+                }
+                    
                 <div className="form-group">
                     <label htmlFor="image">Image Link:<span className="red">*</span></label>
                     <input
                     className="input-error" 
-                    type="text" id="image" name="image" />
+                    type="text" id="image" name="image"
+                    {...register('image',{
+                        required: 'Image address is required!',
+                        pattern : {
+                            value : /^https:\/\/.*$/,
+                            message : 'Image address must start with https:// !'
+                        }
+                    })} />
                 </div>
-                    <div>
-                            <p className="error">
-                                Image address is required!
-                            </p>
-                            <p className="error">
-                                Image address must start with https:// !
-                            </p>
-                    </div>
+                { errors.image && 
+                <div>
+                        <p className="error">
+                            {errors.image.message}
+                        </p>
+                </div>
+                }
+                    
                 {/* <div className="form-group">
                     <label htmlFor="imageFile">Image File:</label>
                     <input
@@ -102,19 +148,31 @@ export default function AddItem() {
                     type="text" 
                     name="description" 
                     id="postText" 
-                    rows="5" 
+                    rows="5"
+										{...register('description',{
+											required: 'Description is required!',
+											minLength : {
+												value: 10,
+												message: 'Description must be at least 10 characters!'
+											}
+										})} 
                     ></textarea>
-                        <div>
-                                <p className="error">
-                                    Description is required!
-                                </p>
-                                <p className="error">
-                                    Description must be at least 10 characters!
-                                </p>
-                        </div>
+										{ errors.description && 
+										<div>
+														<p className="error">
+																{ errors.description.message}
+														</p>
+										</div>
+										}
+                        
                 </div>
                 
-                <SubmitBtn />
+                <button  
+									className="btn"
+									disabled={pending}
+									style={ {backgroundColor: pending ? 'grey':'#0073e6' }}
+									>Create Product
+								</button>
             </form>
         </div>
     </section>    

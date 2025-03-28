@@ -15,7 +15,7 @@ export default function EditItem() {
         const data = Object.fromEntries(formData);
         await edit(itemId, data);
 
-        navigate('/catalog');
+        navigate('/items');
         return data;
     }
 
