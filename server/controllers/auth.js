@@ -39,7 +39,12 @@ function register(req, res, next) {
                 field = field.substring(0, field.lastIndexOf("_"));
                 
                 res.status(409)
-                    .send({ message: `This ${field} is already registered!` });
+                    .send({ 
+                        message: `This ${field} is already registered!`,
+                        err : {
+                                message: `This ${field} is already registered!`
+                            }
+                        });
                 return;
             }
             next(err);
@@ -56,7 +61,11 @@ function login(req, res, next) {
         .then(([user, match]) => {
             if (!match) {
                 res.status(401)
-                    .send({ message: 'Wrong email or password' });
+                    .send({ 
+                        message: 'Wrong email or password',
+                        err: {
+                            message: 'Wrong email or password'
+                        } });
                 return
             }
             user = bsonToJson(user);

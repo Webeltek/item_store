@@ -6,11 +6,10 @@ import useAuth from "../../hooks/useAuth";
 import { useForm } from "react-hook-form";
 
 export default function EditItem() {
-    const [errorMsg, setErrorMsg] = useState();
     const [pending, setPending] = useState();
     const { _id: userId} = useAuth()
     const navigate = useNavigate();
-    const { edit } = useEditItem();
+    const { edit, errorMessage } = useEditItem();
     const { itemId } = useParams();
     const { item } = useItem(itemId);
     const { register,trigger, handleSubmit,setValue, formState: { errors },} = useForm({
@@ -40,7 +39,8 @@ export default function EditItem() {
             navigate('/items');
         } catch (err) {
             setPending(false);
-			setErrorMsg(err.message);
+            console.log({editItemError: err});
+            
         }
     }
 
@@ -55,8 +55,8 @@ export default function EditItem() {
 
     return (
         <>
-        { errorMsg && (
-				<p className="notification error-message">{errorMsg}</p>
+        { errorMessage && (
+				<p className="notification error-message">{errorMessage}</p>
 		)}
         <section className="edit-hero">
             <div className="container">

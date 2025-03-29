@@ -3,9 +3,9 @@ function errorHandler(err, req, res, next) {
     
     if (err.status === 333) {
         res.status(333)
-            .json({ message: 'ErrorHandler: not allowed!' })
+            .json({ message: 'ErrorHandler: not allowed!',err })
     } else if( err.status === 404){
-        res.status(404).json( { message: 'Not found'})
+        res.status(404).json( { message: 'Not found',err})
     } else {
         console.error(err.stack)
         // console.log(err)

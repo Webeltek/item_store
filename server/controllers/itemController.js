@@ -194,7 +194,11 @@ function editItem(req, res, next) {
                             res.status(200).json(updatedItem);
                         }
                         else {
-                            res.status(401).json({ message: `Not allowed!` });
+                            res.status(401).json({ message: `Not allowed!`,
+                                err: {
+                                    message: `Not allowed!`
+                                }
+                             });
                         }
                     })
                     .catch(next);
@@ -210,7 +214,11 @@ function editItem(req, res, next) {
                         res.status(200).json(updatedItem);
                     }
                     else {
-                        res.status(401).json({ message: `Not allowed!` });
+                        res.status(401).json({ message: `Not allowed!`,
+                            err: {
+                                message: `Not allowed!`
+                            }
+                         });
                     }
                 })
                 .catch(next);
@@ -249,7 +257,11 @@ function deleteItem(req, res, next) {
 
                 res.status(200).json(deletedOne)
             } else {
-                res.status(401).json({ message: `Not allowed!` });
+                res.status(401).json({ message: `Not allowed!`,
+                    err: {
+                        message: `Not allowed!`
+                    }
+                 });
             }
         })
         .catch(next);

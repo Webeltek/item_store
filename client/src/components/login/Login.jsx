@@ -34,6 +34,7 @@ export default function Login(){
             userLoginHandler(authData);
             navigate('/items');
         } catch (err) {
+            setPending(false);
             setErrorMsg(err.message);
         }
     }

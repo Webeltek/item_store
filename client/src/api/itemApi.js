@@ -17,7 +17,7 @@ export const useCreateItem = ()=> {
 }
 
 export const useEditItem = () => {
-    const { request} = useAuth()
+    const { request, errorMessage} = useAuth()
 
     const edit = (itemId, itemData) => {
         return request.put(`${baseUrl}/${itemId}`, {...itemData, _id: itemId});
@@ -25,6 +25,7 @@ export const useEditItem = () => {
 
     return {
         edit,
+        errorMessage
     }
 }
 
