@@ -11,12 +11,14 @@ export default function AddItem() {
     const navigate = useNavigate();
     const { create } = useCreateItem();
     const { register, handleSubmit, formState: { errors },} = useForm({
-			mode: 'onBlur'
+			mode: 'onBlur',
+			reValidateMode: 'onBlur'
 		});
 
-    const submitHandler = async (data)=>{
+    const submitData = async (data)=>{
 			// using react hook form - data parameter contains form values;
-
+			
+			
 			try {
 				setPending(true);
         await create(data);
@@ -43,7 +45,7 @@ export default function AddItem() {
 
     <section className="create-form">
         <div className="container">
-            <form onSubmit={handleSubmit(submitHandler)}> 
+            <form onSubmit={handleSubmit(submitData)}> 
                 <div className="form-group">
                     <label htmlFor="model">Model:<span className="red">*</span></label>
                     <input		
@@ -53,7 +55,7 @@ export default function AddItem() {
                             value: 5,
                             message: 'Model must be at least 5 characters!'}
                     })}
-                    className='input-error' 
+                    className={`${errors.model ? "input-error" : ""}` } 
                     type="text" id="model" name="model" />
                 </div>
                 { errors.model && 
@@ -66,7 +68,7 @@ export default function AddItem() {
                 <div className="form-group">
                     <label htmlFor="screen-size">Screen Size:<span className="red">*</span></label>
                     <input
-                    className='input-error'
+                    className={`${errors.screenSize ? "input-error" : ""}` }
                     type="text" id="screen-size" name="screenSize"
                     {...register('screenSize',{
                         required: 'Screen size is required!',
@@ -87,7 +89,7 @@ export default function AddItem() {
                 <div className="form-group">
                     <label htmlFor="price">Price:<span className="red">*</span></label>
                     <input
-                    className="'input-error" 
+                    className={`${errors.price ? "input-error" : ""}` } 
                     type="number" 
                     id="price" 
                     name="price"
@@ -109,7 +111,7 @@ export default function AddItem() {
                 <div className="form-group">
                     <label htmlFor="image">Image Link:<span className="red">*</span></label>
                     <input
-                    className="input-error" 
+                    className={`${errors.image ? "input-error" : ""}` } 
                     type="text" id="image" name="image"
                     {...register('image',{
                         required: 'Image address is required!',
@@ -144,7 +146,7 @@ export default function AddItem() {
                 <div className="new-theme-content">
                     <label htmlFor="phoneText">Description <span className="red">*</span></label>
                     <textarea
-                    className='input-error'  
+                    className={`${errors.description ? "input-error" : ""}` }  
                     type="text" 
                     name="description" 
                     id="postText" 

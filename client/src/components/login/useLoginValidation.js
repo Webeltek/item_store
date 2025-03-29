@@ -6,14 +6,6 @@ export const useLoginValidation = (initialErrors = {
 }
 ) => {
         const [errors, setErrors] = useState(initialErrors);
-    
-        // in case of uncontrolled form
-        const emailRef = useRef(null);
-        const passwordRef = useRef(null);
-        const refs = {
-            email:emailRef,
-            password: passwordRef,
-        }
 
         // Validation function
         const validateField = (name, value) => {
