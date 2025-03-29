@@ -1,6 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useEditItem, useItem } from "../../api/itemApi";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import './EditItem.css'
 import useAuth from "../../hooks/useAuth";
 import { useForm } from "react-hook-form";
@@ -13,11 +13,26 @@ export default function EditItem() {
     const { edit } = useEditItem();
     const { itemId } = useParams();
     const { item } = useItem(itemId);
-    const { register, handleSubmit, formState: { errors },} = useForm({
-                mode: 'onBlur'
+    const { register,trigger, handleSubmit,setValue, formState: { errors },} = useForm({
+                mode: 'onBlur',
+                reValidateMode: 'onBlur',
             });
 
-    const submitHandler = async ( data)=>{
+    // Validate all fields as soon as the form loads
+    useEffect(() => {
+        setValue('model', item.model)
+        setValue('screenSize',item.screenSize)
+        setValue('price', item.price)
+        setValue('image', item.image)
+        setValue('description',item.description)
+        trigger();
+    }, [trigger, 
+        item.model,item.screenSize,
+        item.price, item.image, item.description,
+        setValue
+    ]);
+
+    const submitData = async ( data)=>{
         try {
             setPending(true);
             await edit(itemId, data);
@@ -52,7 +67,7 @@ export default function EditItem() {
 
         <section className="edit-form">
             <div className="container">
-                <form  onSubmit={handleSubmit(submitHandler)}> 
+                <form  onSubmit={handleSubmit(submitData)}> 
                     <div className="form-group">
                         <label htmlFor="model">Model:<span className="red">*</span></label>
                         <input
