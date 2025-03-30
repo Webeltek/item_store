@@ -6,8 +6,12 @@ import useAuth from '../../hooks/useAuth';
 
 export default function Header(){
     const { email, isAuthenticated } = useAuth();
+    const { errorMessage } = useContext(UserContext);
+    console.log({headerErrMsg: errorMessage});
+    
 
     return (
+        <>
         <header>
             <div className="container-header">
                 <nav>
@@ -55,6 +59,10 @@ export default function Header(){
 
             </div>
         </header>
+        { errorMessage && (
+            <p className="notification error-message">{errorMessage}</p>
+        )}
+        </>
     )
 }
 

@@ -9,7 +9,7 @@ export default function EditItem() {
     const [pending, setPending] = useState();
     const { _id: userId} = useAuth()
     const navigate = useNavigate();
-    const { edit, errorMessage } = useEditItem();
+    const { edit } = useEditItem();
     const { itemId } = useParams();
     const { item } = useItem(itemId);
     const { register,trigger, handleSubmit,setValue, formState: { errors },} = useForm({
@@ -55,9 +55,6 @@ export default function EditItem() {
 
     return (
         <>
-        { errorMessage && (
-				<p className="notification error-message">{errorMessage}</p>
-		)}
         <section className="edit-hero">
             <div className="container">
                 <h2>Edit Product</h2>

@@ -5,14 +5,19 @@ import request from "../utils/request";
 function readErrorMessage(error){
     if(error.message === 'jwt expired'){
         return "Session expired, please login again!"
-    } else if (error.message === 'invalid token'){
-        return 'Invalid token'
+    } else if (error.message === 'invalid token'
+        || error.message === 'blacklisted token'
+        || error.message === 'jwt must be provided'
+    ){
+        return 'Invalid session, please login again!'
     }
+
+    return error.message;
 }
 
 export default function useAuth(){
     const authData = useContext(UserContext);
-    const [ errorMessage, setErrorMessage] = useState('');
+    
 
     const requestWrapper = async (method, url,data,options = {}) =>{
         // console.log('authData.accessToken', authData.accessToken);
@@ -26,23 +31,19 @@ export default function useAuth(){
         }
 
         //console.log('authOptions', authOptions);
-
         try {
+            
             const result = await request.baseRequest(method,url, data, authData.accessToken ? authOptions : options);
             return result;
-        } catch(error){
-            const finalMessage = readErrorMessage(error);
-            console.log({useAuthErr: error, finalMessage});
+        } catch (error) {
+            const finalMessage = readErrorMessage(error.message);
             
-            setErrorMessage(finalMessage);
-            const newError = new Error(finalMessage);
-            throw newError;
+            authData.showErrorMsg(finalMessage);
+            throw error;
         }
-
     }
 
     return {
-        errorMessage,
         ...authData,
         isAuthenticated: !!authData.accessToken,
         request : {

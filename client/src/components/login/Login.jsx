@@ -6,7 +6,6 @@ import { UserContext } from "../../contexts/UserContext";
 import { useLoginValidation } from "./useLoginValidation";
 
 export default function Login(){
-    const [errorMsg, setErrorMsg] = useState();
     const { userLoginHandler } = useContext(UserContext);
     let navigate = useNavigate();
     const { login } = useLogin();
@@ -34,16 +33,15 @@ export default function Login(){
             userLoginHandler(authData);
             navigate('/items');
         } catch (err) {
+            console.log({loginErr: err});
+            
             setPending(false);
-            setErrorMsg(err.message);
         }
     }
 
     return (
         <>
-        { errorMsg && (
-            <p className="notification error-message">{errorMsg}</p>
-        )}
+        
         <section className="login-hero">
             <div className="container">
                 <h2>Login to Your Account</h2>

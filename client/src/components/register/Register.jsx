@@ -7,7 +7,6 @@ import { useRegisterValidation } from "./useRegisterValidation";
 
 
 export default function Register() {
-    const [errorMsg, setErrorMsg] = useState();
     const [pending , setPending] = useState();
     
     
@@ -45,7 +44,6 @@ export default function Register() {
                 password: '',
                 rePassword: ''
             });
-            setErrorMsg(err.message);
             
         }
     }
@@ -64,9 +62,6 @@ export default function Register() {
 
     return (
         <>
-        { errorMsg && 
-            <p className="notification error-message">{errorMsg}</p>
-        }
 
         <section className="register-hero">
             <div className="container">

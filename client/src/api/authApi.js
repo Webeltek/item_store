@@ -5,14 +5,22 @@ import { UserContext } from "../contexts/UserContext";
 const baseUrl = import.meta.env.VITE_API_URL;
 
 export const useLogin = () => {
+    const { showErrorMsg } = useContext(UserContext);
     const abortRef = useRef(new AbortController());
 
     const login = async (email, password) => {
-        return request.post(
-            `${baseUrl}/login`, 
-            {email, password}, 
-            { signal: abortRef.current.signal}
-        );
+        try {
+            
+            const result = await request.post(
+                `${baseUrl}/login`, 
+                {email, password}, 
+                { signal: abortRef.current.signal}
+            );
+            return result;
+        } catch (error) {
+            showErrorMsg(error.message);
+            throw error;
+        }
     }
 
     useEffect(() => {
@@ -24,8 +32,17 @@ export const useLogin = () => {
 }
 
 export const useRegister = () => {
-    const register = (username, email, password) => 
-        request.post(`${baseUrl}/register`, {username, email, password}); // returning expression body - one line
+    const { showErrorMsg } = useContext(UserContext);
+    const register = async (username, email, password) =>{
+        try {
+            
+            const result = await request.post(`${baseUrl}/register`, {username, email, password}); // returning expression body - one line
+            return result;
+        } catch (error) {
+            showErrorMsg(error.message);
+            throw error;
+        }
+    } 
     
     return {
         register
@@ -33,6 +50,7 @@ export const useRegister = () => {
 }
 
 export const useLogout = () => {
+    const { showErrorMsg } = useContext(UserContext);
     const { accessToken, userLogoutHandler } = useContext(UserContext)
 
     useEffect(() => {
@@ -47,8 +65,9 @@ export const useLogout = () => {
         
         request.get(`${baseUrl}/logout`, null, options)
         .then(userLogoutHandler)
+        .catch( err=> showErrorMsg(err.message))
         
-    },[accessToken, userLogoutHandler]);
+    },[accessToken, userLogoutHandler, showErrorMsg]);
 
     return {
         isLoggedOut: !!accessToken  // TODO is better to return the actual isLoggetOut state from context instead of derived value !!accessToken because !!accessToken is not updated to latest value 
@@ -56,14 +75,21 @@ export const useLogout = () => {
 }
 
 export const useEditProfile = ()=>{
+    const { showErrorMsg } = useContext(UserContext);
     const { accessToken} = useContext(UserContext);
 
     const options = { 
         headers: { 'X-Authorization': accessToken}
     };
 
-    const editProfile = (username, email)=>{
-        return request.put(`${baseUrl}/users/profile`, {username, email}, options)
+    const editProfile = async (username, email)=>{
+        try {
+            const result = await request.put(`${baseUrl}/users/profile`, {username, email}, options)
+            return result;
+        } catch (error) {
+            showErrorMsg(error.message);
+            throw error;
+        }
     }
 
     return { editProfile};

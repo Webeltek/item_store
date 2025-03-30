@@ -33,9 +33,6 @@ export default function AddItem() {
 
     return (
     <>
-		{ errorMsg && (
-				<p className="notification error-message">{errorMsg}</p>
-		)}
     <section className="create-hero">
         <div className="container">
             <h2>Add New Tv</h2>

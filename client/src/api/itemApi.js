@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import request from "../utils/request"
 import useAuth from "../hooks/useAuth";
+import { UserContext } from "../contexts/UserContext";
 
 const baseUrl = `${import.meta.env.VITE_API_URL}/items`;
 
@@ -12,12 +13,12 @@ export const useCreateItem = ()=> {
     }
 
     return {
-        create
+        create, 
     }
 }
 
 export const useEditItem = () => {
-    const { request, errorMessage} = useAuth()
+    const { request} = useAuth()
 
     const edit = (itemId, itemData) => {
         return request.put(`${baseUrl}/${itemId}`, {...itemData, _id: itemId});
@@ -25,7 +26,6 @@ export const useEditItem = () => {
 
     return {
         edit,
-        errorMessage
     }
 }
 
@@ -37,7 +37,7 @@ export const useDeleteItem = ()=> {
     }
 
     return {
-        deleteItem
+        deleteItem, 
     }
 }
 
@@ -52,6 +52,7 @@ export const useOrderItem = () => {
 }
 
 export const useItems = ()=> {
+    const { showErrorMsg } = useContext(UserContext);
     const [ isPending, setIsPending ] = useState(false);
     const [items, setItems] = useState([]);
     useEffect(()=>{
@@ -60,9 +61,13 @@ export const useItems = ()=> {
         .then( result =>{
             setIsPending(false);
             setItems(result);
-        });
+        }).catch(err=>{
+            console.log({itemApiUseItemsErr: err});
+            
+            showErrorMsg(err.message)
+    });
 
-    },[])
+    },[showErrorMsg])
 
     return {
         items,
@@ -71,6 +76,7 @@ export const useItems = ()=> {
 }
 
 export const useItem = (itemId) => {
+    const { showErrorMsg } = useContext(UserContext);
     const [item, setItem ] = useState({});
 
     useEffect(()=> {
@@ -78,8 +84,8 @@ export const useItem = (itemId) => {
         .then(result => {
             // console.log(result);
             setItem(result)
-        })
-    },[itemId]);
+        }).catch(err=> showErrorMsg(err.message))
+    },[itemId, showErrorMsg]);
 
     return {
         item,
@@ -90,6 +96,7 @@ export const useItem = (itemId) => {
 
 
 export const useLatestItems = (size) => {
+    const { showErrorMsg } = useContext(UserContext);
     const [ isPending, setIsPending ] = useState(false);
     const [latestItems, setLatestItems] = useState([]);
 
@@ -102,14 +109,15 @@ export const useLatestItems = (size) => {
         .then(result => {
             setIsPending(false);
             setLatestItems(result);
-        });
+        }).catch(err => showErrorMsg(err.message));
 
-    },[size])
+    },[size,showErrorMsg])
 
     return { latestItems, isPending }
 }
 
 export const useOwnedItems = ()=> {
+    const { showErrorMsg } = useContext(UserContext);
     const { accessToken } = useAuth();
     const [ isPending, setIsPending ] = useState(false);
     const [ownedItems, setOwnedItems] = useState([]);
@@ -127,9 +135,9 @@ export const useOwnedItems = ()=> {
         .then( result =>{
             setIsPending(false);
             setOwnedItems(result);
-        });
+        }).catch(err=> showErrorMsg(err.message));
 
-    },[accessToken])  // TODO fix missing dependency request making endless cycle
+    },[accessToken,showErrorMsg])  // TODO fix missing dependency request making endless cycle
 
     return {
         ownedItems,
@@ -138,6 +146,7 @@ export const useOwnedItems = ()=> {
 }
 
 export const useOrderedItems = ()=> {
+    const { showErrorMsg } = useContext(UserContext);
     const { accessToken} = useAuth();
     const [ isPending, setIsPending ] = useState(false);
     const [orderedItems, setOrderedItems] = useState([]);
@@ -156,9 +165,9 @@ export const useOrderedItems = ()=> {
         .then( result =>{
             setIsPending(false);
             setOrderedItems(result);
-        });
+        }).catch(err => showErrorMsg(err.message));
 
-    },[accessToken])
+    },[accessToken, showErrorMsg])
 
     return {
         orderedItems,
