@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useCreateComment } from "../../api/commentApi";
 import './CommentsCreate.css'
+import { useForm } from "react-hook-form";
 
 export default function CommentsCreate({
     email,
@@ -10,12 +11,16 @@ export default function CommentsCreate({
 }) {
     const { create } = useCreateComment();
     const [pending, setPending] = useState(false);
+    const { register, handleSubmit, formState: { errors },} = useForm({
+        mode: 'onBlur',
+        reValidateMode: 'onBlur',
+    });
 
-    const commentAction = async (formData) => {
-        const comment = formData.get('postText');
+    const commentAction = async (data) => {
+        const { postText} = data;
         try {
             setPending(true);
-            const createdComment = await create( itemId, comment);
+            const createdComment = await create( itemId, postText);
             setPending(false);
             onCreate(createdComment);
         } catch (error) {
@@ -28,22 +33,28 @@ export default function CommentsCreate({
         <div className="answer-comment">
             <p><span>{username}</span> comment:</p>
             <div className="answer">
-                <form  action={commentAction}>
+                <form  action={handleSubmit(commentAction)}>
                     <textarea
                         // className={ hasValidErr ? 'input-error' : ''}
                         name="postText" 
                         id="comment" 
                         cols="20" 
                         rows="5"
+                        {...register('postText',{
+                            required: 'Comment is required!',
+                            minLength: {
+                                value: 10,
+                                message: 'Comment must be at least 10 characters!'
+                            }
+                        })}
                     ></textarea>
+                    { errors.postText && 
                         <div>
                                 <p className="error">
-                                    Comment is required!
-                                </p>
-                                <p className="error">
-                                    Comment must be at least 10 characters!
+                                    {errors.postText.message}
                                 </p>
                         </div>
+                    }
                     <button 
                         disabled={ pending} 
                         className="btn"

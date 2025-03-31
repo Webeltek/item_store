@@ -7,7 +7,7 @@
     border-radius: 0.5rem;
     color: rgb(255, 255, 255);
     font-style: italic;
-    text-decoration: underline;
+    text-decoration: none;
     box-shadow: 0 5px 10px rgb(204, 204, 204);
     background-color: rgba(54, 141, 192, 0.699);
 }
