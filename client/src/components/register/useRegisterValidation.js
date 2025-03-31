@@ -22,7 +22,7 @@ export const useRegisterValidation = (initialErrors = {
             let error = '';
             
             if (!value) {
-                error = `${name} is required!`;
+                error = `${name=== 'rePassword' ? 'repeat password': name} is required!`;
             } else if( 
             (name === 'username' || name === 'password') && value.length < 5){
                 error = `${name} must be at least 5 characters!`  

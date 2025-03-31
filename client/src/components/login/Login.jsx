@@ -13,13 +13,20 @@ export default function Login(){
     const [pending, setPending] = useState();
 
     const loginHandler = async (formData) =>{
-        const data = Object.fromEntries(formData)
+        const data = Object.fromEntries(formData);
+
+        // stop submitting if form untouched
+        const areAllFieldsEmpty = Object.values(data).some( val => val === '');
+        if(areAllFieldsEmpty){
+            return;
+        }
+
         // Validate all fields before submitting
         Object.keys(data).forEach((key) => {
             validateField(key, data[key]);
         });
         
-
+        // stop submitting if errors
         if (Object.values(errors).some((error) => error)) {
             // form is automatically reset since loginHandler is client action
             return;
@@ -33,7 +40,6 @@ export default function Login(){
             userLoginHandler(authData);
             navigate('/items');
         } catch (err) {
-            console.log({loginErr: err});
             
             setPending(false);
         }

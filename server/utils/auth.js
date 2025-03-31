@@ -41,7 +41,11 @@ function auth(redirectUnauthenticated = true) {
                     }
                     res
                         .status(401)
-                        .send({ message: "Invalid token!" });
+                        .send({ message: "Invalid token!" ,
+                            err : {
+                                message: err.message
+                            }
+                        });
                     return;
                 }
                 next(err);

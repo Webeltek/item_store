@@ -31,6 +31,7 @@ const request = async ( method ,url,data,options = {} ) =>{
         const response = await fetch(url, options);
         if(!response.ok){
             const errorData = await response.json();
+            
             throw new Error(errorData.err.message);
         }
         if(response.status == 204){

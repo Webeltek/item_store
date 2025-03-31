@@ -19,16 +19,15 @@ export default function AddItem() {
 			// using react hook form - data parameter contains form values;
 			
 			
-			try {
-				setPending(true);
+		try {
+		setPending(true);
         await create(data);
-				setPending(false);
+		setPending(false);
         navigate('/items');
 				
-			} catch (err) {
-				setPending(false);
-				setErrorMsg(err.message);
-			}
+        } catch (err) {
+            setPending(false);
+        }
     }
 
     return (

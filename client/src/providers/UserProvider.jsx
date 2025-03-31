@@ -2,6 +2,7 @@ import usePersistedState from "../hooks/usePersitedState";
 import { UserContext } from "../contexts/UserContext";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { readErrorMessage } from "../hooks/useAuth";
 
 export default function UserProvider({
     children
@@ -19,7 +20,8 @@ export default function UserProvider({
       }
 
       const showErrorMsg = (errMsg)=> {
-        setErrorMessage(errMsg);
+        const userMessage = readErrorMessage(errMsg);
+        setErrorMessage(userMessage);
       }
 
       useEffect(() => {

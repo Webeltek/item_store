@@ -5,6 +5,7 @@ import { useOrderedItems, useOrderItem, useOwnedItems } from "../../api/itemApi"
 import useAuth from "../../hooks/useAuth";
 import ProfileItem from "./profile-item/ProfileItem";
 import { useEditProfile } from "../../api/authApi";
+import { useForm } from "react-hook-form";
 
 const IMAGES_URL  = import.meta.env.VITE_IMAGES_URL;
 
@@ -14,16 +15,35 @@ export default function Profile() {
     const  { ownedItems , isPending}  = useOwnedItems();
     const { orderedItems } = useOrderedItems();
     const { editProfile} = useEditProfile();
+    const [isSavePending, setIsSavePending] = useState(false);
+    const { register, handleSubmit, formState: { errors },} = useForm({
+                mode: 'onBlur',
+                reValidateMode: 'onBlur'
+            });
 
     const toggleEditMode = () => {
         setEditMode( state=> !state);
     }
 
-    const handleSaveProfile = async (formData) => {
-        const { username, email} = Object.fromEntries(formData);
-        const authData = await editProfile(username, email);
-        userLoginHandler(authData);
-        toggleEditMode();
+    const handleSaveProfile = async (data) => {
+        
+        const { username, email} = data;
+        try {
+            setIsSavePending(true);
+            const authData = await editProfile(username, email);
+            setIsSavePending(false);
+            userLoginHandler(authData);
+            toggleEditMode();
+        } catch (error) {
+            setIsSavePending(false);
+        }
+    }
+
+    function getEmailPref() {
+        const emailPrefixLength = import.meta.env.VITE_EMAIL_PREFIX_LENGTH;
+        const emailPref = emailPrefixLength === null ? 1 : emailPrefixLength;
+        
+        return emailPref;
     }
 
     return (
@@ -49,41 +69,57 @@ export default function Profile() {
                     </>
                 : 
                 <>
-                    <form  action={handleSaveProfile}>
+                    <form  action={handleSubmit(handleSaveProfile)}>
                         <div className="flex-prof">
                             <p>Username: </p>
                             <input 
-                            type="text" name="username" id="username" />
+                            type="text" 
+                            name="username" 
+                            id="username"
+                            {...register('username',{
+                                required: 'Username is required!',
+                                minLength: {
+                                    value: 5,
+                                    message: 'Username must be at least 5 characters!'
+                                }
+                            })} />
                         </div>
+                        { errors.username && 
                             <div>
                                     <p className="error">
-                                        Username is required!
-                                    </p>
-                                    <p className="error">
-                                        Username must be at least 5 characters!
+                                        {errors.username.message}
                                     </p>
                             </div>
+                        }
                         <div className="flex-prof">
                             <p>Email: </p>
                             <input
-                            type="email" name="email" id="email" />
+                            {...register('email',{
+                                required: 'Email is required!',
+                                pattern: { 
+                                    value: RegExp(`[_a-z0-9\\.]{${getEmailPref()},}@[a-z0-9_]+\\.[a-z0-9_]+`),
+                                    message: 'Email is not valid!'
+                                }
+                            })}
+                            type="email" 
+                            name="email" 
+                            id="email" />
                         </div>
+                        { errors.email && 
                             <div>
                                     <p className="error">
-                                        Email is required!
-                                    </p>
-                                    <p className="error">
-                                        Email is not valid!
+                                        {errors.email.message}
                                     </p>
                             </div>
+                        }
                         <div style={ { marginTop : '20px'} }>
                             <button className="cancel-button" onClick={toggleEditMode}>Cancel</button>
                             <button className="save-button" 
-                            // disabled="form.invalid" 
+                            disabled={isSavePending} 
                             style={ {
                                 marginLeft: '50px',
-                                // backgroundColor: form.invalid ? 'grey':'#5cb85c',
-                                // borderColor: form.invalid ? 'grey': '#5cb85c'
+                                backgroundColor: isSavePending ? 'grey':'#5cb85c',
+                                borderColor: isSavePending ? 'grey': '#5cb85c'
                             } }>Save</button>
                         </div>
                     </form>

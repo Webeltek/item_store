@@ -3,11 +3,11 @@ import { NavLink } from 'react-router';
 import './Header.css'
 import { UserContext } from '../../contexts/UserContext';
 import useAuth from '../../hooks/useAuth';
+import ErrorMsg from './ErrorMsg';
 
 export default function Header(){
     const { email, isAuthenticated } = useAuth();
     const { errorMessage } = useContext(UserContext);
-    console.log({headerErrMsg: errorMessage});
     
 
     return (
@@ -59,9 +59,7 @@ export default function Header(){
 
             </div>
         </header>
-        { errorMessage && (
-            <p className="notification error-message">{errorMessage}</p>
-        )}
+        <ErrorMsg errorMsg={errorMessage}/>
         </>
     )
 }

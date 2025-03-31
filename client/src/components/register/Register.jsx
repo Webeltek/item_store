@@ -19,14 +19,23 @@ export default function Register() {
     const registerHandler = async (e)=> {
         e.preventDefault();
         
+        // stop submitting if form untouched
+        const areAllFieldsEmpty = Object.values(values).some( val => val === '');
+        if(areAllFieldsEmpty){
+            return;
+        }
+        
         // Validate all fields before submitting
         Object.keys(values).forEach((key) => {
             validateField(key, values[key]);
         });
-        
+        // stop submitting if errors
         if (Object.values(errors).some((error) => error)) {
+            console.log(errors);
             return;
         }
+        
+        
         
         const { username, email , password , rePassword} = values;
         try {

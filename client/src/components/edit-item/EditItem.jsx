@@ -39,7 +39,6 @@ export default function EditItem() {
             navigate('/items');
         } catch (err) {
             setPending(false);
-            console.log({editItemError: err});
             
         }
     }

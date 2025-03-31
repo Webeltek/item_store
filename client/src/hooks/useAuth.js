@@ -2,23 +2,24 @@ import { useContext, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import request from "../utils/request";
 
-function readErrorMessage(error){
-    if(error.message === 'jwt expired'){
+export function readErrorMessage(message){
+    if(message === 'jwt expired'){
         return "Session expired, please login again!"
-    } else if (error.message === 'invalid token'
-        || error.message === 'blacklisted token'
-        || error.message === 'jwt must be provided'
+    } else if (
+        message === 'invalid token'
+        || message === 'blacklisted token'
+        || message === 'jwt must be provided'
+        || message === 'jwt malformed'
     ){
         return 'Invalid session, please login again!'
     }
-
-    return error.message;
+    
+    return message;
 }
 
 export default function useAuth(){
     const authData = useContext(UserContext);
     
-
     const requestWrapper = async (method, url,data,options = {}) =>{
         // console.log('authData.accessToken', authData.accessToken);
         
@@ -36,9 +37,8 @@ export default function useAuth(){
             const result = await request.baseRequest(method,url, data, authData.accessToken ? authOptions : options);
             return result;
         } catch (error) {
-            const finalMessage = readErrorMessage(error.message);
             
-            authData.showErrorMsg(finalMessage);
+            authData.showErrorMsg(error.message);
             throw error;
         }
     }

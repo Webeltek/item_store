@@ -1,6 +1,6 @@
 header {
-    background: linear-gradient(to right, #58c05d, #48af2e);
-    color: #5c1a0e;
+    background: linear-gradient(to right, #52b69a, #168aad);
+    color: #184e77;
     padding: 1rem 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     position: fixed;
@@ -75,14 +75,14 @@ header {
   
   nav ul li a {
     cursor: pointer;
-    color: #5f0606;
+    color: #0f3450;
     text-decoration: none;
     transition: color 0.3s ease, transform 0.3s ease;
   }
 
   .active-link{
-    background-color: #d8cd33;
-    border-radius: 5px;
+    background-color: #d9ed92;
+    border-radius: 3px;
     padding: 5px 3px;
     text-decoration: none;
     transition: color 0.3s ease, transform 0.3s ease;
@@ -90,7 +90,7 @@ header {
 
   
   nav ul li a:hover {
-    color: rgb(134, 134, 34);
+    color: #99d98c;
     transform: scale(1.1);
   }
 
@@ -98,16 +98,4 @@ header {
     color: #063341;
   }
 
-  .notification{
-    position: fixed;
-    z-index: 2000;
-    right: 8%;
-    top: 16%;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    color: rgb(255, 255, 255);
-    font-style: italic;
-    text-decoration: underline;
-    box-shadow: 0 5px 10px rgb(204, 204, 204);
-    background-color: rgba(54, 141, 192, 0.699);
-}
+  

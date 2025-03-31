@@ -62,7 +62,6 @@ export const useItems = ()=> {
             setIsPending(false);
             setItems(result);
         }).catch(err=>{
-            console.log({itemApiUseItemsErr: err});
             
             showErrorMsg(err.message)
     });

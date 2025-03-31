@@ -26,16 +26,26 @@ export default function ItemDetails() {
         if (!hasConfirm){
             return;
         }
-        await deleteItem(itemId);
-        navigate('/items');
+        try {
+            await deleteItem(itemId);
+            navigate('/items');
+        } catch (error) {
+            console.log(error);
+            
+        }
     }
 
     const itemOrderHandler = async ()=> {
         if(isOrdered){
             return;
         }
-        const orderedItem = await orderItem(itemId);
-        setItem(orderedItem);
+        try {
+            const orderedItem = await orderItem(itemId);
+            setItem(orderedItem);
+        } catch (error) {
+            console.log(error);
+            
+        }
     }
 
     const commentCreateHandler = ( newComment )=>{

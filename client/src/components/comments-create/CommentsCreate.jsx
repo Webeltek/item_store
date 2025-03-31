@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useCreateComment } from "../../api/commentApi";
 import './CommentsCreate.css'
 
@@ -8,13 +9,19 @@ export default function CommentsCreate({
     onCreate
 }) {
     const { create } = useCreateComment();
+    const [pending, setPending] = useState(false);
 
     const commentAction = async (formData) => {
         const comment = formData.get('postText');
+        try {
+            setPending(true);
+            const createdComment = await create( itemId, comment);
+            setPending(false);
+            onCreate(createdComment);
+        } catch (error) {
+            setPending(false);
+        }
 
-        const createdComment = await create( itemId, comment);
-
-        onCreate(createdComment);
     }
 
     return (
@@ -38,10 +45,10 @@ export default function CommentsCreate({
                                 </p>
                         </div>
                     <button 
-                        // disabled={ hasValidErr} 
+                        disabled={ pending} 
                         className="btn"
                         style={ {
-                                //backgroundColor: hasValidErr ? 'grey':'#0073e6'
+                                backgroundColor: pending ? 'grey':'#0073e6'
                             } }
                         >
                         Post
