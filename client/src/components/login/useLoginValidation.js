@@ -19,7 +19,7 @@ export const useLoginValidation = (initialErrors = {
             (name === 'username' || name === 'password') && value.length < 5){
                 error = `${name} must be at least 5 characters!`  
             } else if(
-                (name === 'username' || name === 'password') && !/[a-zA-Z0-9]+/.test(value)
+                (name === 'username' || name === 'password') && !/^[a-zA-Z0-9\s]+$/.test(value)
             ){
                 error = `${name} must contain only latin letters and digits!`
             } else if (
