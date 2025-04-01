@@ -10,6 +10,7 @@ export function readErrorMessage(message){
         || message === 'blacklisted token'
         || message === 'jwt must be provided'
         || message === 'jwt malformed'
+        || message === 'invalid signature'
     ){
         return 'Invalid session, please login again!'
     }

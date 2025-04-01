@@ -1,14 +1,12 @@
-import { useContext, useState } from 'react';
-import { NavLink } from 'react-router';
+import { useContext } from 'react';
+import { NavLink, useNavigate } from 'react-router';
 import './Header.css'
 import { UserContext } from '../../contexts/UserContext';
-import useAuth from '../../hooks/useAuth';
-import ErrorMsg from './ErrorMsg';
+import ErrorMsg from './error-msg/ErrorMsg';
 
 export default function Header(){
-    const { email, isAuthenticated } = useAuth();
+    const { email, isAuthenticated } = useContext(UserContext);
     const { errorMessage } = useContext(UserContext);
-    
 
     return (
         <>
@@ -36,7 +34,7 @@ export default function Header(){
                             isActive ? 'active-link' : ''}>Catalog</NavLink></li>
                         <li><NavLink to="/about" className={( { isActive })=>
                             isActive ? 'active-link' : ''}>About</NavLink></li>
-                        { email ? (
+                        { isAuthenticated ? (
                             <>
                             <li><NavLink to="/profile" className={( { isActive })=>
                                 isActive ? 'active-link' : ''}>Profile</NavLink></li>

@@ -10,7 +10,7 @@ const imagesUrl = import.meta.env.VITE_IMAGES_URL;
 
 export default function ItemDetails() {
     const navigate = useNavigate();
-    const { email, _id: userId, username } = useAuth();
+    const { email, _id: userId, username, isAuthenticated } = useAuth();
     const { itemId } = useParams();
     const { deleteItem } = useDeleteItem();
     const { item, setItem } = useItem(itemId);
@@ -120,7 +120,7 @@ export default function ItemDetails() {
                     )
                 : <p>No comments.</p>    
                 }
-                { email 
+                { isAuthenticated 
                 &&  
                 <CommentsCreate 
                 email={email}
