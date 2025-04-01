@@ -3,6 +3,7 @@ import CommentsCreate from "../comments-create/CommentsCreate";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { useComments } from "../../api/commentApi";
+import { fromIsoDateString } from "../../utils/fromIsoDateString.js";
 import './ItemDetails.css'
 
 const imagesUrl = import.meta.env.VITE_IMAGES_URL;
@@ -66,7 +67,7 @@ export default function ItemDetails() {
         <section className="details-content">
             <div className="container">
                 <div className="product-details">
-                    <p>Created: {item.created_at }</p>
+                    <p>Created: {fromIsoDateString(item.created_at) }</p>
                     <div className="product-image">
                         { item.imageFile &&
                             <img src={`${imagesUrl}/${item.imageFile}`} alt="Phone" />
@@ -103,12 +104,12 @@ export default function ItemDetails() {
                         <section className="header">
                             <p>
                                 <span><strong>{msg.authorId?._id === item.owner?._id ? 'Owner:': ''} </strong></span>
-                                <span>{msg.authorId?.username}</span> posted on <time>{msg.created_at }</time>
+                                <span>{msg.authorId?.username}</span> posted on <time>{fromIsoDateString(msg.created_at) }</time>
                             </p>
                         </section>
                         <div className="comment-main">
                             <div className="userdetails">
-                                <img src="/profile.png" alt="avatar" />
+                                <img src="/profile.jpg" alt="avatar" />
                             </div>
                             <div className="post-content">
                                 <p>{msg.text}</p>

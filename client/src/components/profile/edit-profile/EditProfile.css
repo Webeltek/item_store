@@ -1,10 +1,10 @@
 .flex-prof {
     display: flex;
     flex-wrap: wrap;
-    justify-content: center;
+    justify-content: start;
     gap: 1em;
     padding: 0.4em;
-    line-height: 0.4;
+    line-height: 1.2;
 }
 
 .flex-prof p:first-child {
@@ -24,8 +24,17 @@
 }
 
 .flex-prof input {
-    border-radius: 0.5em;
-    border: 1px solid #ddd
+    width: 25%;
+    margin: 0.4em 0;
+    margin-right: calc(0.4em + 30%);
+    margin-left: 0.4em;
+    outline: none;
+    border-radius: 0.3em;
+    border: 2px solid #999
+}
+
+.flex-prof input:focus{
+    border-color: orange;
 }
 
 .profile-hero {
@@ -52,9 +61,64 @@
     font-size: 1.5rem;
 }
 
+.edit-button {
+    background: #0073e6;
+    color: #fff;
+    padding: 10px 20px;
+    margin-top: 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    border-color: #0073e6;
+    font-size: 1em;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.edit-button:hover {
+    cursor: pointer;
+    background: #005bb5;
+    transform: translateY(-5px);
+}
+
+.cancel-button {
+    background: #d9534f;
+    color: #fff;
+    padding: 10px 20px;
+    margin-top: 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    border-color: #d9534f;
+    font-size: 1em;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.cancel-button:hover {
+    cursor: pointer;
+    background: #942d29;
+    transform: translateY(-5px);
+}
+
+.save-button {
+    background: #5cb85c;
+    color: #fff;
+    padding: 10px 20px;
+    margin-top: 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    border-color: #5cb85c;
+    font-size: 1em;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.save-button:hover {
+    cursor: pointer;
+    background: #0c460c;
+    transform: translateY(-5px);
+}
+
 /* error */
-p.error {
-    text-align: center;
+p.edit-prof-error {
+    margin-left: calc(35% + 2.6em + 2px);
+    text-align: left;
     border-radius: 0.5em;
     color: red!important;
     font-size: 1em!important;

@@ -29,6 +29,7 @@ export default function Register() {
         Object.keys(values).forEach((key) => {
             validateField(key, values[key]);
         });
+        
         // stop submitting if errors
         if (Object.values(errors).some((error) => error)) {
             console.log(errors);
@@ -59,11 +60,11 @@ export default function Register() {
     
     const changeHandler = (e) =>{
         //clear errors
-        setErrors({ 
-            username: '', 
-            email: '', 
-            password: '', 
-            rePassword: ''});
+        // setErrors({ 
+        //     username: '', 
+        //     email: '', 
+        //     password: '', 
+        //     rePassword: ''});
         setValues( state => ( {...state, [e.target.name] : e.target.value}))
     }
         

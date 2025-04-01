@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { readErrorMessage } from "../hooks/useAuth";
 
+
+
 export default function UserProvider({
     children
 }){
@@ -11,18 +13,18 @@ export default function UserProvider({
     const [ errorMessage, setErrorMessage] = useState('');
     const location = useLocation();
     
-      const userLoginHandler = (resultData) => {
-        setAuthData(resultData);
-      }
-    
-      const userLogoutHandler = () =>{
-        setAuthData({})
-      }
+    const userLoginHandler = (resultData) => {
+      setAuthData(resultData);
+    }
+  
+    const userLogoutHandler = () =>{
+      setAuthData({})
+    }
 
-      const showErrorMsg = (errMsg)=> {
-        const userMessage = readErrorMessage(errMsg);
-        setErrorMessage(userMessage);
-      }
+    const showErrorMsg = (errMsg)=> {
+      const userMessage = readErrorMessage(errMsg);
+      setErrorMessage(userMessage);
+    }
 
       useEffect(() => {
         return () => {

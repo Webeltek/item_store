@@ -53,7 +53,7 @@ export default function EditProfile() {
                             <p>Email: </p>
                             <p>{email}</p>
                         </div>
-                        <div style={ { marginTop: '0px' }}>
+                        <div>
                             <button className="edit-button" onClick={toggleEditMode}>Edit</button>
                         </div>
                     </>
@@ -62,7 +62,8 @@ export default function EditProfile() {
                     <form  action={handleSubmit(handleSaveProfile)}>
                         <div className="flex-prof">
                             <p>Username: </p>
-                            <input 
+                            <input
+                            className={ errors.username ? 'input-error': ''} 
                             type="text" 
                             name="username" 
                             id="username"
@@ -77,7 +78,7 @@ export default function EditProfile() {
                         </div>
                         { errors.username && 
                             <div>
-                                    <p className="error">
+                                    <p className="edit-prof-error">
                                         {errors.username.message}
                                     </p>
                             </div>
@@ -85,6 +86,7 @@ export default function EditProfile() {
                         <div className="flex-prof">
                             <p>Email: </p>
                             <input
+                            className={ errors.email ? 'input-error': ''}
                             {...register('email',{
                                 required: 'Email is required!',
                                 pattern: { 
@@ -99,12 +101,12 @@ export default function EditProfile() {
                         </div>
                         { errors.email && 
                             <div>
-                                    <p className="error">
+                                    <p className="edit-prof-error">
                                         {errors.email.message}
                                     </p>
                             </div>
                         }
-                        <div style={ { marginTop : '20px'} }>
+                        <div>
                             <button className="cancel-button" onClick={toggleEditMode}>Cancel</button>
                             <button className="save-button" 
                             disabled={isSavePending} 
