@@ -47,14 +47,12 @@
 8. TV Details:
     - is accessible after View Details button click ( from Home, Catalog and Profile views). For logged in user it shows the order button if the current user is not the owner of the tv or edit and delete buttons if the
     current user is owner of the tv
-    - contains section underneath with user comments for this tv and for logged in textarea to post comment from the current user for this tv.
+    - contains section underneath with user comments for this tv and for logged in user - textarea to post comment from the current user for this tv.
 9. Edit Tv
     - edit button click redirects to the edit tv view
     - contains form with the required fields: model, screen size, price, image link
     and description. 
-    - The image file field is not required and can upload image 
-    from the local computer ( only jpeg and png files less than 5mb are accepted)
-    - after submit phone data is updated and the application redirects to the catalog view
+    - after submit tv data is updated and the application redirects to the catalog view
 
 * live deployment on https://item-store-wlyi.onrender.com/
 

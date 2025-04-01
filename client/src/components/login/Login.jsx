@@ -61,6 +61,7 @@ export default function Login(){
                     <div className="form-group">
                         <label htmlFor="email">Email:</label>
                         <input
+                        className={ errors.email ? 'input-error': ''}
                         type="email" 
                         id="email" 
                         name="email"
@@ -75,6 +76,7 @@ export default function Login(){
                     <div className="form-group">
                         <label htmlFor="password">Password:</label>
                         <input
+                        className={ errors.password ? 'input-error': ''}
                         type="password" 
                         id="password" 
                         name="password"

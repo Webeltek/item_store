@@ -85,7 +85,8 @@ export default function Register() {
                 <form  onSubmit={registerHandler}>
                     <div className="form-group">
                         <label htmlFor="username">Username:</label>
-                        <input 
+                        <input
+                         className={ errors.username ? 'input-error': ''} 
                          type="text" 
                          id="username" 
                          name="username" 
@@ -102,6 +103,7 @@ export default function Register() {
                     <div className="form-group">
                         <label htmlFor="email">Email:</label>
                         <input
+                        className={ errors.email ? 'input-error': ''}
                         type="email" 
                         id="email" 
                         name="email" 
@@ -119,6 +121,7 @@ export default function Register() {
                         <div className="form-group">
                             <label htmlFor="password">Password:</label>
                             <input
+                            className={ errors.password ? 'input-error': ''}
                             type="password" 
                             id="password" 
                             name="password" 
@@ -134,6 +137,7 @@ export default function Register() {
                         <div className="form-group">
                             <label htmlFor="confirm-password">Confirm Password:</label>
                             <input
+                            className={ errors.rePassword ? 'input-error': ''}
                             type="password" 
                             id="confirm-password" 
                             name="rePassword" 
