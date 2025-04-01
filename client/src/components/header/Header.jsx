@@ -3,9 +3,10 @@ import { NavLink, useNavigate } from 'react-router';
 import './Header.css'
 import { UserContext } from '../../contexts/UserContext';
 import ErrorMsg from './error-msg/ErrorMsg';
+import useAuth from '../../hooks/useAuth';
 
 export default function Header(){
-    const { email, isAuthenticated } = useContext(UserContext);
+    const { email, isAuthenticated } = useAuth();
     const { errorMessage } = useContext(UserContext);
 
     return (

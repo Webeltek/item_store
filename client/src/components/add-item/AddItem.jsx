@@ -147,30 +147,30 @@ export default function AddItem() {
                     name="description" 
                     id="postText" 
                     rows="5"
-										{...register('description',{
-											required: 'Description is required!',
-											minLength : {
-												value: 10,
-												message: 'Description must be at least 10 characters!'
-											}
-										})} 
+                    {...register('description',{
+                        required: 'Description is required!',
+                        minLength : {
+                            value: 10,
+                            message: 'Description must be at least 10 characters!'
+                        }
+                    })} 
                     ></textarea>
-										{ errors.description && 
-										<div>
-														<p className="error">
-																{ errors.description.message}
-														</p>
-										</div>
-										}
+                    { errors.description && 
+                    <div>
+                                    <p className="error">
+                                            { errors.description.message}
+                                    </p>
+                    </div>
+                    }
                         
                 </div>
                 
                 <button  
-									className="btn"
-									disabled={pending}
-									style={ {backgroundColor: pending ? 'grey':'#0073e6' }}
-									>Create Product
-								</button>
+                    className="btn"
+                    disabled={pending}
+                    style={ {backgroundColor: pending ? 'grey':'#0073e6' }}
+                    >Create Product
+                </button>
             </form>
         </div>
     </section>    
