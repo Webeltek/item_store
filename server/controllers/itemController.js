@@ -254,8 +254,11 @@ function deleteItem(req, res, next) {
                 } else {
                     console.log('Item without image file deleted successfuly!');
                 }
-
-                res.status(200).json(deletedOne)
+                //returning updated collection instead of deleted item
+                itemModel.find().then(items => {
+                    res.status(200).json(items);
+                })
+                // res.status(200).json(deletedOne)
             } else {
                 res.status(401).json({ message: `Not allowed!`,
                     err: {

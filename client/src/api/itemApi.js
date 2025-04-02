@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import request from "../utils/request"
 import useAuth from "../hooks/useAuth";
 import { UserContext } from "../contexts/UserContext";
+import { useLocation } from "react-router-dom";
 
 const baseUrl = `${import.meta.env.VITE_API_URL}/items`;
 
@@ -33,7 +34,7 @@ export const useDeleteItem = ()=> {
     const { request } = useAuth();
 
     const deleteItem = (itemId) => {
-        request.delete(`${baseUrl}/${itemId}`)
+        return request.delete(`${baseUrl}/${itemId}`)
     }
 
     return {
@@ -54,19 +55,25 @@ export const useOrderItem = () => {
 export const useItems = ()=> {
     const { showErrorMsg } = useContext(UserContext);
     const [ isPending, setIsPending ] = useState(false);
-    const [items, setItems] = useState([]);
+    const location = useLocation();
+    //take items from location state if navigating from ItemDetails after delete item
+    const [items, setItems] = useState(location.state?.items || []);
+    
     useEffect(()=>{
-        setIsPending(true);
-        request.get(`${baseUrl}`)
-        .then( result =>{
-            setIsPending(false);
-            setItems(result);
-        }).catch(err=>{
-            
-            showErrorMsg(err.message)
-    });
+        if(!location.state?.items){
+        
+            setIsPending(true);
+            request.get(`${baseUrl}`)
+            .then( result =>{
+                setIsPending(false);
+                setItems(result);
+            }).catch(err=>{
+                
+                showErrorMsg(err.message)
+            });
+        }
 
-    },[showErrorMsg])
+    },[showErrorMsg,location.state?.items])
 
     return {
         items,

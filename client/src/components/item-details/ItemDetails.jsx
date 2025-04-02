@@ -28,8 +28,9 @@ export default function ItemDetails() {
             return;
         }
         try {
-            await deleteItem(itemId);
-            navigate('/items');
+            const updatedItems = await deleteItem(itemId);
+            
+            navigate('/items',{ state: {items: updatedItems} });
         } catch (error) {
             console.log(error);
             
