@@ -122,28 +122,60 @@ export const useLatestItems = (size) => {
     return { latestItems, isPending }
 }
 
-export const useOwnedItems = ()=> {
+export const useOrderedOwnedItems = ()=>{
     const { showErrorMsg } = useContext(UserContext);
-    const { accessToken } = useAuth();
+    const { request, accessToken, ...rest } = useAuth();
     const [ isPending, setIsPending ] = useState(false);
     const [ownedItems, setOwnedItems] = useState([]);
+    const [orderedItems, setOrderedItems] = useState([]);
+
+    console.log({useOrdOwndItmsRest: rest, accessToken});
+    useEffect(()=>{
+        setIsPending(true);
+
+        
+        if(!accessToken){
+            return;
+        }
+
+        Promise.all([
+            request.get(`${baseUrl}/owned`,null),
+            request.get(`${baseUrl}/ordered`,null)])
+        .then(([ownedResult,orderedResult]) =>{
+            setIsPending(false);
+            setOwnedItems(ownedResult);
+            setOrderedItems(orderedResult);
+        }).catch(err=> showErrorMsg(err.message));
+
+    },[accessToken,showErrorMsg, request])  // TODO fix missing dependency request making endless cycle
+
+    return {
+        ownedItems,
+        orderedItems,
+        isPending
+    }
+}
+
+export const useOwnedItems = ()=> {
+    const { showErrorMsg } = useContext(UserContext);
+    const { accessToken, request } = useAuth();
+    const [ isPending, setIsPending ] = useState(false);
+    const [ownedItems, setOwnedItems] = useState([]);
+
     useEffect(()=>{
         setIsPending(true);
         if(!accessToken){
             return;
         }
 
-        const options = { 
-            headers: { 'X-Authorization': accessToken}
-        };
 
-        request.get(`${baseUrl}/owned`,null,options)
+        request.get(`${baseUrl}/owned`,null)
         .then( result =>{
             setIsPending(false);
             setOwnedItems(result);
         }).catch(err=> showErrorMsg(err.message));
 
-    },[accessToken,showErrorMsg])  // TODO fix missing dependency request making endless cycle
+    },[accessToken,showErrorMsg, request])  // TODO fix missing dependency request making endless cycle
 
     return {
         ownedItems,
@@ -153,7 +185,7 @@ export const useOwnedItems = ()=> {
 
 export const useOrderedItems = ()=> {
     const { showErrorMsg } = useContext(UserContext);
-    const { accessToken} = useAuth();
+    const { accessToken , request} = useAuth();
     const [ isPending, setIsPending ] = useState(false);
     const [orderedItems, setOrderedItems] = useState([]);
     useEffect(()=>{
@@ -162,18 +194,14 @@ export const useOrderedItems = ()=> {
             return;
         }
 
-        const options = { 
-            headers: { 'X-Authorization': accessToken}
-        };
 
-
-        request.get(`${baseUrl}/ordered`,null,options)
+        request.get(`${baseUrl}/ordered`,null)
         .then( result =>{
             setIsPending(false);
             setOrderedItems(result);
         }).catch(err => showErrorMsg(err.message));
 
-    },[accessToken, showErrorMsg])
+    },[accessToken, showErrorMsg, request])
 
     return {
         orderedItems,
