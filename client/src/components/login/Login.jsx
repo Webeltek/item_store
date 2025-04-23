@@ -38,6 +38,8 @@ export default function Login(){
             // console.log(authData);
             setPending(false);
             userLoginHandler(authData);
+            //navigate to previous route after login
+            // navigate(-1);
             navigate('/items');
         } catch (err) {
             
