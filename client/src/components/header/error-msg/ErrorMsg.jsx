@@ -1,38 +1,67 @@
-import { useContext } from 'react';
+import { useCallback, useContext, useEffect } from 'react';
 import './ErrorMsg.css'
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../../contexts/UserContext';
-export default function ErrorMsg({
-    errorMsg,
-}) {
-    const navigate = useNavigate();
-    const { userLogoutHandler } = useContext(UserContext);
+import { toast, ToastContainer, Zoom} from 'react-toastify';
 
-    function isSessionInvalid(){
-        const isInValidSession = errorMsg === "Session expired, please login again!"
-        || errorMsg === "Invalid session, please login again!";
+export default function ErrorMsg() {
+    const navigate = useNavigate();
+    const { userLogoutHandler, errorMessage, showErrorMsg } = useContext(UserContext);
+
+    const isSessionInvalid = useCallback( ()=>{
+        const isInValidSession = errorMessage === "Session expired, please login again!"
+        || errorMessage === "Invalid session, please login again!";
         if(isInValidSession){
             return true;
         }
         return false;
-    }
+    },[ errorMessage] )
     
-    const loginHandler = ()=> {
+    const loginHandler = useCallback( ()=> {
         //call userLogoutHandler from UserProvider to clear authData from state and localStorage to enable GuestGuard to allow navigate to 'login' route
         userLogoutHandler();
         navigate('/login');
-    }
+    } ,[navigate, userLogoutHandler])
+
+    useEffect(()=>{
+        if( errorMessage){
+            toast( (toastProps)=> {
+                return (
+                    <ErrorContent 
+                        errorMsg={errorMessage} 
+                        sessionInValid={isSessionInvalid()} 
+                        handler={loginHandler}
+                    />
+                )
+            },{
+                autoClose: false,
+                transition: Zoom,
+                position: 'bottom-right'
+            });
+            //reset errorMessage after showing
+            showErrorMsg('');
+        }
+    },[errorMessage, isSessionInvalid, loginHandler, showErrorMsg])
+    
     return (
-        <>
-        { errorMsg && (
-            <p className="notification error-message">
-                <span>{errorMsg}</span>
-                { isSessionInvalid() && 
-                <button className="error-msg-btn" onClick={loginHandler}>Login
-                    </button>
-                }
-            </p>
-        )}
-        </>
+        <ToastContainer />
     );
+}
+
+function ErrorContent({
+    errorMsg,
+    sessionInValid,
+    handler
+}) {
+
+    return (
+        
+    <p className="">
+        <span>{errorMsg}</span>
+        { sessionInValid && 
+        <button className="error-msg-btn" onClick={handler}>Login
+        </button>
+        }
+    </p>
+    )
 }

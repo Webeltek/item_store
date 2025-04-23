@@ -58,7 +58,7 @@ export default function Header(){
 
             </div>
         </header>
-        <ErrorMsg errorMsg={errorMessage}/>
+        <ErrorMsg />
         </>
     )
 }
