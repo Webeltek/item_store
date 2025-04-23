@@ -1,3 +1,4 @@
+# build docker public image, push to docker hub, deploy to google cloud run
 name: Deploy to Google Cloud Run from Docker Hub
 
 on:
