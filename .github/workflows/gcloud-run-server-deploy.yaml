@@ -47,4 +47,4 @@ jobs:
             --min-instances 0
             --max-instances 1
             --port 3100
-            --allow-unauthenticated true
+            --allow-unauthenticated
