@@ -36,7 +36,8 @@ export default function ErrorMsg() {
             },{
                 autoClose: false,
                 transition: Zoom,
-                position: 'bottom-right'
+                position: 'bottom-right',
+                type: 'warning'
             });
             //reset errorMessage after showing
             showErrorMsg('');
