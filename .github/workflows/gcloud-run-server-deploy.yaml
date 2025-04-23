@@ -44,7 +44,7 @@ jobs:
           env_vars: |
             DB_URL_CREDENTIALS=${{ secrets.DB_URL_CREDENTIALS }}
           flags: >
-            --min-instances: 0
-            --max-instances: 1
-            --port: 3100
-            --allow-unauthenticated: true
+            --min-instances 0
+            --max-instances 1
+            --port 3100
+            --allow-unauthenticated true
