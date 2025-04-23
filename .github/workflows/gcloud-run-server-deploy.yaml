@@ -3,7 +3,7 @@ name: Deploy to Google Cloud Run from Docker Hub
 on:
   push:
     branches:
-      - dev_branch  # or any branch you want
+      - dev-branch  # or any branch you want
 
 jobs:
   deploy:
