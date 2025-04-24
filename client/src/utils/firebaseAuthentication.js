@@ -6,7 +6,7 @@ import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyBjkHcN--8a84vsRAGqGeHy4305-Aa62AQ",
+  apiKey: import.meta.env.VITE_FIREBASE_WEB_API_KEY,
   authDomain: "tv-store-2025.firebaseapp.com",
   projectId: "tv-store-2025",
   storageBucket: "tv-store-2025.firebasestorage.app",

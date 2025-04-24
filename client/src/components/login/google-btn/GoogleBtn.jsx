@@ -1,14 +1,13 @@
 import { toast, Zoom} from "react-toastify";
 
-import { signOut, signInWithRedirect , getRedirectResult, onAuthStateChanged} from "firebase/auth";
+import { signOut, signInWithPopup , getRedirectResult, onAuthStateChanged} from "firebase/auth";
 import firebase from "../../../utils/firebaseAuthentication";
-import { useEffect } from "react";
 
 export default function GoogleBtn() {
-
     const handleSignIn = async () => {
         try {
-          await signInWithRedirect(firebase.auth, firebase.provider);
+          const result = await signInWithPopup(firebase.auth, firebase.provider);
+          console.log('User:', result.user);
         } catch (error) {
           toast("Google sign-in error", {
             autoClose: false,
@@ -18,29 +17,11 @@ export default function GoogleBtn() {
         } )  
           console.error("Google sign-in error", error);
         }
-      };
-
-    useEffect(()=>{
-        getRedirectResult(firebase.auth)
-        .then((result) => {
-            const user = result;
-            console.log("getRedirectResult Signed in user:", user);
-            })
-            .catch((error) => {
-            console.error(error);
-        });
-
-        const unsubscribe = onAuthStateChanged(firebase.auth, (user) => {
-            if (user) {
-              console.log("onAuthStateChanged Signed in user:", user);
-            }
-          });
-         return ()=> unsubscribe(); 
-    },[]);  
+      };  
 
     const handleSignOut = ()=> {
          signOut(firebase.auth)
-        .then(() => {
+        .then((result) => {
             console.log("Signed out successfully");
         })
         .catch((error) => {
