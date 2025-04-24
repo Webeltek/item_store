@@ -45,7 +45,6 @@ jobs:
           image: docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/repo24:item_store
           env_vars: |
             DB_URL_CREDENTIALS=${{ secrets.DB_URL_CREDENTIALS }}
-            GCP_SERVICE_ACCOUNT_KEY=projects/tv-store-2025/secrets/gcp-service-account-key/versions/latest
           secrets: |
             GCP_SERVICE_ACCOUNT_KEY=gcp-service-account-key:latest
           flags: >
