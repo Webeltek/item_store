@@ -31,6 +31,27 @@ export const useLogin = () => {
     return { login }
 }
 
+export const useGoogleLogin = ()=>{
+    const { showErrorMsg, userLoginHandler } = useContext(UserContext);
+    const googleLogin = async (idToken)=>{
+        try {
+            const result = await request.post(
+                `${baseUrl}/verify_gtoken`, 
+                { idToken }
+            );
+            return result;
+        } catch (error) {
+            showErrorMsg(error.message);
+            throw error;
+        }
+    }
+
+    return {
+        googleLogin,
+        userLoginHandler
+    }
+}
+
 export const useRegister = () => {
     const { showErrorMsg } = useContext(UserContext);
     const register = async (username, email, password) =>{

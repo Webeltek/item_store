@@ -1,6 +1,6 @@
 import usePersistedState from "../hooks/usePersitedState";
 import { UserContext } from "../contexts/UserContext";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { readErrorMessage } from "../hooks/useAuth";
 
@@ -21,16 +21,16 @@ export default function UserProvider({
       setAuthData({})
     }
 
-    const showErrorMsg = (errMsg)=> {
+    const showErrorMsg = useCallback((errMsg)=> {
       const userMessage = readErrorMessage(errMsg);
       setErrorMessage(userMessage);
-    }
+    },[])
 
-      useEffect(() => {
-        return () => {
-          showErrorMsg(''); // clear error msg when navigate away - on unmount
-        };
-      }, [location.pathname]); // Runs when pathname changes
+    useEffect(() => {
+      return () => {
+        showErrorMsg(''); // clear error msg when navigate away - on unmount
+      };
+    }, [location.pathname, showErrorMsg]); // Runs when pathname changes
 
 
     return (

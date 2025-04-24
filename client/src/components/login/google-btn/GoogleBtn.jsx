@@ -2,13 +2,33 @@ import { toast, Zoom} from "react-toastify";
 
 import { signOut, signInWithPopup , getRedirectResult, onAuthStateChanged} from "firebase/auth";
 import firebase from "../../../utils/firebaseAuthentication";
+import { useGoogleLogin } from "../../../api/authApi";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function GoogleBtn() {
+    const { googleLogin, userLoginHandler } = useGoogleLogin();
+    const [pending, setPending] = useState(false);
+    let navigate = useNavigate();
+
+    console.log(pending);
+    
+
     const handleSignIn = async () => {
         try {
           const result = await signInWithPopup(firebase.auth, firebase.provider);
           console.log('User:', result.user);
-        } catch (error) {
+          const idToken = await result.user.getIdToken();
+          setPending(true);
+          const authData = await googleLogin(idToken);
+          setPending(false);
+          userLoginHandler(authData);
+          //navigate to previous route after login
+          // navigate(-1);
+          navigate('/items');
+        
+    } catch (error) {
+        setPending(false);
           toast("Google sign-in error", {
             autoClose: false,
             transition: Zoom,
@@ -19,33 +39,23 @@ export default function GoogleBtn() {
         }
       };  
 
-    // sign out testing btn  
-    const handleSignOut = ()=> {
-         signOut(firebase.auth)
-        .then((result) => {
-            console.log("Signed out successfully");
-        })
-        .catch((error) => {
-            console.error("Sign out error:", error);
-        });
-    }
-
     return (
         <>
-        <button onClick={handleSignOut}>SignOut</button>
         <button
             onClick={handleSignIn}
+            disabled={pending}
             style={{
-                width: "50%",
+                width: "60%",
                 margin: "0.3em auto",
                 display: "flex",
                 alignItems: "center",
+                justifyContent: "center",
                 padding: "10px 24px",
                 borderRadius: "4px",
                 border: "1px solid #dadce0",
-                backgroundColor: "#fff",
+                backgroundColor: `${pending} ? 'gray' : '#fff'`,
                 color: "#3c4043",
-                fontSize: "14px",
+                fontSize: "12px",
                 fontWeight: 500,
                 fontFamily: "Roboto, sans-serif",
                 cursor: "pointer",

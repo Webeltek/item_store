@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect, useRef } from 'react';
 import './ErrorMsg.css'
 import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../../../contexts/UserContext';
@@ -23,22 +23,27 @@ export default function ErrorMsg() {
         navigate('/login');
     } ,[navigate, userLogoutHandler])
 
+    const toastId = useRef(null);
+
     useEffect(()=>{
         if( errorMessage){
-            toast( (toastProps)=> {
-                return (
-                    <ErrorContent 
-                        errorMsg={errorMessage} 
-                        sessionInValid={isSessionInvalid()} 
-                        handler={loginHandler}
-                    />
-                )
-            },{
-                autoClose: false,
-                transition: Zoom,
-                position: 'bottom-right',
-                type: 'warning'
-            });
+            if(!toast.isActive(toastId.current)){
+
+                toastId.current = toast((toastProps)=>{
+                    return (
+                        <ErrorContent 
+                            errorMsg={errorMessage} 
+                            sessionInValid={isSessionInvalid()} 
+                            handler={loginHandler}
+                        />
+                    )
+                },{
+                    autoClose: false,
+                    transition: Zoom,
+                    position: 'bottom-right',
+                    type: 'warning'
+                });
+            }
             //reset errorMessage after showing
             showErrorMsg('');
         }

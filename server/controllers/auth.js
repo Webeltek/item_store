@@ -3,6 +3,8 @@ const {
     tokenBlacklistModel
 } = require('../models');
 
+const firebaseAdmin = require('firebase-admin');
+
 const utils = require('../utils');
 const { authCookieName } = require('../app-config');
 
@@ -10,6 +12,41 @@ const bsonToJson = (data) => { return JSON.parse(JSON.stringify(data)) };
 const removePassword = (data) => {
     const { password, __v, ...userData } = data;
     return userData
+}
+
+function verifyGtoken(req, res, next){
+    const { idToken } = req.body; 
+    if(!idToken) return res.status(400).json({
+        message: 'Invalid token',
+        err: {
+            message: 'Invalid token'
+        }
+    });
+
+    firebaseAdmin.auth().verifyIdToken(idToken)
+    .then( decodedToken => {
+        const { uid, email, name } = decodedToken;
+        userModel.findOne({ email} )
+            .then( result => {
+                if(result === null){
+                    userModel.create({ username : name, email: email, password: uid })
+                        .then( createdUser => {
+                            createdUser = bsonToJson(createdUser);
+                            createdUser = removePassword(createdUser);
+                            const token = utils.jwt.createToken({ id: createdUser._id });
+                            res.status(200)
+                            .send({...createdUser, accessToken: token}); 
+                        }).catch(next); 
+                } else {
+                    foundUser = result
+                    foundUser = bsonToJson(foundUser);
+                    foundUser = removePassword(foundUser);
+                    const token = utils.jwt.createToken({ id: foundUser._id });
+                            res.status(200)
+                            .send({...foundUser, accessToken: token}); 
+                }
+            }).catch(next)
+    }).catch(next)
 }
 
 function register(req, res, next) {
@@ -123,6 +160,7 @@ function editProfileInfo(req, res, next) {
 
 module.exports = {
     login,
+    verifyGtoken,
     register,
     logout,
     getProfileInfo,
