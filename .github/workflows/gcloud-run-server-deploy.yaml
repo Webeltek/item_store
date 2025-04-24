@@ -52,3 +52,4 @@ jobs:
             --max-instances 1
             --port 3100
             --allow-unauthenticated
+            --verbosity=debug
