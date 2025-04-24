@@ -19,6 +19,7 @@ export default function GoogleBtn() {
         }
       };  
 
+    // sign out testing btn  
     const handleSignOut = ()=> {
          signOut(firebase.auth)
         .then((result) => {
