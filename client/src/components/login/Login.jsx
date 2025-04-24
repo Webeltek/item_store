@@ -4,6 +4,8 @@ import './Login.css'
 import { useLogin } from "../../api/authApi";
 import { UserContext } from "../../contexts/UserContext";
 import { useLoginValidation } from "./useLoginValidation";
+import GoogleBtn from "./google-btn/GoogleBtn";
+
 
 export default function Login(){
     const { userLoginHandler } = useContext(UserContext);
@@ -95,6 +97,7 @@ export default function Login(){
                         style={ {backgroundColor: pending ? 'grey':'#0073e6' }}
                         >Login
                     </button>
+                    <GoogleBtn />
                     <p>Don&apos;t have an account? <Link to="/register">Register</Link></p>
                 </form>
             </div>
