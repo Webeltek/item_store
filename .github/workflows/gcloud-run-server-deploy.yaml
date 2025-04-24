@@ -5,8 +5,8 @@ on:
   push:
     branches:
       - dev-branch  # or any branch you want
-    paths: 
-      - 'server/**'  
+    # paths: 
+    #   - 'server/**'  
 
 jobs:
   deploy:
