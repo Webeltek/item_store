@@ -4,6 +4,7 @@ ENV PORT=3100
 ENV NODE_ENV="production"
 ENV ORIGIN_RENDER='https://item-store-wlyi.onrender.com'
 ENV ORIGIN_FIREBASE='https://tv-store-2025.web.app'
+ENV ORIGIN_FIREBASE2='https://tv-store-2025.firebaseapp.com'
 
 WORKDIR /usr/src/app
 

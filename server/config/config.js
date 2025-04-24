@@ -17,6 +17,7 @@ const config = {
         origin: [
             process.env.ORIGIN_RENDER,
             process.env.ORIGIN_FIREBASE,
+            process.env.ORIGIN_FIREBASE2,
             'http://localhost:4173', 
             'http://localhost:5173',
             'http://localhost:4173']
