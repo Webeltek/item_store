@@ -23,7 +23,7 @@ const config = {
             'http://localhost:4173', 
             'http://localhost:5173',
             'http://localhost:4173'],
-        serviceAccount: JSON.parse(process.env.GCP_SERVICE_ACCOUNT_KEY)    
+        serviceAccount: JSON.parse(process.env.GCP_SERVICE_ACCOUNT_KEY || '{}')    
     } : ''
 };
 
