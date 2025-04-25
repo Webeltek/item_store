@@ -3,7 +3,7 @@ const env = process.env.NODE_ENV || 'development';
 //included CORS origins for running locally with remote backend
 // when running frontend with npm run preview it runs on none default port 4173    
 const config = {
-    development: {
+    development: env === 'development' ? {
         port: process.env.PORT || 3100,
         dbURL: 'mongodb://127.0.0.1:27017/itemstore',
         origin: [
@@ -12,8 +12,8 @@ const config = {
             'http://localhost:5173'
         ],
         serviceAccount: require('../tv-store-2025-serv-acc-key.json')
-    },
-    production: {
+    } : '',
+    production: env === 'production' ?  {
         port: process.env.PORT || 3100,
         dbURL: process.env.DB_URL_CREDENTIALS,
         origin: [
@@ -23,8 +23,8 @@ const config = {
             'http://localhost:4173', 
             'http://localhost:5173',
             'http://localhost:4173'],
-        serviceAccount: JSON.parse(process.env.GCP_SERVICE_ACCOUNT_KEY || '{}')    
-    }
+        serviceAccount: JSON.parse(process.env.GCP_SERVICE_ACCOUNT_KEY)    
+    } : ''
 };
 
 module.exports = config[env];

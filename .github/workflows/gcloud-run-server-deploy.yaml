@@ -45,8 +45,7 @@ jobs:
           image: docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/repo24:item_store
           env_vars: |
             DB_URL_CREDENTIALS=${{ secrets.DB_URL_CREDENTIALS }}
-          secrets: |
-            GCP_SERVICE_ACCOUNT_KEY=gcp-service-account-key:latest
+            GCP_SERVICE_ACCOUNT_KEY=${{ secrets.GCP_SERVICE_ACCOUNT_KEY }}
           flags: >
             --min-instances 0
             --max-instances 1
