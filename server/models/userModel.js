@@ -10,6 +10,9 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    isFirebaseUser: {
+        type: Boolean
+    },
     username: {
         type: String,
         required: true,

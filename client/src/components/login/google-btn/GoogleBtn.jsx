@@ -1,9 +1,9 @@
 import { toast, Zoom} from "react-toastify";
 
-import { signOut, signInWithPopup , getRedirectResult, onAuthStateChanged} from "firebase/auth";
+import { signOut, signInWithPopup , getRedirectResult, onAuthStateChanged, signInWithRedirect} from "firebase/auth";
 import firebase from "../../../utils/firebaseAuthentication";
 import { useGoogleLogin } from "../../../api/authApi";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function GoogleBtn() {
@@ -16,28 +16,28 @@ export default function GoogleBtn() {
 
     const handleSignIn = async () => {
         try {
-          const result = await signInWithPopup(firebase.auth, firebase.provider);
-          console.log('User:', result.user);
-          const idToken = await result.user.getIdToken();
-          setPending(true);
-          const authData = await googleLogin(idToken);
-          setPending(false);
-          userLoginHandler(authData);
-          //navigate to previous route after login
-          // navigate(-1);
-          navigate('/items');
+            setPending(true);
+            const result = await signInWithPopup(firebase.auth, firebase.provider);
+            console.log('User:', result.user);
+            const idToken = await result.user.getIdToken();
+            const authData = await googleLogin(idToken);
+            setPending(false);
+            userLoginHandler(authData);
+            navigate('/items');
         
-    } catch (error) {
-        setPending(false);
-          toast("Google sign-in error", {
-            autoClose: false,
-            transition: Zoom,
-            position: 'bottom-right',
-            type: 'warning'
-        } )  
-          console.error("Google sign-in error", error);
+        } catch (error) {
+            setPending(false);
+            toast("Google sign-in error", {
+                autoClose: false,
+                transition: Zoom,
+                position: 'bottom-right',
+                type: 'warning'
+            } )  
+            console.error("Google sign-in error", error);
         }
-      };  
+        };
+    
+    
 
     return (
         <>

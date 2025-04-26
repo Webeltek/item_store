@@ -29,7 +29,7 @@ function verifyGtoken(req, res, next){
         userModel.findOne({ email} )
             .then( result => {
                 if(result === null){
-                    userModel.create({ username : name, email: email, password: uid })
+                    userModel.create({ username : name, email: email, password: uid, isFirebaseUser: true })
                         .then( createdUser => {
                             createdUser = bsonToJson(createdUser);
                             createdUser = removePassword(createdUser);

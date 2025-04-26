@@ -17,9 +17,9 @@ export default function ErrorMsg() {
         return false;
     },[ errorMessage] )
     
-    const loginHandler = useCallback( ()=> {
+    const loginHandler = useCallback( async ()=> {
         //call userLogoutHandler from UserProvider to clear authData from state and localStorage to enable GuestGuard to allow navigate to 'login' route
-        userLogoutHandler();
+        await userLogoutHandler();
         navigate('/login');
     } ,[navigate, userLogoutHandler])
 
