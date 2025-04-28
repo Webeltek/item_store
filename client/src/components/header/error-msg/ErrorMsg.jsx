@@ -38,9 +38,6 @@ export default function ErrorMsg() {
                         />
                     )
                 },{
-                    autoClose: false,
-                    transition: Zoom,
-                    position: 'bottom-right',
                     type: 'warning'
                 });
             }
@@ -50,7 +47,11 @@ export default function ErrorMsg() {
     },[errorMessage, isSessionInvalid, loginHandler, showErrorMsg])
     
     return (
-        <ToastContainer />
+        <ToastContainer 
+            autoClose={false} 
+            transition={Zoom} 
+            position={'bottom-right'}
+            />
     );
 }
 

@@ -3,7 +3,6 @@ import { UserContext } from "../contexts/UserContext";
 import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { readErrorMessage } from "../hooks/useAuth";
-import firebase from '../utils/firebaseAuthentication'
 
 
 export default function UserProvider({
