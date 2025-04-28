@@ -15,6 +15,7 @@ import EditItem from './components/edit-item/EditItem'
 import UserProvider from './providers/UserProvider'
 import AuthGuard from './components/guards/AuthGuard'
 import GuestGuard from './components/guards/GuestGuard'
+import PrivacyPolicy from './components/privacy-policy/PrivacyPolicy'
 
 function App() {
   
@@ -27,6 +28,7 @@ function App() {
         
             <Route index element={ <Home />} />
             <Route path="/items" element={ <Catalog />} />
+            <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/items/:itemId/details" element={ <ItemDetails />} />
             <Route element={ <AuthGuard />}>
               <Route path="/add-item" element={ <AddItem />} />

@@ -33,7 +33,7 @@ export const useLogin = () => {
 
 export const useFirebaseLogin = ()=>{
     const { showErrorMsg, userLoginHandler } = useContext(UserContext);
-    const googleLogin = async (idToken)=>{
+    const firebaseLogin = async (idToken)=>{
         try {
             const result = await request.post(
                 `${baseUrl}/verify_gtoken`, 
@@ -46,22 +46,8 @@ export const useFirebaseLogin = ()=>{
         }
     }
 
-    const facebookLogin = async (idToken)=>{
-        try {
-            const result = await request.post(
-                `${baseUrl}/verify_ftoken`, 
-                { idToken }
-            );
-            return result;
-        } catch (error) {
-            showErrorMsg(error.message);
-            throw error;
-        }
-    }
-
     return {
-        facebookLogin,
-        googleLogin,
+        firebaseLogin,
         userLoginHandler
     }
 }

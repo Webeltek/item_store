@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 import './FirebaseBtns.css'
 
 export default function FirebaseBtns() {
-    const { googleLogin, userLoginHandler, facebookLogin } = useFirebaseLogin();
+    const { userLoginHandler, firebaseLogin } = useFirebaseLogin();
     const [pending, setPending] = useState({google: false,facebook: false});
     let navigate = useNavigate();
 
@@ -19,7 +19,7 @@ export default function FirebaseBtns() {
             const result = await signInWithPopup(firebase.auth, firebase.googleProvider);
             console.log('User:', result.user);
             const idToken = await result.user.getIdToken();
-            const authData = await googleLogin(idToken);
+            const authData = await firebaseLogin(idToken);
             setPending(false);
             userLoginHandler(authData);
             navigate('/items');
@@ -38,7 +38,10 @@ export default function FirebaseBtns() {
             console.log(user);
             
             const idToken = await result.user.getIdToken();
-            const authData = await facebookLogin(idToken);
+            const authData = await firebaseLogin(idToken);
+            setPending(false);
+            userLoginHandler(authData);
+            navigate('/items');
             
         } catch (error) {
             console.log(error);
