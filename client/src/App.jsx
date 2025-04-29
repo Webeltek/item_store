@@ -16,11 +16,19 @@ import UserProvider from './providers/UserProvider'
 import AuthGuard from './components/guards/AuthGuard'
 import GuestGuard from './components/guards/GuestGuard'
 import PrivacyPolicy from './components/privacy-policy/PrivacyPolicy'
+import { ConfigProvider } from 'antd'
 
 function App() {
   
 
   return (
+    <ConfigProvider theme={ 
+      {
+        token: { 
+          colorPrimary: '#00b96b',
+          colorBgContainer: '#f6ffed',} 
+      }
+    }>
     <UserProvider>
     
       <Header  />
@@ -45,6 +53,7 @@ function App() {
 
       <Footer />
     </UserProvider>
+    </ConfigProvider>
   )
 }
 

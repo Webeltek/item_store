@@ -17,9 +17,10 @@ export default function ErrorMsg() {
         return false;
     },[ errorMessage] )
     
-    const loginHandler = useCallback( async ()=> {
+    const loginHandler = useCallback( async (closeToast)=> {
         //call userLogoutHandler from UserProvider to clear authData from state and localStorage to enable GuestGuard to allow navigate to 'login' route
         await userLogoutHandler();
+        closeToast();
         navigate('/login');
     } ,[navigate, userLogoutHandler])
 
@@ -29,12 +30,13 @@ export default function ErrorMsg() {
         if( errorMessage){
             if(!toast.isActive(toastId.current)){
 
-                toastId.current = toast((toastProps)=>{
+                toastId.current = toast(({ closeToast })=>{
                     return (
-                        <ErrorContent 
+                        <ErrorContent
+                            closeMethod={closeToast} 
                             errorMsg={errorMessage} 
                             sessionInValid={isSessionInvalid()} 
-                            handler={loginHandler}
+                            handler={()=>loginHandler(closeToast)}
                         />
                     )
                 },{

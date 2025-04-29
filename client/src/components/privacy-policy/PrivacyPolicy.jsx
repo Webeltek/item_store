@@ -1,7 +1,9 @@
+import { Link } from "react-router-dom";
+
 export default function PrivacyPolicy() {
     return (
       <div style={{ maxWidth: '800px', margin: '50px auto', padding: '80px 0 100px', fontFamily: 'Arial, sans-serif' }}>
-        <h1>Privacy Policy</h1>
+        <h1 style={{ color: '#3b5998'}}>Privacy Policy</h1>
   
         <p>
           We value your privacy and are committed to protecting your personal information.
@@ -30,6 +32,8 @@ export default function PrivacyPolicy() {
         <p>
           We take reasonable measures to protect your personal information from unauthorized access and use.
         </p>
+        <h2>Data Deletion Instructions</h2>
+        <p>You can permanently delete your account and all associated data at any time by visiting your Profile tab and selecting &quot;Delete My Account&quot;.</p>
   
         <h2>Changes to This Policy</h2>
         <p>

@@ -25,6 +25,7 @@ function verifyGtoken(req, res, next){
 
     firebaseAdmin.auth().verifyIdToken(idToken)
     .then( decodedToken => {
+        
         const { uid, email, name } = decodedToken;
         userModel.findOne({ email} )
             .then( result => {
@@ -122,17 +123,34 @@ function login(req, res, next) {
         .catch(next);
 }
 
-function logout(req, res) {
+function logout(req, res, next) {
     // const token = req.cookies[authCookieName];
     const token = req.get('X-Authorization');
 
     tokenBlacklistModel.create({ token })
         .then(() => {
             //res.clearCookie(authCookieName)
-                res.status(204)
-                .send();
+            return res.status(204).send();
         })
-        .catch(err => res.send(err));
+        .catch(next);
+}
+
+function deleteProfile(req, res, next) {
+    const { email } = req.user;
+    const token = req.get('X-Authorization');
+
+    if (!token || !email) {
+        return res.status(400).json({ message: 'Missing token or email' });
+    }
+
+    tokenBlacklistModel.create({ token })
+        .then(() => {
+            return userModel.deleteOne({ email })
+        })
+        .then(()=> { 
+            return res.status(204).send()
+        })
+        .catch(next);
 }
 
 function getProfileInfo(req, res, next) {
@@ -163,6 +181,7 @@ module.exports = {
     verifyGtoken,
     register,
     logout,
+    deleteProfile,
     getProfileInfo,
     editProfileInfo,
 }

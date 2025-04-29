@@ -129,7 +129,6 @@ export const useOrderedOwnedItems = ()=>{
     const [ownedItems, setOwnedItems] = useState([]);
     const [orderedItems, setOrderedItems] = useState([]);
 
-    console.log({useOrdOwndItmsRest: rest, accessToken});
     useEffect(()=>{
         setIsPending(true);
 

@@ -1,13 +1,19 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useEditProfile } from "../../../api/authApi";
+import { useEditProfile, useDeleteProfile } from "../../../api/authApi";
 import useAuth from "../../../hooks/useAuth";
+import { Button } from "antd"
+import { UserDeleteOutlined } from "@ant-design/icons"
 import './EditProfile.css'
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function EditProfile() {
     const [isEditMode, setEditMode] = useState(false);
-    const { email, username, userLoginHandler } = useAuth();
+    let navigate = useNavigate();
+    const { email, username, userLoginHandler, userLogoutHandler } = useAuth();
     const { editProfile} = useEditProfile();
+    const { deleteProfile } = useDeleteProfile();
     const [isSavePending, setIsSavePending] = useState(false);
     const { register, handleSubmit, formState: { errors },} = useForm({
         mode: 'onBlur',
@@ -36,7 +42,16 @@ export default function EditProfile() {
     }
     const toggleEditMode = () => {
         setEditMode( state=> !state);
-    }        
+    }
+    
+    const handleDelete = async ()=>{
+        try {
+            await deleteProfile();
+            await userLogoutHandler();
+        } catch (error){
+            toast.warn("Error deleting profile!")
+        }
+    }
     return (
         <section className="profile-hero">
             <div className="container">
@@ -120,6 +135,7 @@ export default function EditProfile() {
                 </>
                 }
             </div>
+            <Button onClick={handleDelete} type="primary" size="large" danger icon={<UserDeleteOutlined /> }>Delete My Account</Button>
         </section>
     );
 }

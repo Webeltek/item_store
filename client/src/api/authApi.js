@@ -115,3 +115,24 @@ export const useEditProfile = ()=>{
 
     return { editProfile};
 }
+
+export const useDeleteProfile = ()=>{
+    const { showErrorMsg } = useContext(UserContext);
+    const { accessToken} = useContext(UserContext);
+
+    const options = { 
+        headers: { 'X-Authorization': accessToken}
+    };
+
+    const deleteProfile = async ()=>{
+        try {
+            const result = await request.get(`${baseUrl}/users/delete_profile`, null, options)
+            return result;
+        } catch (error) {
+            showErrorMsg(error.message);
+            throw error;
+        }
+    }
+
+    return { deleteProfile};
+}
