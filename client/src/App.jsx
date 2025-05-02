@@ -17,6 +17,7 @@ import AuthGuard from './components/guards/AuthGuard'
 import GuestGuard from './components/guards/GuestGuard'
 import PrivacyPolicy from './components/privacy-policy/PrivacyPolicy'
 import { ConfigProvider } from 'antd'
+import FinishSignIn from './components/login/firebase-btns/FinishSignIn'
 
 function App() {
   
@@ -25,8 +26,15 @@ function App() {
     <ConfigProvider theme={ 
       {
         token: { 
-          colorPrimary: '#00b96b',
-          colorBgContainer: '#f6ffed',} 
+          colorPrimary: '#0096c7',
+          colorBgContainer: '#f9f9f9',
+          borderRadius: "0.3rem",
+        },
+        components: {
+          Button: {
+            fontWeight: "bold"
+          }
+        }
       }
     }>
     <UserProvider>
@@ -47,6 +55,7 @@ function App() {
             <Route element={ <GuestGuard />}>
               <Route path="/login" element={ <Login />} />
               <Route path="/register" element={ <Register />} />
+              <Route path="/finish-signin" element={ <FinishSignIn />} />
             </Route>
             <Route path="/about" element={ <About />} />
       </Routes>

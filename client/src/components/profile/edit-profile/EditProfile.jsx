@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useEditProfile, useDeleteProfile } from "../../../api/authApi";
 import useAuth from "../../../hooks/useAuth";
-import { Button } from "antd"
+import { Button, ConfigProvider } from "antd"
 import { UserDeleteOutlined } from "@ant-design/icons"
 import './EditProfile.css'
 import { toast } from "react-toastify";
@@ -135,7 +135,11 @@ export default function EditProfile() {
                 </>
                 }
             </div>
-            <Button onClick={handleDelete} type="primary" size="large" danger icon={<UserDeleteOutlined /> }>Delete My Account</Button>
+                <Button 
+                onClick={handleDelete} 
+                type="primary" 
+                size="large" 
+                danger icon={<UserDeleteOutlined /> }>Delete My Account</Button>
         </section>
     );
 }

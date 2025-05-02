@@ -4,6 +4,10 @@ import { initializeApp } from "firebase/app";
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { FacebookAuthProvider, getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
+const actionCodeSettings = {
+  url: import.meta.env.VITE_FIREBASE_REDIRECT_URL,
+  handleCodeInApp: true,
+}
 // Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_WEB_API_KEY,
@@ -20,4 +24,4 @@ const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 const facebookProvider = new FacebookAuthProvider();
 
-export default { auth, googleProvider, facebookProvider };
+export default { auth, googleProvider, facebookProvider, actionCodeSettings };

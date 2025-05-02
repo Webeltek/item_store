@@ -55,7 +55,7 @@
     background: #0073e6;
     color: #fff;
     border: none;
-    border-radius: 5px;
+    border-radius: 0.3rem;
     cursor: pointer;
     transition: background 0.3s ease, transform 0.3s ease;
 }
