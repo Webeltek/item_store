@@ -18,3 +18,10 @@
 .google-btn:hover{
     box-shadow : 0 1px 3px rgba(60,64,67,.3);
 }
+
+.myDivider :global(.mantine-Divider-label) {
+    font-size: 1em;
+    &::before, &::after{
+        border-top: 0.1em solid rgb(216, 214, 214);
+    }
+}

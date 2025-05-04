@@ -39,7 +39,7 @@
     font-weight: bold;
 }
 
-.login-form input {
+.login-form .form-group input {
     width: 96%;
     padding: 10px;
     border: 1px solid #ddd;

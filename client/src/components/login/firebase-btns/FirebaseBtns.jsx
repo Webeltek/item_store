@@ -5,14 +5,18 @@ import firebase from "../../../utils/firebaseAuthentication";
 import { useFirebaseLogin } from "../../../api/authApi";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ConfigProvider, Input } from "antd";
+// import { ConfigProvider, Input } from "antd";
+import { Input, Button, Stack, Text, Notification, Divider } from '@mantine/core';
 import styles from "./FirebaseBtns.module.css"
 
 export default function FirebaseBtns() {
     const { userLoginHandler, firebaseLogin } = useFirebaseLogin();
     const [pending, setPending] = useState({google: false,facebook: false});
     let navigate = useNavigate();
-    const { Search } = Input;
+    // const { Search } = Input;
+    const [email, setEmail] = useState('');
+    const [sent, setSent] = useState(false);
+    const [error, setError] = useState('');
 
     const handleGoogleSignIn = async () => {
         try {
@@ -52,20 +56,18 @@ export default function FirebaseBtns() {
             setPending(prev => ({ ...prev, facebook: false }));
           }
     }
-    
-    const onSendLink = async (value, _e, info)=>{
-        const email = value;
-        const source = info.source;
-        if(source === "input"){
-            try {
-                await sendSignInLinkToEmail(firebase.auth, email, firebase.actionCodeSettings);
-                window.localStorage.setItem('emailForSignIn', email);
-                alert('Check your email for the sign-in link.');
-              } catch (error) {
-                console.error('Error sending link:', error);
-            }
+
+    const handleSendLink = async () => {
+        try {
+          await sendSignInLinkToEmail(firebase.auth, email, firebase.actionCodeSettings);
+          window.localStorage.setItem('emailForSignIn', email);
+          setSent(true);
+          setError('');
+        } catch (err) {
+          setError(err.message);
+          setSent(false);
         }
-    }
+      };
 
     return (
         <>
@@ -99,27 +101,49 @@ export default function FirebaseBtns() {
                 />
                 Login with Facebook
             </button>
-            <Search
-            style={{
-                display: "block",
-                width: "60%",
-                margin: "0.3em auto"
-            }}
-            classNames={{
-            input: 'my-input',
-            }}
-            styles={{
-            input: { 
-                color: '',
-                },
-            }}
-            placeholder="input email"
-            allowClear
-            enterButton="Send Link"
-            size="large"
-            onSearch={onSendLink}
-            onClear={()=> ''}
-            />
+            <Stack align="center" justify="center" p="0" gap="0.3em">
+                <Divider size="md" label="or sign in with email" 
+                labelPosition="center"
+                className={styles.myDivider}
+                w="60%"
+                m="0.3em 0"
+                 />
+
+                <Input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.currentTarget.value)}
+                    placeholder="Enter your email"
+                    style={{
+                        width: '60%',
+                        padding: '0',
+                        }}
+                    size="md"
+                    required
+                />
+
+                <Button
+                    onClick={handleSendLink}
+                    variant="filled"
+                    color="teal"
+                    size="md"
+                    w="60%"
+                    m="0 auto"
+                >
+                    Send Sign-in Link
+                </Button>
+
+                {sent && <Notification
+                            w="60%" 
+                            color="green" 
+                            title="Success"
+                            onClose={()=> setSent(false)}>Email link sent! <br /> Check your email!
+                        </Notification>}
+                {error && <Notification 
+                            color="red" 
+                            title="Error"
+                            onClose={()=> setError(false)}>Error sending link!</Notification>}
+            </Stack>
         </>
         );
 }

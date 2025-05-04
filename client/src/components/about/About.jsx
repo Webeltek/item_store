@@ -12,7 +12,7 @@ export default function About(){
 
         <section className="about-content">
             <div className="container">
-                <h3>Our Mission</h3>
+                <h3 className="mt-[100px]">Our Mission</h3>
                 <p>We aim to offer TVs at affordable prices.</p>
                 <h3>Our Values</h3>
                 <ul>

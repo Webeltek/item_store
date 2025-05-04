@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import firebase from "../../../utils/firebaseAuthentication";
 import {
   isSignInWithEmailLink,
@@ -6,16 +6,30 @@ import {
 } from 'firebase/auth';
 import { useFirebaseLogin } from '../../../api/authApi';
 import { useNavigate } from 'react-router-dom';
+import EmailPrompt from './email-prompt/EmailPrompt';
 
 export default function FinishSignIn() {
+  const [opened, setOpened] = useState(false);
+  const [promptEmail, setPromptEmail] = useState('');
+
+  console.log("Opened state", opened)
+
+  const handleConfirm = (value) => {
+    setPromptEmail(value);
+    setOpened(false);
+  };
+  
   const { userLoginHandler, firebaseLogin } = useFirebaseLogin();
   let navigate = useNavigate();
   useEffect(() => {
     const completeSignIn = async () => {
       if (isSignInWithEmailLink(firebase.auth, window.location.href)) {
         let email = window.localStorage.getItem('emailForSignIn');
+        console.log("email from local storage",email);
+        
         if (!email) {
-          email = window.prompt('Please enter your email');
+          setOpened(true);
+          email = promptEmail;
         }
 
         try {
@@ -33,7 +47,13 @@ export default function FinishSignIn() {
     };
 
     completeSignIn();
-  }, [firebaseLogin,navigate]);
+  }, [firebaseLogin,navigate,userLoginHandler,promptEmail]);
 
-  return <p>Completing sign-in...</p>;
+  return (
+  <>
+  <EmailPrompt isOpen={opened} confirmHandler={handleConfirm}/>
+  {promptEmail && <p>You entered: {promptEmail}</p>}
+  <p  className="mt-[280px] text-2xl font-semibold text-center text-gray-700 mb-4">Completing sign-in...</p>;
+  </>
+  )
 }
