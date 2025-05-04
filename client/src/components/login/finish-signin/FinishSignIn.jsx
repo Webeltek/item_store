@@ -46,7 +46,7 @@ export default function FinishSignIn() {
     };
 
     completeSignIn();
-  }, [emailToUse]); // Only runs when we have an email
+  }, [emailToUse,firebaseLogin,navigate,userLoginHandler]); // Only runs when we have an email
 
   const handleConfirm = (value) => {
     setEmailToUse(value);

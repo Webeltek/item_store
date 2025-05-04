@@ -11,7 +11,7 @@ export default function Header(){
 
     return (
         <>
-        <header>
+        <header className="top-header">
             <div className="container-header">
                 <nav>
                     <span>Tv Store</span>
