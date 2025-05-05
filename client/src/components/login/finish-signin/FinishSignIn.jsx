@@ -11,6 +11,7 @@ import EmailPrompt from './email-prompt/EmailPrompt';
 export default function FinishSignIn() {
 
   const [opened, setOpened] = useState(false);
+  const [emailLinkError, setEmailLinkError] = useState('');
   const [emailToUse, setEmailToUse] = useState('');
   const { userLoginHandler, firebaseLogin } = useFirebaseLogin();
   const navigate = useNavigate();
@@ -41,6 +42,7 @@ export default function FinishSignIn() {
         userLoginHandler(authData);
         navigate('/items');
       } catch (error) {
+        setEmailLinkError("This link may have expired, already been used or opened in a different browser/device.")
         console.error('Error signing in:', error);
       }
     };
@@ -57,7 +59,7 @@ export default function FinishSignIn() {
   <>
   <EmailPrompt isOpen={opened} confirmHandler={handleConfirm}/>
   {emailToUse && <p>You entered: {emailToUse}</p>}
-  <p  className="mt-[280px] text-2xl font-semibold text-center text-gray-700 mb-4">Completing sign-in...</p>;
+  <p  className="mt-[280px] text-2xl font-semibold text-center text-gray-700 mb-4">{ emailLinkError ? emailLinkError :  "Completing sign-in..."}</p>;
   </>
   )
 }

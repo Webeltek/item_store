@@ -88,7 +88,7 @@ export default function FirebaseBtns() {
             Login with Google
             </button>
             <button 
-                className={styles["google-btn"]} 
+                className={styles["facebook-btn"]} 
                 onClick={handleFacebookLogin}
                 disabled={pending.facebook}
                 style={{

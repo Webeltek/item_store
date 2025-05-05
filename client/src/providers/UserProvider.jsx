@@ -20,6 +20,7 @@ export default function UserProvider({
     const auth = getAuth();
   
     const userLogoutHandler = async () =>{
+      // try to logout firebase user if logged in as firebase user
       try {
         await signOut(auth);
         console.log('Firebase User signed out');
