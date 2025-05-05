@@ -1,6 +1,6 @@
 import { toast} from "react-toastify";
 
-import {  getRedirectResult, onAuthStateChanged, sendSignInLinkToEmail, signInWithPopup, signInWithRedirect } from "firebase/auth";
+import {  sendSignInLinkToEmail, signInWithPopup } from "firebase/auth";
 import firebase from "../../../utils/firebaseAuthentication";
 import { useFirebaseLogin } from "../../../api/authApi";
 import { useEffect, useState } from "react";
@@ -8,12 +8,11 @@ import { useNavigate } from "react-router-dom";
 // import { ConfigProvider, Input } from "antd";
 import { Input, Button, Stack, Text, Notification, Divider } from '@mantine/core';
 import styles from "./FirebaseBtns.module.css"
-import useFacebook from "./firebaseHooks/useFacebook";
 
 export default function FirebaseBtns() {
     const [pending, setPending] = useState({google: false,facebook: false});
     const { userLoginHandler, firebaseLogin } = useFirebaseLogin();
-    const { handleFacebookLogin } = useFacebook(setPending);
+
     let navigate = useNavigate();
     // const { Search } = Input;
     const [email, setEmail] = useState('');
@@ -37,7 +36,27 @@ export default function FirebaseBtns() {
         }
         };
 
-    
+    const handleFacebookLogin = async ()=> {
+        try {
+            setPending(state=> ({...state, facebook: true}));
+            const result = await signInWithPopup(firebase.auth, firebase.facebookProvider);
+            const user = result.user;
+            console.log(user);
+            
+            const idToken = await result.user.getIdToken();
+            const authData = await firebaseLogin(idToken);
+            setPending(false);
+            userLoginHandler(authData);
+            navigate('/items');
+            
+        } catch (error) {
+            console.log(error);
+            
+            toast.warn("Facebook Login Error")
+        } finally {
+            setPending(prev => ({ ...prev, facebook: false }));
+          }
+    }
 
     const handleSendLink = async () => {
         try {
