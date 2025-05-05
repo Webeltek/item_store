@@ -3,6 +3,7 @@ import { UserContext } from "../contexts/UserContext";
 import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { readErrorMessage } from "../hooks/useAuth";
+import { getAuth, signOut } from "firebase/auth";
 
 
 export default function UserProvider({
@@ -15,8 +16,16 @@ export default function UserProvider({
     const userLoginHandler = (resultData) => {
       setAuthData(resultData);
     }
+
+    const auth = getAuth();
   
     const userLogoutHandler = async () =>{
+      try {
+        await signOut(auth);
+        console.log('Firebase User signed out');
+      } catch (error) {
+        console.error('Firebase Error signing out:', error);
+      }
       setAuthData({})
     }
 
