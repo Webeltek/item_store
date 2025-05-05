@@ -1,4 +1,4 @@
-import { toast, Zoom} from "react-toastify";
+import { toast} from "react-toastify";
 
 import {  getRedirectResult, onAuthStateChanged, sendSignInLinkToEmail, signInWithPopup, signInWithRedirect } from "firebase/auth";
 import firebase from "../../../utils/firebaseAuthentication";
@@ -8,10 +8,12 @@ import { useNavigate } from "react-router-dom";
 // import { ConfigProvider, Input } from "antd";
 import { Input, Button, Stack, Text, Notification, Divider } from '@mantine/core';
 import styles from "./FirebaseBtns.module.css"
+import useFacebook from "./firebaseHooks/useFacebook";
 
 export default function FirebaseBtns() {
-    const { userLoginHandler, firebaseLogin } = useFirebaseLogin();
     const [pending, setPending] = useState({google: false,facebook: false});
+    const { userLoginHandler, firebaseLogin } = useFirebaseLogin();
+    const { handleFacebookLogin } = useFacebook(setPending);
     let navigate = useNavigate();
     // const { Search } = Input;
     const [email, setEmail] = useState('');
@@ -35,54 +37,7 @@ export default function FirebaseBtns() {
         }
         };
 
-    const [authChecked, setAuthChecked] = useState(false);
-    const handleFacebookLogin = async ()=> {
-        try {
-            setPending(state=> ({...state, facebook: true}));
-             await signInWithRedirect(firebase.auth, firebase.facebookProvider);
-            
-        } catch (error) {
-            console.log(error);
-            
-            toast.warn("Facebook Login Error")
-        } finally {
-            setPending(prev => ({ ...prev, facebook: false }));
-          }
-    }
-
-
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(firebase.auth,(firebaseUser) => {
-          setAuthChecked(true);
-        });
     
-        return () => unsubscribe();
-      }, []);
-    
-    // Handle the Facebook login redirect
-    useEffect(() => {
-    if (!authChecked) return;
-
-    getRedirectResult(firebase.auth)
-        .then(async (result) => {
-        if (result?.user) {
-        console.log('Facebook login successful:', result.user);
-        const user = result.user;
-        console.log(user);
-        
-        const idToken = await result.user.getIdToken();
-        const authData = await firebaseLogin(idToken);
-        setPending(false);
-        userLoginHandler(authData);
-        navigate('/items');
-        } else {
-            console.log('No redirect result or user already signed in');
-        }
-        })
-        .catch((error) => {
-        console.error('Error during Facebook redirect:', error);
-        });
-    }, [authChecked,firebaseLogin, navigate,userLoginHandler]);
 
     const handleSendLink = async () => {
         try {
