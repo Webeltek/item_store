@@ -35,7 +35,7 @@ export default function FinishSignIn() {
 
       try {
         const result = await signInWithEmailLink(firebase.auth, emailToUse, window.location.href);
-        console.log('Successfully signed in:', result.user);
+        //console.log('Successfully signed in:', result.user);
         window.localStorage.removeItem('emailForSignIn');
         const idToken = await result.user.getIdToken();
         const authData = await firebaseLogin(idToken);

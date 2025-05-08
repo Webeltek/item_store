@@ -41,7 +41,7 @@ export default function FirebaseBtns() {
             setPending(state=> ({...state, facebook: true}));
             const result = await signInWithPopup(firebase.auth, firebase.facebookProvider);
             const user = result.user;
-            console.log(user);
+            //console.log(user);
             
             const idToken = await result.user.getIdToken();
             const authData = await firebaseLogin(idToken);

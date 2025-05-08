@@ -1,0 +1,87 @@
+.topHeader {
+    background: linear-gradient(to right,  #e0ecf8, #c9e7fc);
+    color: #184e77;
+    padding: 0.5rem 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s ease;
+    height: 100%;
+  }
+
+  
+  
+  .profileMenu {
+    margin-left: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .profile-menu-icon{
+    /* border: solid 1px red; */
+    cursor: pointer;
+    display: block;
+    padding: 0 0.5em;
+    color:rgba(0, 0, 0, 0.7);
+  }
+  
+  .profile{
+    text-decoration: none;
+    padding-left: 0.5em;
+    color:rgba(0, 0, 0, 0.7);
+  }
+  
+  .siteTitle {
+    color: #063341;
+    font-size: 1.3rem;
+    font-weight: bold;
+  }
+  
+  .menuList {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    
+    display: flex;
+    align-items: stretch;
+  }
+
+  
+  .listItem {
+    display: block;
+    margin-left: 20px;
+  }
+  
+  .listItemA {
+    display: block;
+    cursor: pointer;
+    color: #0f3450;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+  .activeLink {
+    display: block;
+    background-color: teal;
+    border-radius: 3px;
+    height: 100%;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease;
+  }
+
+
+  .root {
+    &[aria-current]{
+      background-color: #99d98c;
+    }
+  }
+  
+  nav ul li a:hover {
+    color: #99d98c;
+    transform: scale(1.1);
+  }
+
+  .fa-user{
+    color: #063341;
+  }
+
+  

@@ -9,9 +9,9 @@ function EmailPrompt({
   
     return (
       <>
-        <Modal centered="true" opened={isOpen} onClose={() => {}} title="Enter your name">
+        <Modal centered="true" opened={isOpen} onClose={() => {}} title="Confirm email">
           <TextInput
-            placeholder="Your name"
+            placeholder="Your email"
             value={value}
             onChange={(e) => setValue(e.currentTarget.value)}
           />
