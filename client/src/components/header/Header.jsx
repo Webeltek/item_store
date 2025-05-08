@@ -1,12 +1,11 @@
-import { useContext, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router';
+import { NavLink } from 'react-router';
 import classes from './Header.module.css'
-import { UserContext } from '../../contexts/UserContext';
 import ErrorMsg from './error-msg/ErrorMsg';
 import useAuth from '../../hooks/useAuth';
 import { Burger, Button, Group, Menu, Stack , NavLink as MNavlink} from '@mantine/core';
 
 export default function Header({
+    isNavbarOpened,
     mobOpened,
     deskOpened,
     toggleMob,
@@ -30,50 +29,56 @@ export default function Header({
                             {/* <i className="fa-solid fa-bars"></i> */}
                         </div>
                     </Group>
-                    <Group justify='flex-start' p="0.2rem 1rem" >
+                    <Group flex="1 1 auto" justify='flex-start' p="0.2rem 1rem" >
                         <Burger opened={mobOpened} onClick={toggleMob} hiddenFrom="sm" size="sm" />
                         <Burger opened={deskOpened} onClick={toggleDesk} visibleFrom="sm" size="sm" />
-                        <Group p="0" visibleFrom='sm'>
-                            <Button variant='filled'
-                                    classNames={{
-                                        root: classes.root
-                                    }}
-                                    component={NavLink} to="/"
-                                    >Home</Button>
+                        <Group flex="1 1 auto" p="0" visibleFrom='sm'>
+                            { !isNavbarOpened && (
+                            <>
+                                <Button variant='filled' component={NavLink} 
+                                    to="/" classNames={{ root: classes.root }} >Home
+                                </Button>
+                                    
+                                <Menu>
+                                    <Menu.Target>
+                                        <Button
+                                        variant='filled'component={NavLink}
+                                        to="/items"
+                                        classNames={{
+                                            root: classes.root
+                                        }}
+                                        >Catalog</Button>
+                                    </Menu.Target>
+                                </Menu>
                                 
-                            <Menu>
-                                <Menu.Target>
-                                    <Button
-                                    variant='filled'
-                                    component={NavLink} to="/items"
-                                    classNames={{
-                                        root: classes.root
-                                    }}
-                                    >Catalog</Button>
-                                </Menu.Target>
-                            </Menu>
-                            
-                            <Button variant='filled'
-                            component={NavLink} to="/about" 
-                            classNames={{
-                                root: classes.root
-                            }}>About
-                            </Button>
+                                <Button variant='filled' component={NavLink} 
+                                    to="/about" classNames={{ root: classes.root }}>About
+                                </Button>
+                            </>
+                            )}
                             { isAuthenticated ? (
                                 <>
-                                <li className={classes.listItem}><NavLink to="/profile" className={( { isActive })=>
-                                    isActive ? 'active-link' : ''}>Profile</NavLink></li>
-                                <li className={classes.listItem}><NavLink to="/add-item" className={( { isActive })=>
-                                    isActive ? 'active-link' : ''}>Add TV</NavLink></li>
-                                <li className={classes.listItem}><NavLink to='/logout'>Logout</NavLink></li>
+                                <Button variant='filled' component={NavLink} 
+                                    to="/add-item" classNames={{ root: classes.root }}>Add TV
+                                </Button>
+                                <Button ml="auto" variant='outline' component={NavLink} 
+                                    to="/profile" classNames={{ root: classes.root }}>Profile
+                                </Button>
+                                <Button variant='outline' component={NavLink} 
+                                    to="/logout" classNames={{ root: classes.root }}>Logout
+                                </Button>
                                 </>
                             )
                             : (
                                 <>
-                                <li className={classes.listItem}><NavLink to="/login" className={( { isActive })=>
-                                    isActive ? 'active-link' : ''}>Login</NavLink></li>
-                                <li className={classes.listItem}><NavLink to="/register" className={( { isActive })=>
-                                    isActive ? 'active-link' : ''}>Register</NavLink></li>
+                                <Button ml="auto" variant='outline' component={NavLink}
+                                    to="/login"
+                                    classNames={{ root: classes.root}} >Login
+                                </Button>
+                                <Button  variant='outline' component={NavLink}
+                                    to="/register"
+                                    classNames={{ root: classes.root}} >Register
+                                </Button>
                                 </>
                             
                             )}

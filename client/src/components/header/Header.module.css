@@ -1,5 +1,5 @@
 .topHeader {
-    background: linear-gradient(to right,  #e0ecf8, #c9e7fc);
+    background: linear-gradient(to right,  #f5f6f7, #eafaf7);
     color: #184e77;
     padding: 0.5rem 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -68,12 +68,19 @@
     transition: color 0.3s ease, transform 0.3s ease;
   }
 
-
+  /* NavLink from react router adds arria-current attribute in active state
+  and here is used to change bg when activated */
   .root {
     &[aria-current]{
       background-color: #99d98c;
     }
+  
   }
+
+  .marginLeftAuto{
+    margin-left: auto;
+  }
+
   
   nav ul li a:hover {
     color: #99d98c;

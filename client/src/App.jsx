@@ -2,26 +2,30 @@
 import UserProvider from './providers/UserProvider'
 import { Button, ConfigProvider } from 'antd'
 import '@mantine/core/styles.css';
-import { MantineProvider } from '@mantine/core';
+import { MantineProvider, createTheme } from '@mantine/core';
 import Layout from './Layout'
 
 function App() {
   
-
-  return (
-    <MantineProvider theme={ {
+  const theme = createTheme({
+      colors: {
+        'ocean-blue': ['#7AD1DD', '#5FCCDB', '#44CADC', '#2AC9DE', '#1AC2D9', '#11B7CD', '#09ADC3', '#0E99AC', '#128797', '#147885'],
+      },
       fontFamily: 'Lato, sans-serif',
       defaultRadius: '0.3rem',
       components: {
         Button : {
           defaultProps: {
-            color: "teal",
-            variant: 'gradient',
-              gradient: { from: '#00a6fb', to: '#0582ca', deg: 135 },
+            color: "ocean-blue.5",
+            // variant: 'gradient',
+            //   gradient: { from: '#00a6fb', to: '#0582ca', deg: 135 },
           }
         }
       }
-      }}>
+  })
+
+  return (
+    <MantineProvider theme={theme} >
       <ConfigProvider theme={ 
         {
           token: { 

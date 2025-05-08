@@ -16,34 +16,41 @@ import GuestGuard from './components/guards/GuestGuard'
 import PrivacyPolicy from './components/privacy-policy/PrivacyPolicy'
 import FinishSignIn from './components/login/finish-signin/FinishSignIn'
 import { AppShell, Burger, Group } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks'
+import { useDisclosure, useMediaQuery } from '@mantine/hooks'
 import Navbar from './components/navbar/Navbar'
 
 export default function Layout() {
-    const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
+  const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
+  const isMobile = useMediaQuery('(max-width: 48em)');
+  const isNavbarExpanded = mobileOpened || desktopOpened; 
 
     return (
         <AppShell
-        withBorder="false"
+        withBorder={false}
         header={{
             height: "5.3rem"
         }}
         navbar={{
-            width: 250,
+            width: isMobile ? 200: 250,
             breakpoint: 'sm',
             collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
 
         }}>
             <AppShell.Header>
-                <Header 
+                <Header
+                    isNavbarOpened={isNavbarExpanded} 
                     mobOpened={mobileOpened} 
                     deskOpened={desktopOpened} 
                     toggleMob={toggleMobile} 
                     toggleDesk={toggleDesktop}  
                 />
             </AppShell.Header>
-            <AppShell.Navbar p="0">
+            <AppShell.Navbar
+            style={{
+              width: (mobileOpened || desktopOpened) ? (isMobile ? 200 : 250) : 0,
+            }}
+            >
               <Navbar />
             </AppShell.Navbar>
             <AppShell.Main>

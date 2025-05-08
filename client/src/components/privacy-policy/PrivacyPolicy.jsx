@@ -1,3 +1,4 @@
+import { Title } from "@mantine/core";
 import { Link } from "react-router-dom";
 
 export default function PrivacyPolicy() {
@@ -9,7 +10,7 @@ export default function PrivacyPolicy() {
           We value your privacy and are committed to protecting your personal information.
         </p>
   
-        <h2>Information We Collect</h2>
+        <Title order={3}>Information We Collect</Title>
         <p>
           When you use our app and sign in with Facebook (or other providers), we collect your basic profile
           information such as your name, email address, and profile picture. This information is used to create
