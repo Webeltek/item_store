@@ -32,7 +32,7 @@ export default function Layout() {
             height: "5.3rem"
         }}
         navbar={{
-            width: isMobile ? 200: 250,
+            width: 200,
             breakpoint: 'sm',
             collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
 
@@ -48,7 +48,8 @@ export default function Layout() {
             </AppShell.Header>
             <AppShell.Navbar
             style={{
-              width: (mobileOpened || desktopOpened) ? (isMobile ? 200 : 250) : 0,
+              width: isNavbarExpanded ? 200 : 0, //only width: 0 doesn't hide it fully
+              overflow: 'hidden',
             }}
             >
               <Navbar />

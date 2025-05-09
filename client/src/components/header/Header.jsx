@@ -12,7 +12,6 @@ export default function Header({
     toggleDesk
 }){
     const { email, isAuthenticated } = useAuth();
-    
 
     return (
         <>
@@ -58,9 +57,11 @@ export default function Header({
                             )}
                             { isAuthenticated ? (
                                 <>
+                                {!isNavbarOpened && 
                                 <Button variant='filled' component={NavLink} 
                                     to="/add-item" classNames={{ root: classes.root }}>Add TV
                                 </Button>
+                                }
                                 <Button ml="auto" variant='outline' component={NavLink} 
                                     to="/profile" classNames={{ root: classes.root }}>Profile
                                 </Button>

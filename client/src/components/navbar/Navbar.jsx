@@ -1,9 +1,11 @@
 import { ScrollArea } from "@mantine/core";
 import classes from "./Navbar.module.css";
-import { IconHome, IconList, IconInfoCircle} from "@tabler/icons-react";
+import { IconHome, IconList, IconInfoCircle ,IconPackage} from "@tabler/icons-react";
 import { NavbarLinksGroup } from "./NavbarLinksGroup/NavbarLinksGroup";
+import useAuth from "../../hooks/useAuth";
 
 export default function Navbar() {
+    const { isAuthenticated} = useAuth();
     const linksdata = [
         { label : 'Home', link: '/', icon: IconHome},
         { label: 'Catalog', icon: IconList,
@@ -12,16 +14,16 @@ export default function Navbar() {
 
             ]
         },
+        ...(isAuthenticated ?  [{ label: 'Add TV', link: '/add-item', icon: IconPackage}] : []),
         { label: 'About', link: '/about', icon: IconInfoCircle}
     ]
 
     const links = linksdata.map((item)=> <NavbarLinksGroup {...item} key={item.label} />)
     return (
         <nav className={classes.navbar}>
-
-        <ScrollArea className={classes.links}>
-            <div className={classes.linksInner}>{links}</div>
-        </ScrollArea>
+            <ScrollArea className={classes.links}>
+                <div className={classes.linksInner}>{links}</div>
+            </ScrollArea>
         </nav>
     );
 }
