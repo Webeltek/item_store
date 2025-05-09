@@ -39,6 +39,7 @@ export default function Layout() {
         }}>
             <AppShell.Header>
                 <Header
+                    isMobile={isMobile}
                     isNavbarOpened={isNavbarExpanded} 
                     mobOpened={mobileOpened} 
                     deskOpened={desktopOpened} 
@@ -52,7 +53,7 @@ export default function Layout() {
               overflow: 'hidden',
             }}
             >
-              <Navbar />
+              <Navbar toggleMobile={toggleMobile} />
             </AppShell.Navbar>
             <AppShell.Main>
               <Routes>

@@ -5,6 +5,7 @@ import useAuth from '../../hooks/useAuth';
 import { Burger, Button, Group, Menu, Stack , NavLink as MNavlink} from '@mantine/core';
 
 export default function Header({
+    isMobile,
     isNavbarOpened,
     mobOpened,
     deskOpened,
@@ -31,8 +32,8 @@ export default function Header({
                     <Group flex="1 1 auto" justify='flex-start' p="0.2rem 1rem" >
                         <Burger opened={mobOpened} onClick={toggleMob} hiddenFrom="sm" size="sm" />
                         <Burger opened={deskOpened} onClick={toggleDesk} visibleFrom="sm" size="sm" />
-                        <Group flex="1 1 auto" p="0" visibleFrom='sm'>
-                            { !isNavbarOpened && (
+                        <Group flex="1 1 auto" p="0">
+                        { !isNavbarOpened && !isMobile && (
                             <>
                                 <Button variant='filled' component={NavLink} 
                                     to="/" classNames={{ root: classes.root }} >Home
@@ -54,10 +55,10 @@ export default function Header({
                                     to="/about" classNames={{ root: classes.root }}>About
                                 </Button>
                             </>
-                            )}
+                        )}
                             { isAuthenticated ? (
                                 <>
-                                {!isNavbarOpened && 
+                                {!isNavbarOpened && !isMobile && 
                                 <Button variant='filled' component={NavLink} 
                                     to="/add-item" classNames={{ root: classes.root }}>Add TV
                                 </Button>

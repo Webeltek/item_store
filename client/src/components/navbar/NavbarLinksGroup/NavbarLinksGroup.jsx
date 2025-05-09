@@ -8,11 +8,19 @@ export function NavbarLinksGroup({
     label,
     link, 
     initiallyOpened, 
-    links 
+    links,
+    toggleMobile 
   }
 ) {
   const hasLinks = Array.isArray(links);
   const [opened, setOpened] = useState(initiallyOpened || false);
+
+  const menuTitleClickHandler = ()=>{
+    if (!hasLinks){
+      toggleMobile();
+    }
+  }
+
   const items = (hasLinks ? links : []).map((link) => (
     <Text
       component={NavLink}
@@ -31,7 +39,7 @@ export function NavbarLinksGroup({
             <ThemeIcon variant="light" size={30}>
               <Icon size={18} />
             </ThemeIcon>
-            <Box ml="md" component={NavLink} to={link}>{label}</Box>
+            <Box ml="md" onClick={menuTitleClickHandler} component={NavLink} to={link}>{label}</Box>
           </Box>
           {hasLinks && (
             <IconChevronRight

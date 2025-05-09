@@ -23,7 +23,7 @@ export default function FirebaseBtns() {
         try {
             setPending(state=> ({...state, google: true}) );
             const result = await signInWithPopup(firebase.auth, firebase.googleProvider);
-            console.log('User:', result.user);
+            //console.log('User:', result.user);
             const idToken = await result.user.getIdToken();
             const authData = await firebaseLogin(idToken);
             setPending(false);

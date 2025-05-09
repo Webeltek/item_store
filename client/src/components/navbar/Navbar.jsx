@@ -4,7 +4,9 @@ import { IconHome, IconList, IconInfoCircle ,IconPackage} from "@tabler/icons-re
 import { NavbarLinksGroup } from "./NavbarLinksGroup/NavbarLinksGroup";
 import useAuth from "../../hooks/useAuth";
 
-export default function Navbar() {
+export default function Navbar({
+    toggleMobile
+}) {
     const { isAuthenticated} = useAuth();
     const linksdata = [
         { label : 'Home', link: '/', icon: IconHome},
@@ -18,7 +20,7 @@ export default function Navbar() {
         { label: 'About', link: '/about', icon: IconInfoCircle}
     ]
 
-    const links = linksdata.map((item)=> <NavbarLinksGroup {...item} key={item.label} />)
+    const links = linksdata.map((item)=> <NavbarLinksGroup toggleMobile={toggleMobile} {...item} key={item.label} />)
     return (
         <nav className={classes.navbar}>
             <ScrollArea className={classes.links}>
