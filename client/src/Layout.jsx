@@ -18,11 +18,24 @@ import FinishSignIn from './components/login/finish-signin/FinishSignIn'
 import { AppShell, Burger, Group } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks'
 import Navbar from './components/navbar/Navbar'
+import { useClickOutside } from '@mantine/hooks';
+import { useRef, useState } from 'react'
 
 export default function Layout() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
   const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
   const isMobile = useMediaQuery('(max-width: 48em)');
+  const [navbar, setNavbar] = useState()
+  const [headerWithBurger, setHeaderWithBurger]= useState();
+  
+  //trigger on click outside navbar and header
+  const ref = useClickOutside(()=> {
+    console.log({mobileOpened});
+    
+    if(mobileOpened){ 
+      toggleMobile()
+    }
+  },['mousedown','touchstart'],[navbar,headerWithBurger]);
   const isNavbarExpanded = mobileOpened || desktopOpened; 
 
     return (
@@ -38,6 +51,7 @@ export default function Layout() {
 
         }}>
             <AppShell.Header>
+              <div ref={setHeaderWithBurger}>
                 <Header
                     isMobile={isMobile}
                     isNavbarOpened={isNavbarExpanded} 
@@ -46,6 +60,7 @@ export default function Layout() {
                     toggleMob={toggleMobile} 
                     toggleDesk={toggleDesktop}  
                 />
+              </div>
             </AppShell.Header>
             <AppShell.Navbar
             style={{
@@ -53,7 +68,7 @@ export default function Layout() {
               overflow: 'hidden',
             }}
             >
-              <Navbar toggleMobile={toggleMobile} />
+              <Navbar ref={setNavbar} toggleMobile={toggleMobile} />
             </AppShell.Navbar>
             <AppShell.Main>
               <Routes>

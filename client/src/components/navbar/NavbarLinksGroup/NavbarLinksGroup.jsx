@@ -27,6 +27,7 @@ export function NavbarLinksGroup({
       className={classes.link}
       to={link.link}
       key={link.label}
+      onClick={toggleMobile}
     >
       {link.label}
     </Text>

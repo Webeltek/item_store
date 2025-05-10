@@ -3,10 +3,9 @@ import classes from "./Navbar.module.css";
 import { IconHome, IconList, IconInfoCircle ,IconPackage} from "@tabler/icons-react";
 import { NavbarLinksGroup } from "./NavbarLinksGroup/NavbarLinksGroup";
 import useAuth from "../../hooks/useAuth";
+import { forwardRef } from "react";
 
-export default function Navbar({
-    toggleMobile
-}) {
+const Navbar = forwardRef( ({toggleMobile }, ref)=> {
     const { isAuthenticated} = useAuth();
     const linksdata = [
         { label : 'Home', link: '/', icon: IconHome},
@@ -22,10 +21,14 @@ export default function Navbar({
 
     const links = linksdata.map((item)=> <NavbarLinksGroup toggleMobile={toggleMobile} {...item} key={item.label} />)
     return (
-        <nav className={classes.navbar}>
+        <nav ref={ref} className={classes.navbar}>
             <ScrollArea className={classes.links}>
                 <div className={classes.linksInner}>{links}</div>
             </ScrollArea>
         </nav>
     );
-}
+})
+
+Navbar.displayName = 'Navbar';
+
+export default Navbar
