@@ -1,0 +1,7 @@
+.editProfStack{
+    padding: 0 calc((100% - 30rem)/2);
+}
+
+.deleteAccBtn {
+    align-self: center;
+}

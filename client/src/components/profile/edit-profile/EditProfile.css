@@ -43,6 +43,8 @@
     border-radius: 10px;
     text-align: center;
     color: #fff;
+    max-width: 500px;
+    margin: 0 auto;
     margin-top: 80px;
     animation: fadeIn 3s;
 }

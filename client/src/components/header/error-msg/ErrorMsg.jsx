@@ -17,10 +17,9 @@ export default function ErrorMsg() {
         return false;
     },[ errorMessage] )
     
-    const loginHandler = useCallback( async (closeToast)=> {
+    const loginHandler = useCallback( async ()=> {
         //call userLogoutHandler from UserProvider to clear authData from state and localStorage to enable GuestGuard to allow navigate to 'login' route
         await userLogoutHandler();
-        closeToast();
         navigate('/login');
     } ,[navigate, userLogoutHandler])
 
@@ -29,19 +28,30 @@ export default function ErrorMsg() {
     useEffect(()=>{
         if( errorMessage){
             if(!toast.isActive(toastId.current)){
-
-                toastId.current = toast(({ closeToast })=>{
-                    return (
-                        <ErrorContent
-                            closeMethod={closeToast} 
-                            errorMsg={errorMessage} 
-                            sessionInValid={isSessionInvalid()} 
-                            handler={()=>loginHandler(closeToast)}
-                        />
-                    )
-                },{
-                    type: 'warning'
-                });
+                if(isSessionInvalid()){
+                    loginHandler();
+                    toastId.current = toast(({ closeToast })=>{
+                        return (
+                            <ErrorContent
+                                errorMsg={errorMessage} 
+                            />
+                        )
+                    },{
+                        type: 'warning',
+                        autoClose: 3000
+                    });
+                } else {
+                    toastId.current = toast(({ closeToast })=>{
+                        return (
+                            <ErrorContent
+                                errorMsg={errorMessage} 
+                            />
+                        )
+                    },{
+                        type: 'warning',
+                        autoClose: false
+                    });
+                }
             }
             //reset errorMessage after showing
             showErrorMsg('');
@@ -50,7 +60,6 @@ export default function ErrorMsg() {
     
     return (
         <ToastContainer 
-            autoClose={false} 
             transition={Zoom} 
             position={'bottom-right'}
             />
@@ -58,19 +67,11 @@ export default function ErrorMsg() {
 }
 
 function ErrorContent({
-    errorMsg,
-    sessionInValid,
-    handler
+    errorMsg
 }) {
-
     return (
-        
     <p className="">
         <span>{errorMsg}</span>
-        { sessionInValid && 
-        <button className="error-msg-btn" onClick={handler}>Login
-        </button>
-        }
     </p>
     )
 }

@@ -120,7 +120,6 @@ export default function FirebaseBtns() {
                         padding: '0',
                         }}
                     size="md"
-                    required
                 />
 
                 <Button

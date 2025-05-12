@@ -30,8 +30,6 @@ export default function Layout() {
   
   //trigger on click outside navbar and header
   const ref = useClickOutside(()=> {
-    console.log({mobileOpened});
-    
     if(mobileOpened){ 
       toggleMobile()
     }
@@ -42,7 +40,7 @@ export default function Layout() {
         <AppShell
         withBorder={false}
         header={{
-            height: "5.3rem"
+            height: "90"
         }}
         navbar={{
             width: 200,
@@ -51,7 +49,7 @@ export default function Layout() {
 
         }}>
             <AppShell.Header>
-              <div ref={setHeaderWithBurger}>
+              <div className='h-full' ref={setHeaderWithBurger}>
                 <Header
                     isMobile={isMobile}
                     isNavbarOpened={isNavbarExpanded} 
