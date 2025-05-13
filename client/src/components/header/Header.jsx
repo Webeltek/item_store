@@ -1,64 +1,93 @@
-import { useContext } from 'react';
-import { NavLink, useNavigate } from 'react-router';
-import './Header.css'
-import { UserContext } from '../../contexts/UserContext';
+import { NavLink } from 'react-router';
+import classes from './Header.module.css'
 import ErrorMsg from './error-msg/ErrorMsg';
 import useAuth from '../../hooks/useAuth';
+import { Burger, Button, Group, Menu, Stack , NavLink as MNavlink} from '@mantine/core';
 
-export default function Header(){
+export default function Header({
+    isMobile,
+    isNavbarOpened,
+    mobOpened,
+    deskOpened,
+    toggleMob,
+    toggleDesk
+}){
     const { email, isAuthenticated } = useAuth();
-    const { errorMessage } = useContext(UserContext);
 
     return (
         <>
-        <header>
-            <div className="container-header">
-                <nav>
-                    <span>Tv Store</span>
-                    <div className='profile-menu'>
-                        <i className="fa-solid fa-user"></i>
-                        { isAuthenticated ? 
-                        <NavLink className='profile' to="/profile">User: {email}</NavLink>
-                        :
-                        <NavLink className='profile-guest' to="/login">Profile</NavLink>
-                        }
-                        {/* <i className="fa-solid fa-bars"></i> */}
-                    </div>
-
-
-                </nav>
-                <nav>
-                    <ul>
-                        <li><NavLink to="/" className={( { isActive })=>
-                            isActive ? 'active-link' : ''}>Home</NavLink></li>
-                        <li><NavLink to="/items" className={( { isActive })=>
-                            isActive ? 'active-link' : ''}>Catalog</NavLink></li>
-                        <li><NavLink to="/about" className={( { isActive })=>
-                            isActive ? 'active-link' : ''}>About</NavLink></li>
-                        { isAuthenticated ? (
+                <Stack className={classes.topHeader} gap="0">
+                    <Group align='baseline' p="0 1rem">
+                        <span className={classes.siteTitle}>Tv Store</span>
+                        <div className={classes.profileMenu}>
+                            <i className={`fa-solid fa-user ${classes["profile-menu-icon"]}`}></i>
+                            { isAuthenticated ? 
+                            <NavLink className={classes.profile} to="/profile">User: {email}</NavLink>
+                            :
+                            <NavLink className={classes.profile} to="/login">Guest</NavLink>
+                            }
+                            {/* <i className="fa-solid fa-bars"></i> */}
+                        </div>
+                    </Group>
+                    <Group flex="1 1 auto" justify='flex-start' p="0.2rem 1rem" >
+                        <Burger opened={mobOpened} onClick={toggleMob} hiddenFrom="sm" size="sm" />
+                        <Burger opened={deskOpened} onClick={toggleDesk} visibleFrom="sm" size="sm" />
+                        <Group flex="1 1 auto" p="0">
+                        { !isNavbarOpened && !isMobile && (
                             <>
-                            <li><NavLink to="/profile" className={( { isActive })=>
-                                isActive ? 'active-link' : ''}>Profile</NavLink></li>
-                            <li><NavLink to="/add-item" className={( { isActive })=>
-                                isActive ? 'active-link' : ''}>Add TV</NavLink></li>
-                            <li><NavLink to='/logout'>Logout</NavLink></li>
+                                <Button variant='filled' component={NavLink} 
+                                    to="/" classNames={{ root: classes.root }} >Home
+                                </Button>
+                                    
+                                <Menu>
+                                    <Menu.Target>
+                                        <Button
+                                        variant='filled'component={NavLink}
+                                        to="/items"
+                                        classNames={{
+                                            root: classes.root
+                                        }}
+                                        >Catalog</Button>
+                                    </Menu.Target>
+                                </Menu>
+                                
+                                <Button variant='filled' component={NavLink} 
+                                    to="/about" classNames={{ root: classes.root }}>About
+                                </Button>
                             </>
-                        )
-                        : (
-                            <>
-                            <li><NavLink to="/login" className={( { isActive })=>
-                                isActive ? 'active-link' : ''}>Login</NavLink></li>
-                            <li><NavLink to="/register" className={( { isActive })=>
-                                isActive ? 'active-link' : ''}>Register</NavLink></li>
-                            </>
-                        
                         )}
-                    </ul>
-                </nav>
-
-            </div>
-        </header>
-        <ErrorMsg errorMsg={errorMessage}/>
+                            { isAuthenticated ? (
+                                <>
+                                {!isNavbarOpened && !isMobile && 
+                                <Button variant='filled' component={NavLink} 
+                                    to="/add-item" classNames={{ root: classes.root }}>Add TV
+                                </Button>
+                                }
+                                <Button ml="auto" variant='outline' component={NavLink} 
+                                    to="/profile" classNames={{ root: classes.root }}>Profile
+                                </Button>
+                                <Button variant='outline' component={NavLink} 
+                                    to="/logout" classNames={{ root: classes.root }}>Logout
+                                </Button>
+                                </>
+                            )
+                            : (
+                                <>
+                                <Button ml="auto" variant='outline' component={NavLink}
+                                    to="/login"
+                                    classNames={{ root: classes.root}} >Login
+                                </Button>
+                                <Button  variant='outline' component={NavLink}
+                                    to="/register"
+                                    classNames={{ root: classes.root}} >Register
+                                </Button>
+                                </>
+                            
+                            )}
+                        </Group>
+                    </Group>
+                </Stack>            
+        <ErrorMsg />
         </>
     )
 }

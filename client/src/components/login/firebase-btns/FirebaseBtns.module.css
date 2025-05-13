@@ -1,0 +1,52 @@
+.google-btn{
+    width: 60%;
+    margin: 0.3em auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 24px;
+    border-radius: 0.3rem;
+    border: 1px solid #dadce0;
+    color: #3c4043;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    transition: box-shadow 0.2s ease-in-out;
+    &:hover {
+        box-shadow : 0 1px 3px rgba(60,64,67,.3);
+    }
+}
+
+.facebook-btn{
+    width: 60%;
+    margin: 0.3em auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 24px;
+    border-radius: 0.3rem;
+    border: 1px solid #dadce0;
+    color: #3c4043;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    transition: box-shadow 0.2s ease-in-out;
+    &:hover {
+        box-shadow : 0 1px 3px rgba(60,64,67,.3);
+    }
+
+    @media (pointer: coarse) {
+        & {
+          display: none;
+        }
+      }
+}
+
+.myDivider :global(.mantine-Divider-label) {
+    font-size: 1em;
+    &::before, &::after{
+        border-top: 0.1em solid rgb(216, 214, 214);
+    }
+}

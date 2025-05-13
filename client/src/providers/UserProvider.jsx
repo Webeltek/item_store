@@ -1,9 +1,9 @@
 import usePersistedState from "../hooks/usePersitedState";
 import { UserContext } from "../contexts/UserContext";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { readErrorMessage } from "../hooks/useAuth";
-
+import { getAuth, signOut } from "firebase/auth";
 
 
 export default function UserProvider({
@@ -16,21 +16,30 @@ export default function UserProvider({
     const userLoginHandler = (resultData) => {
       setAuthData(resultData);
     }
+
+    const auth = getAuth();
   
-    const userLogoutHandler = () =>{
+    const userLogoutHandler = async () =>{
+      // try to logout firebase user if logged in as firebase user
+      try {
+        await signOut(auth);
+        console.log('Firebase User signed out');
+      } catch (error) {
+        console.error('Firebase Error signing out:', error);
+      }
       setAuthData({})
     }
 
-    const showErrorMsg = (errMsg)=> {
+    const showErrorMsg = useCallback((errMsg)=> {
       const userMessage = readErrorMessage(errMsg);
       setErrorMessage(userMessage);
-    }
+    },[])
 
-      useEffect(() => {
-        return () => {
-          showErrorMsg(''); // clear error msg when navigate away - on unmount
-        };
-      }, [location.pathname]); // Runs when pathname changes
+    useEffect(() => {
+      return () => {
+        showErrorMsg(''); // clear error msg when navigate away - on unmount
+      };
+    }, [location.pathname, showErrorMsg]); // Runs when pathname changes
 
 
     return (

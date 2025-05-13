@@ -1,5 +1,10 @@
 function errorHandler(err, req, res, next) {
     //console.log({errHandlerErr: err});
+    if (res.headersSent) {
+    // Headers already sent — can't modify response, just log the error
+    console.error('Unhandled error after response sent:', err);
+    return;
+    }
     
     if (err.status === 333) {
         res.status(333)

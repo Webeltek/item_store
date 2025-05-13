@@ -4,6 +4,8 @@ import './Login.css'
 import { useLogin } from "../../api/authApi";
 import { UserContext } from "../../contexts/UserContext";
 import { useLoginValidation } from "./useLoginValidation";
+import FirebaseBtns from "./firebase-btns/FirebaseBtns";
+
 
 export default function Login(){
     const { userLoginHandler } = useContext(UserContext);
@@ -38,6 +40,8 @@ export default function Login(){
             // console.log(authData);
             setPending(false);
             userLoginHandler(authData);
+            //navigate to previous route after login
+            // navigate(-1);
             navigate('/items');
         } catch (err) {
             
@@ -93,6 +97,7 @@ export default function Login(){
                         style={ {backgroundColor: pending ? 'grey':'#0073e6' }}
                         >Login
                     </button>
+                    <FirebaseBtns />
                     <p>Don&apos;t have an account? <Link to="/register">Register</Link></p>
                 </form>
             </div>

@@ -9,6 +9,7 @@ const { authController } = require('../controllers');
 router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.get('/logout', authController.logout);
+router.post('/verify_gtoken', authController.verifyGtoken)
 
 router.use('/users', users);
 router.use('/items', items);

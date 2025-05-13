@@ -39,7 +39,7 @@
     font-weight: bold;
 }
 
-.login-form input {
+.login-form .form-group input {
     width: 96%;
     padding: 10px;
     border: 1px solid #ddd;
@@ -48,12 +48,14 @@
 }
 
 .login-form .btn {
-    width: 100%;
+    display: block;
+    margin: 0 auto;
+    width: 60%;
     padding: 10px;
     background: #0073e6;
     color: #fff;
     border: none;
-    border-radius: 5px;
+    border-radius: 0.3rem;
     cursor: pointer;
     transition: background 0.3s ease, transform 0.3s ease;
 }

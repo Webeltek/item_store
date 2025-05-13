@@ -31,6 +31,27 @@ export const useLogin = () => {
     return { login }
 }
 
+export const useFirebaseLogin = ()=>{
+    const { showErrorMsg, userLoginHandler } = useContext(UserContext);
+    const firebaseLogin = async (idToken)=>{
+        try {
+            const result = await request.post(
+                `${baseUrl}/verify_gtoken`, 
+                { idToken }
+            );
+            return result;
+        } catch (error) {
+            showErrorMsg(error.message);
+            throw error;
+        }
+    }
+
+    return {
+        firebaseLogin,
+        userLoginHandler
+    }
+}
+
 export const useRegister = () => {
     const { showErrorMsg } = useContext(UserContext);
     const register = async (username, email, password) =>{
@@ -64,8 +85,8 @@ export const useLogout = () => {
 
         
         request.get(`${baseUrl}/logout`, null, options)
-        .then(userLogoutHandler)
         .catch( err=> showErrorMsg(err.message))
+        .finally(userLogoutHandler)
         
     },[accessToken, userLogoutHandler, showErrorMsg]);
 
@@ -93,4 +114,25 @@ export const useEditProfile = ()=>{
     }
 
     return { editProfile};
+}
+
+export const useDeleteProfile = ()=>{
+    const { showErrorMsg } = useContext(UserContext);
+    const { accessToken} = useContext(UserContext);
+
+    const options = { 
+        headers: { 'X-Authorization': accessToken}
+    };
+
+    const deleteProfile = async ()=>{
+        try {
+            const result = await request.get(`${baseUrl}/users/delete_profile`, null, options)
+            return result;
+        } catch (error) {
+            showErrorMsg(error.message);
+            throw error;
+        }
+    }
+
+    return { deleteProfile};
 }

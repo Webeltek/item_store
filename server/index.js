@@ -4,6 +4,7 @@ const dbConnector = require('./config/db');
 // const mongoose = require('mongoose');
 const apiRouter = require('./router');
 const cors = require('cors');
+const firebaseAdmin = require('firebase-admin');
 // const config = require('./config/config');
 const { errorHandler } = require('./utils');
 
@@ -19,6 +20,11 @@ dbConnector()
       origin: config.origin,
       credentials: true
     }));
+
+
+    firebaseAdmin.initializeApp({
+      credential: firebaseAdmin.credential.cert(config['serviceAccount']),
+    })
 
     const express = require('express');
 

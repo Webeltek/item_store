@@ -10,10 +10,12 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true,
     },
+    isFirebaseUser: {
+        type: Boolean
+    },
     username: {
         type: String,
         required: true,
-        unique: true,
         minlength: [5, 'Username should be at least 5 characters'],
         validate: {
             validator: function (v) {

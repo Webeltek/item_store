@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useCallback, useContext, useMemo, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import request from "../utils/request";
 
@@ -19,40 +19,42 @@ export function readErrorMessage(message){
 }
 
 export default function useAuth(){
-    const authData = useContext(UserContext);
+    const { accessToken, showErrorMsg, ...contextData} = useContext(UserContext);
     
-    const requestWrapper = async (method, url,data,options = {}) =>{
-        // console.log('authData.accessToken', authData.accessToken);
+    const requestWrapper = useCallback( async (method, url,data,options = {}) =>{
         
         const authOptions = {
             ...options,
             headers: {
-                'X-Authorization': authData.accessToken,
+                'X-Authorization': accessToken,
                 ...options.headers
             }
         }
-
-        //console.log('authOptions', authOptions);
+        
         try {
-            
-            const result = await request.baseRequest(method,url, data, authData.accessToken ? authOptions : options);
+            const result = await request.baseRequest(method,url, data, accessToken ? authOptions : options);
             return result;
         } catch (error) {
-            
-            authData.showErrorMsg(error.message);
+            showErrorMsg(error.message);
             throw error;
         }
-    }
+    },[accessToken, showErrorMsg])
 
-    return {
-        ...authData,
-        isAuthenticated: !!authData.accessToken,
-        request : {
+    const requestObj = useMemo(()=> (
+        {
             get: requestWrapper.bind(null,'GET'),
             post: requestWrapper.bind(null, 'POST'),
             put: requestWrapper.bind(null, 'PUT'),
             delete: requestWrapper.bind(null, 'DELETE'),
         }
+    ),[requestWrapper])
+
+    return {
+        accessToken,
+        ...contextData,
+        showErrorMsg,
+        isAuthenticated: !!accessToken,
+        request : requestObj
     }
 
 }

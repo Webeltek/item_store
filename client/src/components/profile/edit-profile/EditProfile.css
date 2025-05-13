@@ -43,6 +43,8 @@
     border-radius: 10px;
     text-align: center;
     color: #fff;
+    max-width: 500px;
+    margin: 0 auto;
     margin-top: 80px;
     animation: fadeIn 3s;
 }
@@ -113,6 +115,10 @@
     cursor: pointer;
     background: #0c460c;
     transform: translateY(-5px);
+}
+
+.profile-hero .container {
+    margin-bottom: 2em;
 }
 
 /* error */

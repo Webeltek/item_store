@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react"
 import { Link } from 'react-router'
 import './Profile.css'
-import { useOrderedItems, useOrderItem, useOwnedItems } from "../../api/itemApi";
-import useAuth from "../../hooks/useAuth";
+import { useOrderedItems, useOrderedOwnedItems, useOrderItem, useOwnedItems } from "../../api/itemApi";
 import ProfileItem from "./profile-item/ProfileItem";
-import { useEditProfile } from "../../api/authApi";
 import EditProfile from "./edit-profile/EditProfile";
 
-const IMAGES_URL  = import.meta.env.VITE_IMAGES_URL;
 
 export default function Profile() {
-    const  { ownedItems , isPending}  = useOwnedItems();
-    const { orderedItems } = useOrderedItems();
+    // const  { ownedItems , isPending}  = useOwnedItems();
+    // const { orderedItems } = useOrderedItems();
+
+    const { ownedItems, orderedItems} = useOrderedOwnedItems();
     
     
     return (

@@ -2,12 +2,25 @@ footer {
     background: #333;
     color: #fff;
     text-align: center;
-    padding: 1rem 0;
+    padding: 0.3rem 0;
     margin-top: auto;
     position: relative;
-    
+    height: 100%;
   }
   
   footer p {
     margin: 0;
+  }
+
+  footer a {
+    display: inline-block;
+    margin: 0.3em 0;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  footer a:hover {
+    color: #99d98c;
+    cursor: pointer;
   }
