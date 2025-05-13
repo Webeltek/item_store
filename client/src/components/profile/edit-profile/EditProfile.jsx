@@ -8,6 +8,8 @@ import { toast } from "react-toastify";
 import EditUser from "./edit-user/EditUser";
 import { Box, Button, Container, Fieldset, Stack } from "@mantine/core";
 import ShowUser from "./show-user/ShowUser";
+import DeleteAccPrompt from "./delete-acc-prompt/DeleteAccPrompt";
+import { useDisclosure } from "@mantine/hooks";
 
 export default function EditProfile() {
     const [isEditMode, setEditMode] = useState(false);
@@ -15,6 +17,7 @@ export default function EditProfile() {
     const { editProfile} = useEditProfile();
     const { deleteProfile } = useDeleteProfile();
     const [isSavePending, setIsSavePending] = useState(false);
+    const [opened, setOpened] = useState();
 
     const handleSaveProfile = async (data) => {
 
@@ -34,6 +37,7 @@ export default function EditProfile() {
     }
     
     const handleDelete = async ()=>{
+        setOpened(false)
         try {
             await deleteProfile();
             await userLogoutHandler();
@@ -53,15 +57,23 @@ export default function EditProfile() {
                 toggleEditMode={toggleEditMode}
                 isSavePending={isSavePending} />
                 }
-            <Fieldset m="sm" variant='filled' legend="Danger zone">
-                <Button
+            <Fieldset m="sm" variant='filled' legend="Danger zone"
+            classNames={{
+                legend: classes.dangerSoneLegend,
+                root: classes.dangerSoneBorder
+            }
+            }>
+                <Button m="0 auto" display="block"
                 className={classes.deleteAccBtn} 
-                onClick={handleDelete} 
+                onClick={()=>setOpened(true)} 
                 variant="filled" 
                 size="md"
                 color="pink"
                 leftSection={<UserDeleteOutlined /> }>Delete My Account</Button>
-            </Fieldset>    
+            </Fieldset>
+            <DeleteAccPrompt email={email} 
+            opened={opened} setOpened={setOpened}
+            confirmHandler={handleDelete} />    
         </Stack>
     );
 }

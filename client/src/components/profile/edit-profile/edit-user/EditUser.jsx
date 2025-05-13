@@ -1,4 +1,4 @@
-import { Button, Fieldset, Group, TextInput } from '@mantine/core';
+import { Button, Fieldset, Group, TextInput, useMantineTheme } from '@mantine/core';
 import { hasLength, useForm } from '@mantine/form'
 
 export default function EditUser({
@@ -8,6 +8,8 @@ export default function EditUser({
     isSavePending,
     toggleEditMode
 }) {
+    const theme = useMantineTheme();
+
     function getEmailPref() {
         const emailPrefixLength = import.meta.env.VITE_EMAIL_PREFIX_LENGTH;
         const emailPref = emailPrefixLength === null ? 1 : emailPrefixLength;
@@ -30,12 +32,15 @@ export default function EditUser({
 
     return (
         <form onSubmit={form.onSubmit(handleSaveProfile)}>
-            <Fieldset m="sm" variant='filled' legend="Personal information">
+            <Fieldset styles={{
+                legend: { color: theme.colors['ocean-blue'][5]},
+                root: { borderColor: theme.colors['ocean-blue'][5]}
+            }} m="sm" variant='filled' legend="Personal information">
                 <TextInput {...form.getInputProps('username')} label="Your name" placeholder="Your name" />
                 <TextInput {...form.getInputProps('email')} label="Email" placeholder="Email" mt="md" />
             </Fieldset>
 
-            <Group mt="md" justify="flex-end">
+            <Group m="sm" justify="flex-end">
                 <Button variant='outline' onClick={toggleEditMode}>Cancel</Button>
                 <Button disabled={isSavePending} type="submit">Save</Button>
             </Group>
