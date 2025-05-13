@@ -1,7 +1,29 @@
 .editProfStack{
     padding: 0 calc((100% - 30rem)/2);
+    background-color: #fff;
+    margin: 1rem ;
+    animation: fadeIn 3s;
+    border-radius: 10px;
+    box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover{
+        transform: translateY(-10px);
+        box-shadow: 4px 8px 16px rgba(0, 0, 0, 0.2); 
+    }
 }
 
 .deleteAccBtn {
     align-self: center;
+}
+
+.deleteProfBox {
+    padding: var(--mantine-spacing-lg);
+    padding-top: var(--mantine-spacing-xs);
+    border-radius: var(--fieldset-radius, var(--mantine-radius-default));
+    min-inline-size: auto;
+    background-color: var(--mantine-color-gray-0);
+    border : calc(0.0625rem * var(--mantine-scale)) solid;
+    border-color: var(--mantine-color-gray-3);
+    margin: var(--mantine-spacing-sm);
 }

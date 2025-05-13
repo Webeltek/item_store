@@ -6,7 +6,7 @@ import { UserDeleteOutlined } from "@ant-design/icons"
 import classes from './EditProfile.module.css'
 import { toast } from "react-toastify";
 import EditUser from "./edit-user/EditUser";
-import { Box, Button, Container, Stack } from "@mantine/core";
+import { Box, Button, Container, Fieldset, Stack } from "@mantine/core";
 import ShowUser from "./show-user/ShowUser";
 
 export default function EditProfile() {
@@ -53,13 +53,15 @@ export default function EditProfile() {
                 toggleEditMode={toggleEditMode}
                 isSavePending={isSavePending} />
                 }
-            <Button
-            className={classes.deleteAccBtn} 
-            onClick={handleDelete} 
-            variant="filled" 
-            size="md"
-            color="pink"
-            leftSection={<UserDeleteOutlined /> }>Delete My Account</Button>
+            <Fieldset m="sm" variant='filled' legend="Danger zone">
+                <Button
+                className={classes.deleteAccBtn} 
+                onClick={handleDelete} 
+                variant="filled" 
+                size="md"
+                color="pink"
+                leftSection={<UserDeleteOutlined /> }>Delete My Account</Button>
+            </Fieldset>    
         </Stack>
     );
 }

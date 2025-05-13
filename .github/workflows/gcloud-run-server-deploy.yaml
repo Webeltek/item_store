@@ -4,9 +4,9 @@ name: Deploy to Google Cloud Run from Docker Hub
 on:
   push:
     branches:
-      - dev-branch  # or any branch you want
+      - main  # or any branch you want
     paths: 
-      - 'server/**'  
+      # - 'server/**'  
 
 jobs:
   deploy:
