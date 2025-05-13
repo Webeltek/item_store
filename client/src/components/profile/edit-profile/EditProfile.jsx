@@ -6,7 +6,7 @@ import { UserDeleteOutlined } from "@ant-design/icons"
 import classes from './EditProfile.module.css'
 import { toast } from "react-toastify";
 import EditUser from "./edit-user/EditUser";
-import { Box, Button, Container, Fieldset, Stack } from "@mantine/core";
+import { Box, Button, Container, Fieldset, Stack, Title } from "@mantine/core";
 import ShowUser from "./show-user/ShowUser";
 import DeleteAccPrompt from "./delete-acc-prompt/DeleteAccPrompt";
 import { useDisclosure } from "@mantine/hooks";
@@ -47,7 +47,7 @@ export default function EditProfile() {
     }
     return (
         <Stack className={classes.editProfStack}>
-                <h2>User Profile</h2>
+                <Title c="blue.3" ta="center" order={2}>User Profile</Title>
                 {/* <!-- Readonly mode--> */}
                 { !isEditMode ?
                 <ShowUser username={username} email={email} toggleEditMode={toggleEditMode} />    
