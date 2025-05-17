@@ -47,7 +47,7 @@ export default function EditProfile() {
     }
     return (
         <Stack className={classes.editProfStack}>
-                <Title c="blue.3" ta="center" order={2}>User Profile</Title>
+                <Title c="gray.7" ta="center" order={2}>User Profile</Title>
                 {/* <!-- Readonly mode--> */}
                 { !isEditMode ?
                 <ShowUser username={username} email={email} toggleEditMode={toggleEditMode} />    

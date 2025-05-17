@@ -54,5 +54,7 @@
     and description. 
     - after submit tv data is updated and the application redirects to the catalog view
 
-* live deployment on https://item-store-wlyi.onrender.com/
+* live deployment: 
+    - https://item-store-wlyi.onrender.com/
+    - https://tv-store-2025.web.app/
 

@@ -16,6 +16,7 @@ jobs:
         run: npm ci && npm run build
         env: 
           VITE_FIREBASE_WEB_API_KEY: ${{ secrets.VITE_FIREBASE_WEB_API_KEY}}
+          VITE_RECAPTCHA_SITEKEY: ${{secrets.VITE_RECAPTCHA_SITEKEY}}
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: ${{ secrets.GITHUB_TOKEN }}

@@ -7,10 +7,11 @@ const baseUrl = import.meta.env.VITE_API_URL;
 export const useLogin = () => {
     const { showErrorMsg } = useContext(UserContext);
     const abortRef = useRef(new AbortController());
+    const isPendingRef = useRef(false);
 
     const login = async (email, password) => {
+        isPendingRef.current = true;
         try {
-            
             const result = await request.post(
                 `${baseUrl}/login`, 
                 {email, password}, 
@@ -20,12 +21,18 @@ export const useLogin = () => {
         } catch (error) {
             showErrorMsg(error.message);
             throw error;
+        } finally {
+            isPendingRef.current = false;
         }
     }
 
     useEffect(() => {
         const abortController = abortRef.current;
-        return  () => abortController.abort();
+        return  () => {
+            if (isPendingRef.current && abortController){
+                abortController.abort();
+            }
+        }
     },[]);
 
     return { login }
