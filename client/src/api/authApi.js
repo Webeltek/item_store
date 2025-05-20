@@ -9,12 +9,12 @@ export const useLogin = () => {
     const abortRef = useRef(new AbortController());
     const isPendingRef = useRef(false);
 
-    const login = async (email, password) => {
+    const login = async (email, password,recaptchaToken) => {
         isPendingRef.current = true;
         try {
             const result = await request.post(
                 `${baseUrl}/login`, 
-                {email, password}, 
+                {email, password, recaptchaToken}, 
                 { signal: abortRef.current.signal}
             );
             return result;
@@ -61,10 +61,11 @@ export const useFirebaseLogin = ()=>{
 
 export const useRegister = () => {
     const { showErrorMsg } = useContext(UserContext);
-    const register = async (username, email, password) =>{
+    const register = async (username, email, password, rePassword, recaptchaToken) =>{
         try {
             
-            const result = await request.post(`${baseUrl}/register`, {username, email, password}); // returning expression body - one line
+            const result = await request.post(`${baseUrl}/register`, 
+                {username, email, password, recaptchaToken}); // returning expression body - one line
             return result;
         } catch (error) {
             showErrorMsg(error.message);

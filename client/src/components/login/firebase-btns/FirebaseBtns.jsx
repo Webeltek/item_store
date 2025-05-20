@@ -106,7 +106,7 @@ export default function FirebaseBtns() {
                 <Divider size="md" label="or sign in with email" 
                 labelPosition="center"
                 className={styles.myDivider}
-                w="60%"
+                w="80%"
                 m="0.3em 0"
                  />
 
@@ -116,7 +116,7 @@ export default function FirebaseBtns() {
                     onChange={(e) => setEmail(e.currentTarget.value)}
                     placeholder="Enter your email"
                     style={{
-                        width: '60%',
+                        width: '80%',
                         padding: '0',
                         }}
                     size="md"
@@ -127,7 +127,7 @@ export default function FirebaseBtns() {
                     variant="filled"
                     color="teal"
                     size="md"
-                    w="60%"
+                    w="80%"
                     m="0 auto"
                 >
                     Send Sign-in Link

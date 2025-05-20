@@ -1,60 +1,20 @@
-import { useContext, useEffect, useRef, useState } from "react"
-import { Link, useNavigate } from 'react-router'
-import './Login.css'
+import {  useState } from "react"
+import { Link } from 'react-router'
 import { useLogin } from "../../api/authApi";
-import { UserContext } from "../../contexts/UserContext";
 import { useLoginValidation } from "./useLoginValidation";
 import FirebaseBtns from "./firebase-btns/FirebaseBtns";
+import useRecapchta from "../../hooks/useRecaptcha";
+import classes from './Login.module.css'
+import { Paper } from "@mantine/core";
 
 
 export default function Login(){
-    const { userLoginHandler, showErrorMsg } = useContext(UserContext);
-    let navigate = useNavigate();
-    const { login } = useLogin();
     const {errors, handleBlur, validateField} = useLoginValidation();
-    const [pending, setPending] = useState();
-    const [showCaptcha, setShowCaptcha] = useState(false);
-    const [pendingFormData, setPendingFormData] = useState(false) 
-    const recaptchaRef = useRef(null);
-    const recaptchaRendered = useRef(false);
-
-  useEffect(() => {
-    // Load reCAPTCHA script
-    const script = document.createElement('script');
-    script.src = 'https://www.google.com/recaptcha/api.js?render=explicit';
-    script.async = true;
-    script.defer = true;
-    document.body.appendChild(script);
-  },[]);
-
-    // Callback to render reCAPTCHA
-    useEffect(() => {
-    // Render captcha only when showCaptcha becomes true AND DOM has updated
-    if (showCaptcha && window.grecaptcha && recaptchaRef.current && !recaptchaRendered.current) {
-        window.grecaptcha.ready(() => {
-            recaptchaRendered.current = true;
-            window.grecaptcha.render(recaptchaRef.current, {
-                sitekey: import.meta.env.VITE_RECAPTCHA_SITEKEY,
-                callback: async (token) => {
-                try {
-                    setPending(true);
-                    const authData = await login(pendingFormData.email, pendingFormData.password);
-                    userLoginHandler(authData);
-                    navigate('/items');
-                } catch (err) {
-                    showErrorMsg(err.message);
-                } finally {
-                    setPending(false);
-                    setShowCaptcha(false);
-                    setPendingFormData(null);
-                    recaptchaRendered.current = false;
-                    // optionally reset recaptcha here if needed
-                }
-                },
-            });
-        });
-    }
-    }, [showCaptcha, login, navigate, pendingFormData, userLoginHandler, showErrorMsg]);
+    const [pendingFormData, setPendingFormData] = useState(false);
+    const { login } = useLogin();
+    const {pending, recaptchaRef,setShowCaptcha,showCaptcha} = useRecapchta(
+        pendingFormData,
+        login);
 
 
     const loginHandler = async (formData) =>{
@@ -84,74 +44,69 @@ export default function Login(){
 
     return (
       <>
-        <section className="login-hero">
-          <div className="container">
-            <h2>Login to Your Account</h2>
-            <p>Access your order history, track orders, and more.</p>
-          </div>
+        <section className={classes.loginHero}>
+            <h2 className={classes.loginHeroH2}>Login to Your Account</h2>
+            <p className={classes.loginHeroP}>Access your order history, track orders, and more.</p>
         </section>
        
-        <section className="login-form">
-          <div className="container">
+        <Paper shadow="md" withBorder p="1em" radius="md" maw={400} m="1em auto" w="100%"
+        styles={{
+            root: {
+                // backgroundColor: "var(--mantine-color-gray-0)"
+            }
+        }}>
             <form action={loginHandler}>
                 { showCaptcha ? (
-                <div style={{
-                    textAlign: 'center'
-                }}>
                     <div ref={recaptchaRef} style={{
-                        display:'inline-block'
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
                     }} />
-                </div>
                 ) :
                     <>   
-                    <div className="form-group">
-                        <label htmlFor="email">Email:</label>
+                    <div className={classes.formGroup}>
+                        <label className={classes.label} htmlFor="email">Email:</label>
                         <input
-                        className={errors.email ? 'input-error' : ''}
+                        className={errors.email ? classes.inputError : classes.formGroupInput}
                         type="email"
                         id="email"
                         name="email"
                         onBlur={handleBlur}
                         />
+                        {errors.email && (
+                            <p className={classes.error}>{errors.email}</p>
+                        )}
                     </div>
-                    {errors.email && (
-                        <div>
-                        <p className="error">{errors.email}</p>
-                        </div>
-                    )}
 
-                    <div className="form-group">
-                        <label htmlFor="password">Password:</label>
+                    <div className={classes.formGroup}>
+                        <label className={classes.label} htmlFor="password">Password:</label>
                         <input
-                        className={errors.password ? 'input-error' : ''}
+                        className={errors.password ? classes.inputError : classes.formGroupInput}
                         type="password"
                         id="password"
                         name="password"
                         onBlur={handleBlur}
                         />
+                        {errors.password && (
+                            <p className={classes.error}>{errors.password}</p>
+                        )}
                     </div>
-                    {errors.password && (
-                        <div>
-                        <p className="error">{errors.password}</p>
-                        </div>
-                    )}
 
                     <button
                         disabled={pending}
-                        className="btn"
+                        className={classes.btn}
                         style={{ backgroundColor: pending ? 'grey' : '#0073e6' }}
                     >
                         Login
                     </button>
                     <FirebaseBtns />
-                    <p>
-                        Don&apos;t have an account? <Link to="/register">Register</Link>
+                    <p className={classes.registerP}>
+                        Don&apos;t have an account? <Link className={classes.registerPA} to="/register">Register</Link>
                     </p>
                     </>
                 }
             </form>
-          </div>
-        </section>
+            </Paper>
       </>
     
     );

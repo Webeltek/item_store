@@ -15,11 +15,11 @@ import AuthGuard from './components/guards/AuthGuard'
 import GuestGuard from './components/guards/GuestGuard'
 import PrivacyPolicy from './components/privacy-policy/PrivacyPolicy'
 import FinishSignIn from './components/login/finish-signin/FinishSignIn'
-import { AppShell, Burger, Group } from '@mantine/core';
+import { AppShell, Burger, Group, Stack, rem } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks'
 import Navbar from './components/navbar/Navbar'
 import { useClickOutside } from '@mantine/hooks';
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 
 export default function Layout() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
@@ -62,13 +62,14 @@ export default function Layout() {
             </AppShell.Header>
             <AppShell.Navbar
             style={{
-              width: isNavbarExpanded ? 200 : 0, //only width: 0 doesn't hide it fully
+              width: isNavbarExpanded ? rem(200) : 0, //only width: 0 doesn't hide it fully
               overflow: 'hidden',
             }}
             >
               <Navbar ref={setNavbar} toggleMobile={toggleMobile} />
             </AppShell.Navbar>
-            <AppShell.Main>
+            <AppShell.Main bg="gray.0" >
+              <div className='flex flex-col h-dvh'>
               <Routes>
                     <Route index element={ <Home />} />
                     <Route path="/items" element={ <Catalog />} />
@@ -88,7 +89,8 @@ export default function Layout() {
                     <Route path="/about" element={ <About />} />
               </Routes>
               <Footer />
-            </AppShell.Main>  
+              </div> 
+            </AppShell.Main> 
             <AppShell.Footer p="0">
             </AppShell.Footer>
           </AppShell>

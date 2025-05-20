@@ -50,43 +50,73 @@ function verifyGtoken(req, res, next){
     }).catch(next)
 }
 
+
 function register(req, res, next) {
-    const { username,email, password, rePassword } = req.body;
+    const { username,email, password, recaptchaToken } = req.body;
+    const secret = process.env.RECAPTCHA_SECRET_KEY;
 
-    return userModel.create({ username, email, password })
-        .then((createdUser) => {
-            createdUser = bsonToJson(createdUser);
-            createdUser = removePassword(createdUser);
+    if (!recaptchaToken) {
+        return res.status(400).json({ success: false, message: 'Recaptcha token missing' });
+    }
 
-            const token = utils.jwt.createToken({ id: createdUser._id });
-//using authorization header instead of cookie
+    fetch('https://www.google.com/recaptcha/api/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        secret,
+        response: recaptchaToken
+      }).toString()
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (!data.success) {
+            
+            return res.status(400).json({ 
+                success: false,
+                err: {
+                    message: 'Failed reCAPTCHA verification'
+                }, 
+                message: 'Failed reCAPTCHA verification' });
+        }
 
-            // if (process.env.NODE_ENV === 'production') {
-            //     res.cookie(authCookieName, token, { httpOnly: true, sameSite: 'none', secure: true })
-            // } else {
-            //     res.cookie(authCookieName, token, { httpOnly: true })
-            // }
+        return userModel.create({ username, email, password })
+            .then((createdUser) => {
+                createdUser = bsonToJson(createdUser);
+                createdUser = removePassword(createdUser);
 
-            res.status(200)
-                .send({...createdUser, accessToken: token});
+                const token = utils.jwt.createToken({ id: createdUser._id });
+    //using authorization header instead of cookie
+
+                // if (process.env.NODE_ENV === 'production') {
+                //     res.cookie(authCookieName, token, { httpOnly: true, sameSite: 'none', secure: true })
+                // } else {
+                //     res.cookie(authCookieName, token, { httpOnly: true })
+                // }
+
+                res.status(200)
+                    .send({...createdUser, accessToken: token});
+            })
+            .catch(err => {
+                if (err.name === 'MongoError' && err.code === 11000) {
+                    let field = err.message.split("index: ")[1];
+                    field = field.split(" dup key")[0];
+                    field = field.substring(0, field.lastIndexOf("_"));
+                    
+                    res.status(409)
+                        .send({ 
+                            message: `This ${field} is already registered!`,
+                            err : {
+                                    message: `This ${field} is already registered!`
+                                }
+                            });
+                    return;
+                }
+                next(err);
+            });
         })
-        .catch(err => {
-            if (err.name === 'MongoError' && err.code === 11000) {
-                let field = err.message.split("index: ")[1];
-                field = field.split(" dup key")[0];
-                field = field.substring(0, field.lastIndexOf("_"));
-                
-                res.status(409)
-                    .send({ 
-                        message: `This ${field} is already registered!`,
-                        err : {
-                                message: `This ${field} is already registered!`
-                            }
-                        });
-                return;
-            }
-            next(err);
-        });
+    .catch(next)    
+
+
 }
 
 function login(req, res, next) {

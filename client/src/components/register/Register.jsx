@@ -1,19 +1,20 @@
-import { useContext, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import './Register.css'
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import classes from '../login/Login.module.css'
 import { useRegister } from "../../api/authApi";
-import { UserContext } from "../../contexts/UserContext";
 import { useRegisterValidation } from "./useRegisterValidation";
+import { Paper } from "@mantine/core";
+import useRecapchta from "../../hooks/useRecaptcha";
 
 
 export default function Register() {
-    const [pending , setPending] = useState();
     
-    
-    const navigate = useNavigate();
     const { register } = useRegister();
-    const { userLoginHandler } = useContext(UserContext);
-    const { errors, setErrors, handleBlur, validateField, values, setValues } = useRegisterValidation();
+    const { errors, handleBlur, validateField, values, setValues } = useRegisterValidation();
+    const [pendingFormData, setPendingFormData] = useState(false);
+    const {pending, recaptchaRef,setShowCaptcha,showCaptcha} = useRecapchta(
+            pendingFormData,
+            register);
         
         
     const registerHandler = async (e)=> {
@@ -38,24 +39,25 @@ export default function Register() {
         
         
         
-        const { username, email , password , rePassword} = values;
-        try {
-            setPending(true);
-            const authData =  await register(username, email, password, rePassword);
-            setPending(false);
-            userLoginHandler(authData);
-            navigate('/items');
+        setPendingFormData(values);
+        setShowCaptcha(true);
+        // try {
+        //     setPending(true);
+        //     const authData =  await register(username, email, password, rePassword);
+        //     setPending(false);
+        //     userLoginHandler(authData);
+        //     navigate('/items');
             
-        } catch (err) {
-            setPending(false);
-            setValues({
-                username: '',
-                email: '',
-                password: '',
-                rePassword: ''
-            });
+        // } catch (err) {
+        //     setPending(false);
+        //     setValues({
+        //         username: '',
+        //         email: '',
+        //         password: '',
+        //         rePassword: ''
+        //     });
             
-        }
+        // }
     }
     
     const changeHandler = (e) =>{
@@ -73,71 +75,74 @@ export default function Register() {
     return (
         <>
 
-        <section className="register-hero">
-            <div className="container">
-                <h2>Create Your Account</h2>
-                <p>Join us to get the best deals on TVs and accessories.</p>
-            </div>
+        <section className={classes.loginHero}>
+                <h2 className={classes.loginHeroH2}>Create Your Account</h2>
+                <p className={classes.loginHeroP}>Join us to get the best deals on TVs and accessories.</p>
         </section>
 
-        <section className="register-form">
-            <div className="container">
+        <Paper shadow="md" withBorder p="1em" radius="md" maw={400} m="1em auto" w="100%"
+                styles={{
+                    root: {
+                        // backgroundColor: "var(--mantine-color-gray-0)"
+                    }
+                }}>
                 <form  onSubmit={registerHandler}>
-                    <div className="form-group">
-                        <label htmlFor="username">Username:</label>
+                { showCaptcha ? (
+                    <div ref={recaptchaRef} style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }} />
+                ) :
+                    <>
+                    <div className={classes.formGroup}>
+                        <label className={classes.label} htmlFor="username">Username:</label>
                         <input
-                         className={ errors.username ? 'input-error': ''} 
+                         className={errors.username ? classes.inputError : classes.formGroupInput} 
                          type="text" 
                          id="username" 
                          name="username" 
                          value={values.username} 
                          onChange={changeHandler}
                          onBlur={handleBlur} />
-                    </div>
                         {errors.username &&  
-                        <div>
-                            <p className="error">{errors.username}</p>
-                        </div>
+                        <p className={classes.error}>{errors.username}</p>
                         }
-                    
-                    <div className="form-group">
-                        <label htmlFor="email">Email:</label>
-                        <input
-                        className={ errors.email ? 'input-error': ''}
-                        type="email" 
-                        id="email" 
-                        name="email" 
-                        value={values.email} 
-                        onChange={changeHandler}
-                        onBlur={handleBlur}/>
                     </div>
-                    {errors.email &&  
-                        <div>
-                            <p className="error">{errors.email}</p>
-                        </div>
-                    }
-                    {/* <!--password--> */}
-                    <div >
-                        <div className="form-group">
-                            <label htmlFor="password">Password:</label>
-                            <input
-                            className={ errors.password ? 'input-error': ''}
-                            type="password" 
-                            id="password" 
-                            name="password" 
-                            value={values.password} 
-                            onChange={changeHandler} 
+                    
+                    <div className={classes.formGroup}>
+                        <label className={classes.label} htmlFor="email">Email:</label>
+                        <input
+                            className={ errors.email ? classes.inputError : classes.formGroupInput}
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            value={values.email} 
+                            onChange={changeHandler}
                             onBlur={handleBlur}/>
-                        </div>
-                        {errors.password &&  
-                            <div>
-                                <p className="error">{errors.password}</p>
-                            </div>
+                        {errors.email &&  
+                                <p className="error">{errors.email}</p>
                         }
-                        <div className="form-group">
-                            <label htmlFor="confirm-password">Confirm Password:</label>
+                    </div>
+                    {/* <!--password--> */}
+                        <div className={classes.formGroup}>
+                            <label className={classes.label} htmlFor="password">Password:</label>
                             <input
-                            className={ errors.rePassword ? 'input-error': ''}
+                                className={errors.password ? classes.inputError : classes.formGroupInput}
+                                type="password" 
+                                id="password" 
+                                name="password" 
+                                value={values.password} 
+                                onChange={changeHandler} 
+                                onBlur={handleBlur}/>
+                            {errors.password &&  
+                                    <p className={classes.error}>{errors.password}</p>
+                            }
+                        </div>
+                        <div className={classes.formGroup}>
+                            <label className={classes.label} htmlFor="confirm-password">Confirm Password:</label>
+                            <input
+                            className={errors.rePassword ? classes.inputError : classes.formGroupInput}
                             type="password" 
                             id="confirm-password" 
                             name="rePassword" 
@@ -146,21 +151,19 @@ export default function Register() {
                             onBlur={handleBlur} />
                         </div>
                         {errors.rePassword &&  
-                            <div>
-                                <p className="error">{errors.rePassword}</p>
-                            </div>
+                                <p className={classes.error}>{errors.rePassword}</p>
                         }
-                    </div>
                     <button 
-                    className="btn" 
+                    className={classes.btn} 
                     disabled={pending} 
                     style={ {backgroundColor: pending ? 'grey':'#0073e6' }}
                     >Register</button>
-                    <p>Already have an account? <Link to="/login">Login</Link></p>
+                    <p className={classes.registerP}>
+                        Already have an account? <Link className={classes.registerPA} to="/login">Login</Link></p>
+                    </>
+                }
                 </form>
-            </div>
-        </section>
-
+        </Paper>                
         </>
     );
 }

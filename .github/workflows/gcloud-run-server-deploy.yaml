@@ -45,6 +45,7 @@ jobs:
           image: docker.io/${{ secrets.DOCKER_HUB_USERNAME }}/repo24:item_store
           env_vars: |
             DB_URL_CREDENTIALS=${{ secrets.DB_URL_CREDENTIALS }}
+            RECAPTCHA_SECRET_KEY=${{secrets.RECAPTCHA_SECRET_KEY}}
           flags: >
             --min-instances 0
             --max-instances 1
