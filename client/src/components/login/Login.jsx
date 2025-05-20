@@ -57,11 +57,13 @@ export default function Login(){
         }}>
             <form action={loginHandler}>
                 { showCaptcha ? (
-                    <div ref={recaptchaRef} style={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center'
-                    }} />
+                    <div>
+                        <div ref={recaptchaRef} style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }} />
+                    </div>
                 ) :
                     <>   
                     <div className={classes.formGroup}>
