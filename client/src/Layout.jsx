@@ -23,7 +23,7 @@ import { useState } from 'react'
 
 export default function Layout() {
   const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
-  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure(true);
+  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure();
   const isMobile = useMediaQuery('(max-width: 48em)');
   const [navbar, setNavbar] = useState()
   const [headerWithBurger, setHeaderWithBurger]= useState();
