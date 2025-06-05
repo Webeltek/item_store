@@ -17,9 +17,9 @@ export default function Header({
     return (
         <>
                 <Stack className={classes.topHeader} gap="0">
-                    <Group align='baseline' p="0 1rem">
+                    <Group justify='space-between' align='baseline' p="0 1rem">
                         <span className={classes.siteTitle}>Tv Store</span>
-                        <span style={{ color: "dark-green", marginLeft: "3rem"}}>site is under construction</span>
+                        <span style={{ color: "dark-green", marginLeft: "3rem"}}>This site is under construction</span>
                         <div className={classes.profileMenu}>
                             <i className={`fa-solid fa-user ${classes["profile-menu-icon"]}`}></i>
                             { isAuthenticated ? 
