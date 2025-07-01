@@ -10,6 +10,7 @@ import { Box, Button, Container, Fieldset, Stack, Title } from "@mantine/core";
 import ShowUser from "./show-user/ShowUser";
 import DeleteAccPrompt from "./delete-acc-prompt/DeleteAccPrompt";
 import { useDisclosure } from "@mantine/hooks";
+import Address from "./address/Adress";
 
 export default function EditProfile() {
     const [isEditMode, setEditMode] = useState(false);
@@ -47,22 +48,22 @@ export default function EditProfile() {
     }
     return (
         <Stack className={classes.editProfStack}>
-                <Title c="gray.7" ta="center" order={2}>User Profile</Title>
-                {/* <!-- Readonly mode--> */}
-                { !isEditMode ?
-                <ShowUser username={username} email={email} toggleEditMode={toggleEditMode} />    
-                : 
-                <EditUser savedUsername={username} savedEmail={email} 
-                handleSaveProfile={handleSaveProfile}
-                toggleEditMode={toggleEditMode}
-                isSavePending={isSavePending} />
-                }
+            <Title c="gray.7" ta="center" order={2}>User Profile</Title>
+            {/* <!-- Readonly mode--> */}
+            { !isEditMode ?
+            <ShowUser username={username} email={email} toggleEditMode={toggleEditMode} />    
+            : 
+            <EditUser savedUsername={username} savedEmail={email} 
+            handleSaveProfile={handleSaveProfile}
+            toggleEditMode={toggleEditMode}
+            isSavePending={isSavePending} />
+        }
+            <Address />
             <Fieldset m="sm" variant='filled' legend="Danger zone"
             classNames={{
                 legend: classes.dangerSoneLegend,
                 root: classes.dangerSoneBorder
-            }
-            }>
+            }}>
                 <Button m="0 auto" display="block"
                 className={classes.deleteAccBtn} 
                 onClick={()=>setOpened(true)} 
