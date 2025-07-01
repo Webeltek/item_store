@@ -15,7 +15,7 @@ export default function ItemDetails() {
     const { deleteItem } = useDeleteItem();
     const { item, setItem } = useItem(itemId);
     const { orderItem } = useOrderItem();
-    const { comments, setComments } = useComments(itemId);
+    const { comments, addComment } = useComments(itemId);
 
     const isOwner = userId === item.owner;
     const isOrdered = item.orderList?.some( orderUserId =>
@@ -53,7 +53,7 @@ export default function ItemDetails() {
     const commentCreateHandler = ( newComment )=>{
         // console.log({newComment});
         
-        setComments( state => [...state, newComment]);
+        addComment( newComment );
     }
 
     return (
