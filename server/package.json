@@ -4,6 +4,7 @@
   "description": "REST-api for back-end of React project",
   "main": "index.js",
   "scripts": {
+    "startBeFe": "npm start & cd ../client && npm run dev",
     "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
