@@ -35,6 +35,33 @@ const userSchema = new mongoose.Schema({
             message: props => `${props.value} must contains only latin letters and digits!`
         },
     },
+    telephone: {
+        type: String,
+        required: false
+    },
+    address: {
+        //required: false, not necessery because in Mongoose Schema properties are optional by default
+        streetAddress: {
+            type : String,
+            required: true,
+            minlength: [3, 'Street should be at least 3 chars!'],
+            validate: {
+                validator: function (v) {
+                    return /^(?=.*\d).+$/g.test(v);
+                },
+                message: props => `Street: ${props.value} must contain street number!`
+            },
+        },
+        postalCode: {
+            type: Number,
+            required: true
+        },
+        city: {
+            type: String,
+            required: true,
+            minlength: [3, 'City should be 3 chars!']
+        }
+    },
     items: [{
         type: ObjectId,
         ref: "Item"

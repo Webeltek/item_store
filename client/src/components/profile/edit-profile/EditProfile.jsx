@@ -10,7 +10,7 @@ import { Box, Button, Container, Fieldset, Stack, Title } from "@mantine/core";
 import ShowUser from "./show-user/ShowUser";
 import DeleteAccPrompt from "./delete-acc-prompt/DeleteAccPrompt";
 import { useDisclosure } from "@mantine/hooks";
-import Address from "./address/Adress";
+import EditAddress from "./edit-address/EditAddress";
 
 export default function EditProfile() {
     const [isEditMode, setEditMode] = useState(false);
@@ -19,6 +19,7 @@ export default function EditProfile() {
     const { deleteProfile } = useDeleteProfile();
     const [isSavePending, setIsSavePending] = useState(false);
     const [opened, setOpened] = useState();
+
 
     const handleSaveProfile = async (data) => {
 
@@ -58,7 +59,7 @@ export default function EditProfile() {
             toggleEditMode={toggleEditMode}
             isSavePending={isSavePending} />
         }
-            <Address />
+            <EditAddress />
             <Fieldset m="sm" variant='filled' legend="Danger zone"
             classNames={{
                 legend: classes.dangerSoneLegend,

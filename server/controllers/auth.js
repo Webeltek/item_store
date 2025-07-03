@@ -193,11 +193,11 @@ function getProfileInfo(req, res, next) {
 
 function editProfileInfo(req, res, next) {
     const { _id: userId } = req.user;
-    const { username, email } = req.body;
+    const { username, email, address : { streetAddres, postalCode, city} } = req.body;
 
     const token = req.get('X-Authorization');
 
-    userModel.findOneAndUpdate({ _id: userId }, { username, email }, { runValidators: true, new: true })
+    userModel.findOneAndUpdate({ _id: userId }, { username, email, address : { streetAddres, postalCode, city} }, { runValidators: true, new: true })
         .then(user => {
             user = bsonToJson(user);
             user = removePassword(user);

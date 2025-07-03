@@ -4,6 +4,8 @@ import { Button, ConfigProvider } from 'antd'
 import '@mantine/core/styles.css';
 import { MantineProvider, createTheme } from '@mantine/core';
 import Layout from './Layout'
+import { Provider } from 'react-redux';
+import store from "./redux/store"
 
 function App() {
   
@@ -40,10 +42,11 @@ function App() {
           }
         }
       }>
-        <UserProvider>
-          
-          <Layout />
-        </UserProvider>
+        <Provider store={store}>
+          <UserProvider>
+            <Layout />
+          </UserProvider>
+        </Provider>
       </ConfigProvider>
     </MantineProvider>
   )

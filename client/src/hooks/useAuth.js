@@ -22,7 +22,6 @@ export default function useAuth(){
     const { accessToken, showErrorMsg, ...contextData} = useContext(UserContext);
     
     const requestWrapper = useCallback( async (method, url,data,options = {}) =>{
-        
         const authOptions = {
             ...options,
             headers: {
