@@ -11,13 +11,19 @@ import ShowUser from "./show-user/ShowUser";
 import DeleteAccPrompt from "./delete-acc-prompt/DeleteAccPrompt";
 import { useDisclosure } from "@mantine/hooks";
 import EditAddress from "./edit-address/EditAddress";
+import { useSelector } from 'react-redux'
+import ShowAddress from "./show-address/ShowAddress";
 
 export default function EditProfile() {
     const [isEditMode, setEditMode] = useState(false);
+    const [isAddressEditMode, setAddressEditMode] = useState(false);
     const { email, username, userLoginHandler, userLogoutHandler } = useAuth();
+    const address = useSelector( state => state.user.address);
+        
     const { editProfile} = useEditProfile();
     const { deleteProfile } = useDeleteProfile();
     const [isSavePending, setIsSavePending] = useState(false);
+    const [isSaveAddressPending, setIsSaveAddressPending] = useState(false);
     const [opened, setOpened] = useState();
 
 
@@ -34,8 +40,23 @@ export default function EditProfile() {
             setIsSavePending(false);
         }
     }
+    const handleSaveAddress = async (addressData) =>{
+        const { streetAddress, postalCode, city } = addressData;
+        try {
+            //setIsSaveAddressPending(true);
+            const savedAddress = ''
+            toggleAddressEditMode();
+        } catch (error) {
+            setIsSaveAddressPending(false);
+        }
+    }
+
     const toggleEditMode = () => {
         setEditMode( state=> !state);
+    }
+
+    const toggleAddressEditMode = () => {
+        setAddressEditMode( state => !state)
     }
     
     const handleDelete = async ()=>{
@@ -58,8 +79,16 @@ export default function EditProfile() {
             handleSaveProfile={handleSaveProfile}
             toggleEditMode={toggleEditMode}
             isSavePending={isSavePending} />
-        }
-            <EditAddress />
+            }
+            { (address && !isAddressEditMode) ?
+            <ShowAddress toggleEditAddress={toggleAddressEditMode} savedAddress={address} />
+            :
+            <EditAddress
+             isSaveAddressPending={isSaveAddressPending} 
+             toggleEditAddress={toggleAddressEditMode} 
+             address={address}
+             handleSaveAddress={handleSaveAddress} />    
+            }    
             <Fieldset m="sm" variant='filled' legend="Danger zone"
             classNames={{
                 legend: classes.dangerSoneLegend,
