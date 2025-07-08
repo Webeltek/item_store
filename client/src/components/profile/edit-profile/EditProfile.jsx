@@ -32,9 +32,9 @@ export default function EditProfile() {
         const { username, email} = data;
         try {
             setIsSavePending(true);
-            const authData = await editProfile(username, email);
+            const userData = await editProfile(username, email);
             setIsSavePending(false);
-            userLoginHandler(authData);
+            userLoginHandler(userData);
             toggleEditMode();
         } catch (error) {
             setIsSavePending(false);
@@ -43,8 +43,10 @@ export default function EditProfile() {
     const handleSaveAddress = async (addressData) =>{
         const { streetAddress, postalCode, city } = addressData;
         try {
-            //setIsSaveAddressPending(true);
-            const savedAddress = ''
+            setIsSaveAddressPending(true);
+            const userData = await editProfile(null, null, addressData);
+            setIsSaveAddressPending(false);
+            userLoginHandler(userData);
             toggleAddressEditMode();
         } catch (error) {
             setIsSaveAddressPending(false);
