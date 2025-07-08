@@ -37,6 +37,7 @@ function auth(redirectUnauthenticated = true) {
                 }
                 if (['token expired', 'blacklisted token', 'jwt must be provided'].includes(err.message)) {
                     if(req.url !== '/profile'){
+                        process.env.NODE_ENV === 'development' &&
                         console.error(err); // prevent frontend getProfile error logs when guest access 
                     }
                     res
