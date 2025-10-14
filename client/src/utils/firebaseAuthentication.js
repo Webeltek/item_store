@@ -5,8 +5,9 @@ import { initializeApp } from "firebase/app";
 import { FacebookAuthProvider, getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 const actionCodeSettings = {
-  url: import.meta.env.VITE_FIREBASE_REDIRECT_URL,
+  url: import.meta.env.VITE_FIREBASE_REDIRECT_URL2,
   handleCodeInApp: true,
+  dynamicLinkDomain: "webeltek.org"
 }
 // Your web app's Firebase configuration
 const firebaseConfig = {
