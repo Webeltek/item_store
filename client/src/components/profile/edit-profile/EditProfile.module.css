@@ -1,6 +1,6 @@
 .editProfStack{
     padding: 0 calc((100% - 30rem)/2);
-    background-color: #fff;
+    background-color: #f2f4f5;
     margin: 1rem ;
     animation: fadeIn 3s;
     border-radius: 10px;

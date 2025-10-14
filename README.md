@@ -30,6 +30,7 @@
     - registered users can login with email ( with validation) and password 
     ( minimum 5 characters and latin letters and digits ), all fields are required
     - if wrong username or password error message is displayed
+    - alternative login with gmail
 
 5. Register:
     - unregistered users can register with username email and password with the same 
