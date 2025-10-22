@@ -10,14 +10,11 @@ export default function Catalog(){
     return (
         <>
         <section className="catalog-hero">
-            <div className="container">
                 <h2>Tv Catalog</h2>
                 <p>Explore our extensive range of TVs and accessories.</p>
-            </div>
         </section>
 
         <section className="catalog">
-            <div className="container">
                 {isPending
                 ? <Loader />
                 : 
@@ -33,7 +30,6 @@ export default function Catalog(){
                     }
                 </div>
                 }
-            </div>
         </section>
         </>
 

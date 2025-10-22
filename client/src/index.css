@@ -1,17 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
 @import "tailwindcss";
 
-/* * {
-  padding: 0;
-  margin: 0;
-} */
+  
 
-/* *, *::before, *::after{
+/* 
+Because Mantine already adds resets this is commented out
+html{
+  box-sizing: border-box;
+} 
+
+ *, *::before, *::after{
   box-sizing: inherit;
 }
 
-html{
-  box-sizing: border-box;
+body, input, textarea, select, option, button {
+    font: inherit;
 } */
 
 
@@ -19,9 +22,6 @@ html {
     font: clamp(12px, 12px + 0.4vw ,18px)/1.5 Lato, sans-serif;
 }
 
-body, input, textarea, select, option, button {
-    font: inherit;
-}
 
 div#root{
   /* background-color: #f4f4f4; */
