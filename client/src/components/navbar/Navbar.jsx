@@ -5,7 +5,7 @@ import { NavbarLinksGroup } from "./NavbarLinksGroup/NavbarLinksGroup";
 import useAuth from "../../hooks/useAuth";
 import { forwardRef } from "react";
 
-const Navbar = forwardRef( ({toggleMobile }, ref)=> {
+const Navbar = forwardRef( ({toggleBurger }, ref)=> {
     const { isAuthenticated} = useAuth();
     const linksdata = [
         { label : 'Home', link: '/', icon: IconHome},
@@ -19,7 +19,7 @@ const Navbar = forwardRef( ({toggleMobile }, ref)=> {
         { label: 'About', link: '/about', icon: IconInfoCircle}
     ]
 
-    const links = linksdata.map((item)=> <NavbarLinksGroup toggleMobile={toggleMobile} {...item} key={item.label} />)
+    const links = linksdata.map((item)=> <NavbarLinksGroup toggleBurger={toggleBurger} {...item} key={item.label} />)
     return (
         <nav ref={ref} className={classes.navbar}>
             <ScrollArea className={classes.links}>

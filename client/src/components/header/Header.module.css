@@ -1,6 +1,6 @@
 .topHeader {
-    background: linear-gradient(to right,  #f5f6f7, #eafaf7);
-    color: #184e77;
+    background: linear-gradient(to right,  #fff, #fff);
+    color: #000;
     padding: 0.5rem 0;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: background 0.3s ease;
@@ -13,18 +13,17 @@
     align-items: center;
   }
   
-  .profile-menu-icon{
-    /* border: solid 1px red; */
+  /* .profile-menu-icon{
     cursor: pointer;
     display: block;
     padding: 0 0.5em;
     color:rgba(0, 0, 0, 0.7);
   }
-  
+   */
   .profile{
     text-decoration: none;
     padding-left: 0.5em;
-    color:rgba(0, 0, 0, 0.7);
+    color:var(--mantine-color-ocean-blue-8);
   }
   
   .siteTitle {
@@ -84,8 +83,6 @@
     transform: scale(1.1);
   }
 
-  .fa-user{
-    color: #063341;
-  }
+
 
   

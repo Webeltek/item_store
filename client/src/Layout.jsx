@@ -5,7 +5,6 @@ import About from './components/about/About'
 import Login from './components/login/Login'
 import Register from './components/register/Register'
 import AddItem from './components/add-item/AddItem'
-import Profile from './components/profile/Profile'
 import Footer from './components/footer/Footer'
 import Header from './components/header/Header'
 import Logout from './components/logout/Logout'
@@ -20,21 +19,22 @@ import { useDisclosure, useMediaQuery } from '@mantine/hooks'
 import Navbar from './components/navbar/Navbar'
 import { useClickOutside } from '@mantine/hooks';
 import { useState } from 'react'
+import EditProfile from './components/profile/edit-profile/EditProfile'
+import ProfileProducts from './components/profile/profile-products/ProfileProducts'
+import ProfileOrders from './components/profile/profile-orders/ProfileOrders'
 
 export default function Layout() {
-  const [mobileOpened, { toggle: toggleMobile }] = useDisclosure();
-  const [desktopOpened, { toggle: toggleDesktop }] = useDisclosure();
+  const [burgerOpened, { toggle: toggleBurger }] = useDisclosure();
   const isMobile = useMediaQuery('(max-width: 48em)');
   const [navbar, setNavbar] = useState()
   const [headerWithBurger, setHeaderWithBurger]= useState();
   
   //trigger on click outside navbar and header
   const ref = useClickOutside(()=> {
-    if(mobileOpened){ 
-      toggleMobile()
+    if(burgerOpened && isMobile){ 
+      toggleBurger()
     }
   },['mousedown','touchstart'],[navbar,headerWithBurger]);
-  const isNavbarExpanded = mobileOpened || desktopOpened; 
 
     return (
         <AppShell
@@ -43,32 +43,29 @@ export default function Layout() {
             height: "90"
         }}
         navbar={{
-            width: 200,
+            width: 250,
             breakpoint: 'sm',
-            collapsed: { mobile: !mobileOpened, desktop: !desktopOpened },
+            collapsed: { mobile: !burgerOpened, desktop: !burgerOpened },
 
         }}>
             <AppShell.Header>
               <div className='h-full' ref={setHeaderWithBurger}>
                 <Header
                     isMobile={isMobile}
-                    isNavbarOpened={isNavbarExpanded} 
-                    mobOpened={mobileOpened} 
-                    deskOpened={desktopOpened} 
-                    toggleMob={toggleMobile} 
-                    toggleDesk={toggleDesktop}  
+                    burgerOpened={burgerOpened} 
+                    toggleBurger={toggleBurger} 
                 />
               </div>
             </AppShell.Header>
             <AppShell.Navbar
             style={{
-              width: isNavbarExpanded ? rem(200) : 0, //only width: 0 doesn't hide it fully
+              width: burgerOpened ? rem(250) : 0, //only width: 0 doesn't hide it fully
               overflow: 'hidden',
             }}
             >
-              <Navbar ref={setNavbar} toggleMobile={toggleMobile} />
+              <Navbar ref={setNavbar} toggleBurger={toggleBurger} />
             </AppShell.Navbar>
-            <AppShell.Main bg="gray.0" >
+            <AppShell.Main  >
               <div className='flex flex-col h-dvh'>
               <Routes>
                     <Route index element={ <Home />} />
@@ -78,7 +75,11 @@ export default function Layout() {
                     <Route element={ <AuthGuard />}>
                       <Route path="/add-item" element={ <AddItem />} />
                       <Route path="/items/:itemId/edit" element={ <EditItem />} />
-                      <Route path="/profile" element={ <Profile />}  />
+                      <Route path="/profile">
+                        <Route index element={ <EditProfile />} />
+                        <Route path="products" element={ <ProfileProducts />} />
+                        <Route path='orders' element={ <ProfileOrders />} />
+                      </Route>
                       <Route path="/logout" element={ <Logout /> }  />
                     </Route>
                     <Route element={ <GuestGuard />}>

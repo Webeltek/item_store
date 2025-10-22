@@ -7,7 +7,7 @@ export default function ProfileItem({
     item
 }) {
     return (
-        <div key={item._id} className="tv-item">
+        <div className="tv-item">
             { item.imageFile &&
                 <img src={`${IMAGES_URL}/${item.imageFile}`} alt="Phone" />
             }

@@ -14,7 +14,7 @@ function App() {
         'ocean-blue': ['#7AD1DD', '#5FCCDB', '#44CADC', '#2AC9DE', '#1AC2D9', '#11B7CD', '#09ADC3', '#0E99AC', '#128797', '#147885'],
       },
       fontFamily: 'Lato, sans-serif',
-      defaultRadius: '0.3rem',
+      defaultRadius: '0.5rem',
       components: {
         Button : {
           defaultProps: {

@@ -9,7 +9,7 @@ export function NavbarLinksGroup({
     link, 
     initiallyOpened, 
     links,
-    toggleMobile 
+    toggleBurger : onMenuClick
   }
 ) {
   const hasLinks = Array.isArray(links);
@@ -17,7 +17,7 @@ export function NavbarLinksGroup({
 
   const menuTitleClickHandler = ()=>{
     if (!hasLinks){
-      toggleMobile();
+      onMenuClick();
     }
   }
 
@@ -27,7 +27,7 @@ export function NavbarLinksGroup({
       className={classes.link}
       to={link.link}
       key={link.label}
-      onClick={toggleMobile}
+      onClick={onMenuClick}
     >
       {link.label}
     </Text>
