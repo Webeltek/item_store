@@ -13,6 +13,8 @@ export function readErrorMessage(message){
         || message === 'invalid signature'
     ){
         return 'Invalid session, please login again!'
+    } else if ( message === 'Failed to fetch') {
+        return 'Server disconnected!'
     }
     
     return message;

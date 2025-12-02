@@ -111,9 +111,9 @@ export const useEditProfile = ()=>{
         headers: { 'X-Authorization': accessToken}
     };
 
-    const editProfile = async (username, email, address)=>{
+    const editProfile = async (update)=>{
         try {
-            const result = await request.put(`${baseUrl}/users/profile`, {username, email,address}, options)
+            const result = await request.put(`${baseUrl}/users/profile`, update, options)
             return result;
         } catch (error) {
             showErrorMsg(error.message);

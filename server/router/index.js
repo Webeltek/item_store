@@ -4,12 +4,12 @@ const items = require('./items');
 const messages = require('./messages');
 const likes = require('./likes');
 const test = require('./test');
-const { authController } = require('../controllers');
+const { userController } = require('../controllers');
 
-router.post('/register', authController.register);
-router.post('/login', authController.login);
-router.get('/logout', authController.logout);
-router.post('/verify_gtoken', authController.verifyGtoken)
+router.post('/register', userController.register);
+router.post('/login', userController.login);
+router.get('/logout', userController.logout);
+router.post('/verify_gtoken', userController.verifyGtoken)
 
 router.use('/users', users);
 router.use('/items', items);

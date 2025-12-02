@@ -193,25 +193,54 @@ function getProfileInfo(req, res, next) {
 
 function editProfileInfo(req, res, next) {
     const { _id: userId } = req.user;
-    const { username, email, address } = req.body;
-    const update = {};
-    if( username && email){
-        update = { username, address};
+    function removeUndefinedFields(obj) {
+        return Object.fromEntries(
+            Object.entries(obj).filter(([_, v]) => v !== undefined)
+        );
     }
-    if(address){
-        const { streetAddress, postalCode, city} = address;
-        update.address = { streetAddress, postalCode, city}
-    }
-
+    const updateObj = req.body;
+    const strippedObj = removeUndefinedFields(updateObj);
     const token = req.get('X-Authorization');
-
-    userModel.findOneAndUpdate({ _id: userId }, update , { runValidators: true, new: true })
+    
+    userModel.findById(userId)
+        .then(user => {
+            if( strippedObj.password){
+                return  user.matchPassword(strippedObj.password)
+                            .then( match => {
+                                if (!match) {
+                                    throw new Error('Wrong password!');  
+                                }
+                                return user;
+                            });
+            }
+            return user;
+        })
+        .then((user) => {
+            Object.keys(strippedObj).forEach(key => {
+                    if (key !== 'password' && key !== 'newPassword') {
+                        user[key] = strippedObj[key];
+                    }
+            });
+            if(strippedObj.newPassword) {
+                user.validatePassword(strippedObj.newPassword);
+                user.password = strippedObj.newPassword;
+            }
+            return user.save();
+        })
         .then(user => {
             user = bsonToJson(user);
             user = removePassword(user);
-             
+                
             res.status(200).json({ ...user, accessToken: token}) })
-        .catch(next);
+        .catch( error => {
+            if( error.message === "Wrong password!"){
+                return res.status(401).send({ 
+                                message: 'Wrong password!',
+                                err: { message: 'Wrong password!'} 
+                });
+            }
+            next(error);
+        });
 }
 
 module.exports = {

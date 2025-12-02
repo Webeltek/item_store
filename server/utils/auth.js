@@ -40,13 +40,12 @@ function auth(redirectUnauthenticated = true) {
                         process.env.NODE_ENV === 'development' &&
                         console.error(err); // prevent frontend getProfile error logs when guest access 
                     }
-                    res
-                        .status(401)
-                        .send({ message: "Invalid token!" ,
-                            err : {
-                                message: err.message
-                            }
-                        });
+                    res.status(401)
+                    .send({ message: "Invalid token!" ,
+                        err : {
+                            message: err.message
+                        }
+                    });
                     return;
                 }
                 next(err);

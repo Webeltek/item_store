@@ -5,7 +5,6 @@ import useAuth from "../../../hooks/useAuth";
 import { UserDeleteOutlined } from "@ant-design/icons"
 import classes from './EditProfile.module.css'
 import { toast } from "react-toastify";
-import EditUser from "./edit-user/EditUser";
 import { Box, Button, Container, Fieldset, Stack, Title } from "@mantine/core";
 import ShowUser from "./show-user/ShowUser";
 import DeleteAccPrompt from "./delete-acc-prompt/DeleteAccPrompt";
@@ -15,7 +14,6 @@ import { useSelector } from 'react-redux'
 import ShowAddress from "./show-address/ShowAddress";
 
 export default function EditProfile() {
-    const [isEditMode, setEditMode] = useState(false);
     const [isAddressEditMode, setAddressEditMode] = useState(false);
     const { email, username, userLoginHandler, userLogoutHandler } = useAuth();
     const address = useSelector( state => state.user.address);
@@ -29,13 +27,12 @@ export default function EditProfile() {
 
     const handleSaveProfile = async (data) => {
 
-        const { username, email} = data;
+        const { username, email, password, newPassword } = data;
         try {
             setIsSavePending(true);
-            const userData = await editProfile(username, email);
+            const userData = await editProfile({ username, email, password, newPassword});
             setIsSavePending(false);
             userLoginHandler(userData);
-            toggleEditMode();
         } catch (error) {
             setIsSavePending(false);
         }
@@ -44,7 +41,7 @@ export default function EditProfile() {
         const { streetAddress, postalCode, city } = addressData;
         try {
             setIsSaveAddressPending(true);
-            const userData = await editProfile(null, null, addressData);
+            const userData = await editProfile({ address: { streetAddress, postalCode, city } });
             setIsSaveAddressPending(false);
             userLoginHandler(userData);
             toggleAddressEditMode();
@@ -53,9 +50,7 @@ export default function EditProfile() {
         }
     }
 
-    const toggleEditMode = () => {
-        setEditMode( state=> !state);
-    }
+    
 
     const toggleAddressEditMode = () => {
         setAddressEditMode( state => !state)
@@ -71,17 +66,12 @@ export default function EditProfile() {
         }
     }
     return (
-        <Stack className={classes.editProfStack}>
-            <Title c="gray.7" ta="center" order={2}>User Profile</Title>
-            {/* <!-- Readonly mode--> */}
-            { !isEditMode ?
-            <ShowUser username={username} email={email} toggleEditMode={toggleEditMode} />    
-            : 
-            <EditUser savedUsername={username} savedEmail={email} 
+        <section className="flex-col shadow-xl rounded-xl w-[35rem] my-8 mx-[calc((100%-35rem)/2)] p-4 bg-white">
+            <Title c="gray.5" ta="center" order={2}>My account</Title>
+            <ShowUser savedUsername={username} savedEmail={email} 
             handleSaveProfile={handleSaveProfile}
-            toggleEditMode={toggleEditMode}
-            isSavePending={isSavePending} />
-            }
+            isSavePending={isSavePending}  />    
+            
             { (address && !isAddressEditMode) ?
             <ShowAddress toggleEditAddress={toggleAddressEditMode} savedAddress={address} />
             :
@@ -107,6 +97,6 @@ export default function EditProfile() {
             <DeleteAccPrompt email={email} 
             opened={opened} setOpened={setOpened}
             confirmHandler={handleDelete} />    
-        </Stack>
+        </section>
     );
 }

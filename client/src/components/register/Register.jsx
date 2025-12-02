@@ -28,6 +28,7 @@ export default function Register() {
         
         // Validate all fields before submitting
         Object.keys(values).forEach((key) => {
+            values[key] = values[key].trim();
             validateField(key, values[key]);
         });
         
