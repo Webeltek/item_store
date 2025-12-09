@@ -66,6 +66,8 @@ export default function FirebaseBtns() {
           setError('');
         } catch (err) {
           setError(err.message);
+          console.log(err.message);
+          
           setSent(false);
         }
       };

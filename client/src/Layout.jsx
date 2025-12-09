@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
 import Home from './components/home/Home'
 import Catalog from './components/catalog/Catalog'
 import About from './components/about/About'
@@ -22,6 +22,7 @@ import { useState } from 'react'
 import EditProfile from './components/profile/edit-profile/EditProfile'
 import ProfileProducts from './components/profile/profile-products/ProfileProducts'
 import ProfileOrders from './components/profile/profile-orders/ProfileOrders'
+import classes from './Layout.module.css'
 
 export default function Layout() {
   const [burgerOpened, { toggle: toggleBurger }] = useDisclosure();
@@ -38,9 +39,12 @@ export default function Layout() {
 
     return (
         <AppShell
+        classNames={{
+          header: classes.root
+        }}
         withBorder={false}
         header={{
-            height: "90"
+            height: "90",
         }}
         navbar={{
             width: 250,
@@ -51,6 +55,7 @@ export default function Layout() {
             <AppShell.Header>
               <div className='h-full' ref={setHeaderWithBurger}>
                 <Header
+                className=" "
                     isMobile={isMobile}
                     burgerOpened={burgerOpened} 
                     toggleBurger={toggleBurger} 
@@ -88,6 +93,7 @@ export default function Layout() {
                       <Route path="/finish-signin" element={ <FinishSignIn />} />
                     </Route>
                     <Route path="/about" element={ <About />} />
+                    <Route path="*" element={<Navigate to="/" />} />
               </Routes>
               <Footer />
               </div> 

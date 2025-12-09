@@ -1,11 +1,11 @@
-
 import UserProvider from './providers/UserProvider'
 import { Button, ConfigProvider } from 'antd'
 import '@mantine/core/styles.css';
-import { MantineProvider, createTheme } from '@mantine/core';
+import { MantineProvider, PasswordInput, TextInput, createTheme } from '@mantine/core';
 import Layout from './Layout'
 import { Provider } from 'react-redux';
-import store from "./redux/store"
+import store from "./redux/store";
+import classes from './App.module.css';
 
 function App() {
   
@@ -19,16 +19,36 @@ function App() {
         Button : {
           defaultProps: {
             color: "ocean-blue.5",
+            radius: '5rem',
             // variant: 'gradient',
             //   gradient: { from: '#00a6fb', to: '#0582ca', deg: 135 },
           }
-        }
+        },
+        TextInput : TextInput.extend({
+          classNames: {
+            input: classes.input,
+            label: classes.label,
+          }
+        }),
+        PasswordInput : PasswordInput.extend({
+          classNames: {
+            input: classes.input,
+            label: classes.label,
+          },
+          // vars:(theme,props)=> { 
+          //   return {
+          //     input: {
+          //       '--input-bd-focus': 'var(--mantine-color-ocean-blue-6)',
+          //     }
+          //   }
+          // }
+        })
       }
   })
 
   return (
     <MantineProvider theme={theme} >
-      <ConfigProvider theme={ 
+       <ConfigProvider theme={ 
         {
           token: { 
             colorPrimary: '#0096c7',
@@ -49,7 +69,7 @@ function App() {
         </Provider>
       </ConfigProvider>
     </MantineProvider>
-  )
+   )
 }
 
 export default App

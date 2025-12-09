@@ -85,6 +85,7 @@ export default function Login(){
                         <input
                         className={errors.password ? classes.inputError : classes.formGroupInput}
                         type="password"
+                        autoComplete="current-password"
                         id="password"
                         name="password"
                         onBlur={handleBlur}

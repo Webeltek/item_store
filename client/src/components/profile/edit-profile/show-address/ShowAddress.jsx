@@ -10,7 +10,7 @@ export default function ShowAddress({
             <Fieldset styles={{
                             legend: { color: theme.colors['ocean-blue'][5]},
                             root: { borderColor: theme.colors['ocean-blue'][5]}
-                        }} m="sm" variant='filled' legend="Address information">
+                        }} m="sm" legend="Address information">
                 <Stack gap="lg">
                     <Group justify="space-between">
                         <span>Street address: </span>

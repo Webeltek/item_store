@@ -15,7 +15,8 @@ export default function Header({
     return (
         <>
                 <Stack className={classes.topHeader} gap="0">
-                    <Group justify='space-between' align='baseline' p="0 1rem">
+                    <Group  
+                    justify='space-between' align='baseline' p="0 1rem">
                         <span className={classes.siteTitle}>Matredder</span>
                         <div className={classes.profileMenu}>
                             <ThemeIcon variant="light" size={24}>
@@ -70,14 +71,14 @@ export default function Header({
                                         </Button>
                                     </Menu.Target>
                                     <Menu.Dropdown>
-                                        <Menu.Item  leftSection={<IconSettings size={14}/>}
+                                        <Menu.Item  leftSection={<IconSettings color='var(--mantine-color-ocean-blue-5)' size={14}/>}
                                         component={NavLink} to="/profile"
-                                        >My site</Menu.Item>
-                                        <Menu.Item leftSection={<IconListDetails size={14}/>}
-                                        component={NavLink} to="/profile/products"
+                                        >My account</Menu.Item>
+                                        <Menu.Item leftSection={<IconListDetails color='var(--mantine-color-ocean-blue-5)' size={14}/>}
+                                        component={NavLink} to="/profile/products" 
                                         >My products</Menu.Item>
-                                        <Menu.Item leftSection={<IconListCheck size={14}/>}
-                                        component={NavLink} to="/profile/orders"
+                                        <Menu.Item leftSection={<IconListCheck color='var(--mantine-color-ocean-blue-5)' size={14}/>}
+                                        component={NavLink} to="/profile/orders" 
                                         >My orders</Menu.Item>
                                     </Menu.Dropdown>
                                 </Menu>
