@@ -1,8 +1,13 @@
-const { userModel, messageModel, itemModel } = require('../models');
-const { formidable } = require('formidable');
-const { log } = require('node:console');
-const  fs  = require('node:fs')
-const path = require('path');
+import { userModel, messageModel, itemModel } from '../models/index.js';
+import { formidable } from 'formidable';
+import { log } from 'node:console';
+import fs from 'node:fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 function getLatestItems(req, res, next) {
     const limit = Number(req.query.limit) || 0;
@@ -283,7 +288,7 @@ function order(req, res, next) {
         .catch(next)
 }
 
-module.exports = {
+export {
     getLatestItems,
     getItem,
     getItems,

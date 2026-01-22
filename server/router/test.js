@@ -1,6 +1,7 @@
-const express = require('express');
+import express from 'express';
+import * as utils from '../utils/index.js';
+
 const router = express.Router();
-const utils = require('../utils')
 
 // middleware that is specific to this router
 
@@ -16,4 +17,4 @@ router.get('/', function (req, res) {
     res.send(data);
 })
 
-module.exports = router
+export default router

@@ -1,9 +1,9 @@
-const jwt = require('./jwt');
-const auth = require('./auth');
-const errorHandler = require('./errHandler');
+import jwt from './jwt.js';
+import auth from './auth.js';
+import errorHandler from './errHandler.js';
 
-module.exports = {
+export {
     jwt,
     auth,
-    errorHandler
+    errorHandler,
 }

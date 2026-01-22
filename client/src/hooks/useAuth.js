@@ -2,23 +2,6 @@ import { useCallback, useContext, useMemo, useState } from "react";
 import { UserContext } from "../contexts/UserContext";
 import request from "../utils/request";
 
-export function readErrorMessage(message){
-    if(message === 'jwt expired'){
-        return "Session expired, please login again!"
-    } else if (
-        message === 'invalid token'
-        || message === 'blacklisted token'
-        || message === 'jwt must be provided'
-        || message === 'jwt malformed'
-        || message === 'invalid signature'
-    ){
-        return 'Invalid session, please login again!'
-    } else if ( message === 'Failed to fetch') {
-        return 'Server disconnected!'
-    }
-    
-    return message;
-}
 
 export default function useAuth(){
     const { accessToken, showErrorMsg, ...contextData} = useContext(UserContext);

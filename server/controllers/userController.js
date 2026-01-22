@@ -1,12 +1,9 @@
-const {
-    userModel,
-    tokenBlacklistModel
-} = require('../models');
+import { userModel, tokenBlacklistModel } from '../models/index.js';
+import firebaseAdmin from 'firebase-admin';
+import * as utils from '../utils/index.js';
+import appConfig from '../app-config.js';
 
-const firebaseAdmin = require('firebase-admin');
-
-const utils = require('../utils');
-const { authCookieName } = require('../app-config');
+const { authCookieName } = appConfig;
 
 const bsonToJson = (data) => { return JSON.parse(JSON.stringify(data)) };
 const removePassword = (data) => {
@@ -243,7 +240,7 @@ function editProfileInfo(req, res, next) {
         });
 }
 
-module.exports = {
+export {
     login,
     verifyGtoken,
     register,

@@ -1,10 +1,13 @@
-const router = require('express').Router();
-const users = require('./users');
-const items = require('./items');
-const messages = require('./messages');
-const likes = require('./likes');
-const test = require('./test');
-const { userController } = require('../controllers');
+import express from 'express';
+import users from './users.js';
+import items from './items.js';
+import messages from './messages.js';
+import likes from './likes.js';
+import test from './test.js';
+import { userController } from '../controllers/index.js';
+import images from './images.js';
+
+const router = express.Router();
 
 router.post('/register', userController.register);
 router.post('/login', userController.login);
@@ -13,8 +16,9 @@ router.post('/verify_gtoken', userController.verifyGtoken)
 
 router.use('/users', users);
 router.use('/items', items);
+router.use('/images', images);
 router.use('/messages', messages);
 router.use('/likes', likes);
 router.use('/test', test);
 
-module.exports = router;
+export default router;

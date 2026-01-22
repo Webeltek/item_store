@@ -1,39 +1,74 @@
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import dotenv from 'dotenv';
+import dbConnector from './config/db.js';
+import apiRouter from './router/index.js';
+import cors from 'cors';
+import express from 'express';
+import firebaseAdmin from 'firebase-admin';
+import errorHandler from './utils/errHandler.js';
+import { ApolloServer } from "@apollo/server";
+import { expressMiddleware } from "@as-integrations/express4";
+import typeDefs from './graphql/schema.js';
+import resolvers from './graphql/resolvers.js';
+import auth from './utils/auth.js';
+import config from './config/config.js';
+import initExpress from './config/express.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 global.__basedir = __dirname;
-require('dotenv').config()
-const dbConnector = require('./config/db');
-// const mongoose = require('mongoose');
-const apiRouter = require('./router');
-const cors = require('cors');
-const firebaseAdmin = require('firebase-admin');
-// const config = require('./config/config');
-const { errorHandler } = require('./utils');
+dotenv.config()
 
 dbConnector()
-  .then(() => {
-    const config = require('./config/config');
+  .then(( mongoose ) => {
+    mongoose.set('strictQuery', true); // to suppress deprecation warning
 
-    const app = require('express')();
-    require('./config/express')(app);
-
+    const app = express();
+    initExpress(app);
 
     app.use(cors({
       origin: config.origin,
       credentials: true
     }));
 
-
     firebaseAdmin.initializeApp({
       credential: firebaseAdmin.credential.cert(config['serviceAccount']),
+      storageBucket: config['storageBucket']
     })
 
-    const express = require('express');
+    // if node process is runned from directory other than server,
+    // use absolute path to 'public' folder
+    // app.use('/assets', express.static(path.join(__dirname, 'public')))
 
-    app.use('/uploads', express.static('uploads'))
+    app.use('/api/assets', express.static('public/media'))
 
-    app.use('/api', apiRouter);
+    const apolloServer = new ApolloServer({
+      typeDefs,
+      resolvers,
+    });
 
-    app.use(errorHandler);
+    apolloServer.start().then( () => {
+      app.use(
+        '/api/graphql',
+        auth(),
+        expressMiddleware(apolloServer, {
+          context: ({ req, res }) => {
+            return Promise.resolve({
+              user: req.user,
+              isLogged: req.isLogged || false
+            });
+          },
+        }),
+      );
 
-    app.listen(config.port, console.log(`Listening on port ${config.port}!`));
+      app.use('/api', apiRouter);
+  
+      app.use(errorHandler);
+  
+      app.listen(config.port, console.log(`Listening on port ${config.port}!`));
+    })
+
   })
   .catch(console.error);

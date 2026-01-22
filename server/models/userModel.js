@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
-const saltRounds = Number(process.env.SALTROUNDS) || 5;
+import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
 
+const saltRounds = Number(process.env.SALTROUNDS) || 5;
 const { ObjectId } = mongoose.Schema.Types;
 
 const userSchema = new mongoose.Schema({
@@ -111,4 +111,4 @@ userSchema.pre('save', function (next) {
 });
 
 
-module.exports = mongoose.model('User', userSchema);
+export default mongoose.model('User', userSchema);

@@ -8,5 +8,5 @@ export const UserContext = createContext({
     accessToken: '',
     userLoginHandler: ()=> null,
     userLogoutHandler: () => null,
-    showErrorMsg: ()=> null,
+    showErrorMsg: ( arg )=> null,
 })
