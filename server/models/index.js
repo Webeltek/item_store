@@ -1,9 +1,9 @@
-const userModel = require('./userModel');
-const tokenBlacklistModel = require('./tokenBlacklistModel');
-const messageModel = require('./messageModel');
-const itemModel = require('./itemModel');
+import userModel from './userModel.js';
+import tokenBlacklistModel from './tokenBlacklistModel.js';
+import messageModel from './messageModel.js';
+import itemModel from './itemModel.js';
 
-module.exports = {
+export {
     userModel,
     tokenBlacklistModel,
     messageModel,

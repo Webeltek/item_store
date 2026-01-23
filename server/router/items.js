@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { auth } from '../utils/index.js';
+import { itemController, messageController } from '../controllers/index.js';
+
 const router = express.Router();
-const { auth } = require('../utils');
-const { itemController, messageController } = require('../controllers');
 
 // middleware that is specific to this router
 
@@ -18,4 +19,4 @@ router.delete('/:itemId',auth(), itemController.deleteItem)
 
 // router.get('/my-trips/:id/reservations', auth(), itemController.getReservations);
 
-module.exports = router
+export default router

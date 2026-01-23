@@ -1,10 +1,11 @@
-const express = require('express');
+import express from 'express';
+import { auth } from '../utils/index.js';
+import { messageController } from '../controllers/index.js';
+
 const router = express.Router();
-const { auth } = require('../utils');
-const { messageController } = require('../controllers');
 
 // middleware that is specific to this router
 
 router.put('/:messageId', auth(), messageController.like);
 
-module.exports = router
+export default router

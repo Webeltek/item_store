@@ -1,4 +1,5 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
+
 const secret = process.env.SECRET || 'SoftSecret';
 
 function createToken(data) {
@@ -17,7 +18,7 @@ function verifyToken(token) {
     });
 }
 
-module.exports = {
+export default {
     createToken,
     verifyToken
 }

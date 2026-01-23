@@ -1,7 +1,7 @@
-const config = require('./config');
-const mongoose = require('mongoose');
+import config from './config.js';
+import mongoose from 'mongoose';
 
-module.exports = () => {
+export default () => {
   return mongoose.connect(config.dbURL, {
     dbName: 'itemstore',
   });

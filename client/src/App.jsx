@@ -2,10 +2,24 @@ import UserProvider from './providers/UserProvider'
 import { Button, ConfigProvider } from 'antd'
 import '@mantine/core/styles.css';
 import { MantineProvider, PasswordInput, TextInput, createTheme } from '@mantine/core';
+import { createClient, Provider as UrqlProvider, dedupExchange, cacheExchange, fetchExchange } from 'urql'
 import Layout from './Layout'
 import { Provider } from 'react-redux';
 import store from "./redux/store";
 import classes from './App.module.css';
+
+const client = createClient({
+  url: `${import.meta.env.VITE_API_URL}/graphql`,
+  fetchOptions: () => {
+    const token = localStorage.getItem('auth') ? JSON.parse(localStorage.getItem('auth')).accessToken : null;
+    return {
+      headers: { 
+        "X-Authorization": token ? `${token}` : '',
+      },
+    };
+  },
+  exchanges: [dedupExchange, cacheExchange, fetchExchange]
+});
 
 function App() {
   
@@ -64,7 +78,9 @@ function App() {
       }>
         <Provider store={store}>
           <UserProvider>
-            <Layout />
+            <UrqlProvider value={client}>
+              <Layout />
+            </UrqlProvider>
           </UserProvider>
         </Provider>
       </ConfigProvider>

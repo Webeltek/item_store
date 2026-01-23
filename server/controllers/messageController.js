@@ -1,4 +1,4 @@
-const { userModel, itemModel, messageModel } = require('../models');
+import { userModel, itemModel, messageModel } from '../models/index.js';
 
 function newMessage(text, userId, itemId) {
     return messageModel.create({ text, authorId: userId, itemId })
@@ -94,7 +94,7 @@ function like(req, res, next) {
         .catch(next)
 }
 
-module.exports = {
+export {
     getLatestMessages,
     getMessages,
     newMessage,

@@ -1,7 +1,8 @@
-const express = require('express');
+import express from 'express';
+import { auth } from '../utils/index.js';
+import { messageController } from '../controllers/index.js';
+
 const router = express.Router();
-const { auth } = require('../utils');
-const { messageController } = require('../controllers');
 
 // middleware that is specific to this router
 
@@ -12,4 +13,4 @@ router.post('/:itemId', auth(), messageController.createMessage);
 router.put('/:itemId/:messageId', auth(), messageController.editMessage);
 router.delete('/:itemId/:messageId', auth(), messageController.deleteMessage);
 
-module.exports = router
+export default router

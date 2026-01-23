@@ -1,8 +1,8 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const tokenBlacklistSchema = new mongoose.Schema({
     token: String,
 }, { timestamps: { createdAt: 'created_at' } });
 
 
-module.exports = mongoose.model('TokenBlacklist', tokenBlacklistSchema);
+export default mongoose.model('TokenBlacklist', tokenBlacklistSchema);

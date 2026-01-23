@@ -1,9 +1,13 @@
-const userController = require('./userController');
-const messageController = require('./messageController');
-const itemController = require('./itemController')
+import * as userController from './userController.js';
+import * as messageController from './messageController.js';
+import * as itemController from './itemController.js';
+import * as imageUploadController from './imageUploadController.js';
+import * as imageDeleteController from './imageDeleteController.js';
 
-module.exports = {
+export {
     userController,
     messageController,
-    itemController
+    itemController,
+    imageUploadController,
+    imageDeleteController
 }

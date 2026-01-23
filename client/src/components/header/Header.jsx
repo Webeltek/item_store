@@ -17,7 +17,7 @@ export default function Header({
                 <Stack className={classes.topHeader} gap="0">
                     <Group  
                     justify='space-between' align='baseline' p="0 1rem">
-                        <span className={classes.siteTitle}>Matredder</span>
+                        <span className={classes.siteTitle}>Store</span>
                         <div className={classes.profileMenu}>
                             <ThemeIcon variant="light" size={24}>
                                 <IconUser size={16} />

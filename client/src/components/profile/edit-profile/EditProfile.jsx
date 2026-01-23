@@ -12,6 +12,7 @@ import { useDisclosure } from "@mantine/hooks";
 import EditAddress from "./edit-address/EditAddress";
 import { useSelector } from 'react-redux'
 import ShowAddress from "./show-address/ShowAddress";
+import EvershopAdmin from "./evershop-admin/EvershopAdmin";
 
 export default function EditProfile() {
     const [isAddressEditMode, setAddressEditMode] = useState(false);
@@ -68,6 +69,7 @@ export default function EditProfile() {
     return (
         <section className="flex-col shadow-xl rounded-xl w-[35rem] my-8 mx-[calc((100%-35rem)/2)] p-4 bg-white">
             <Title c="gray.5" ta="center" order={2}>My account</Title>
+            <EvershopAdmin />
             <ShowUser savedUsername={username} savedEmail={email} 
             handleSaveProfile={handleSaveProfile}
             isSavePending={isSavePending}  />    

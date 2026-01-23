@@ -1,16 +1,14 @@
-const jwt = require('./jwt');
-const { authCookieName } = require('../app-config');
-const {
-    userModel,
-    tokenBlacklistModel
-} = require('../models');
+import jwt from './jwt.js';
+import appConfig from '../app-config.js';
+import { userModel, tokenBlacklistModel } from '../models/index.js';
+
+const { authCookieName } = appConfig;
 
 function auth(redirectUnauthenticated = true) {
 
     return function (req, res, next) {
-
-// using  authorization header instead    
         // const token = req.cookies[authCookieName] || '';
+        // using  authorization header instead    
 
         const token = req.get('X-Authorization');
         
@@ -35,7 +33,7 @@ function auth(redirectUnauthenticated = true) {
                     next();
                     return;
                 }
-                if (['token expired', 'blacklisted token', 'jwt must be provided'].includes(err.message)) {
+                if (['jwt expired', 'blacklisted token', 'jwt must be provided'].includes(err.message)) {
                     if(req.url !== '/profile'){
                         process.env.NODE_ENV === 'development' &&
                         console.error(err); // prevent frontend getProfile error logs when guest access 
@@ -53,4 +51,4 @@ function auth(redirectUnauthenticated = true) {
     }
 }
 
-module.exports = auth;
+export default auth;
