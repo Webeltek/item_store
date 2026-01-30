@@ -1,12 +1,12 @@
 import UserProvider from './providers/UserProvider'
 import { Button, ConfigProvider } from 'antd'
 import '@mantine/core/styles.css';
-import { MantineProvider, PasswordInput, TextInput, createTheme } from '@mantine/core';
+import { MantineProvider, NumberInput, PasswordInput, TextInput, createTheme } from '@mantine/core';
 import { createClient, Provider as UrqlProvider, dedupExchange, cacheExchange, fetchExchange } from 'urql'
 import Layout from './Layout'
 import { Provider } from 'react-redux';
 import store from "./redux/store";
-import classes from './App.module.css';
+import classes from './App.module.scss';
 
 const client = createClient({
   url: `${import.meta.env.VITE_API_URL}/graphql`,
@@ -39,6 +39,12 @@ function App() {
           }
         },
         TextInput : TextInput.extend({
+          classNames: {
+            input: classes.input,
+            label: classes.label,
+          }
+        }),
+        NumberInput : NumberInput.extend({
           classNames: {
             input: classes.input,
             label: classes.label,

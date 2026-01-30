@@ -22,7 +22,7 @@ const config = {
         ],
         serviceAccount: JSON.parse(readFileSync(path.join(__dirname, '../tv-store-2025-serv-acc-key.json'), 'utf-8')),
         get expressApiUrl() { return `http://localhost:${this.port}/api` },
-        imagesStorage: 'localStorage',
+        imagesStorage: 'firebaseStorage',
         storageBucket: "tv-store-2025.firebasestorage.app"
     } : '',
     production: env === 'production' ?  {

@@ -3,7 +3,7 @@
 1. run npm install inside client folder
 2. run npm install inside server folder
 3. mongo database server must be installed and running on localhost:27017 (with default configuration - no access control)
-    - optionally execute inside server folder "mongorestore --db itemstore db_backup/itemstore" to feed sample data with some tvs and 2 users ( pesho@abv.bg with password 12345 and gosho@abv.bg with password 12345 ) 
+    - optionally execute inside server folder "mongorestore --db itemstore db_backup/itemstore" to feed sample data with some items and 2 users ( pesho@abv.bg with password 12345 and gosho@abv.bg with password 12345 ) 
 
     - mongo db connection string is inside server/config/config.js ( dbURL: 'mongodb://127.0.0.1:27017/itemstore' )
 
@@ -12,12 +12,12 @@
 5. npm run dev inside client folder
  - react application is configured on port 5173 ( or the next available port if another is running already) and is accessible on http://localhost:5173 
 
-* The application has the following public views: Home, Catalog, Tv Details without buttons and post comment form , About, Login, Register.
-* The private views available for registered users are: Profile, Add Tv , Edit Tv , (inside Tv details view - Edit and Delete buttons or Order button if user is not the owner of the tv and post comment form).
+* The application has the following public views: Home, Catalog, Details without buttons and post comment form , About, Login, Register.
+* The private views available for registered users are: Profile, Add , Edit , (inside Details view - Edit and Delete buttons or Order button if user is not the owner of and post comment form).
 
 ### Views
 1. Home: 
-    - in the home view are listed the last 3 added tvs from every user with details button
+    - in the home view are listed the last 3 added items from every user with details button
     which redirects to tv details and Shop Now button which redirects to Catalog view
 
 2. Catalog:
@@ -41,19 +41,17 @@
     - contains edit profile section , section with tvs added from the current user
     and section with tvs not owned but ordered from the current user
 
-7. Add TV:
-    - contains form with the required fields: model, screen size, price, image link
-    and description. 
+7. Add item:
+    - contains form with the required fields. 
 
-8. TV Details:
-    - is accessible after View Details button click ( from Home, Catalog and Profile views). For logged in user it shows the order button if the current user is not the owner of the tv or edit and delete buttons if the
+8. Details:
+    - is accessible after View Details button click ( from Home, Catalog and Profile views). For logged in user it shows the order button if the current user is not the owner of the item or edit and delete buttons if the
     current user is owner of the tv
-    - contains section underneath with user comments for this tv and for logged in user - textarea to post comment from the current user for this tv.
-9. Edit Tv
+    - contains section underneath with user comments for this item and for logged in user - textarea to post comment from the current user for this tv.
+9. Edit
     - edit button click redirects to the edit tv view
-    - contains form with the required fields: model, screen size, price, image link
-    and description. 
-    - after submit tv data is updated and the application redirects to the catalog view
+    - contains form with the required fields. 
+    - after submit item data is updated and the application redirects to the catalog view
 
 * live deployment: 
     - https://item-store-wlyi.onrender.com/

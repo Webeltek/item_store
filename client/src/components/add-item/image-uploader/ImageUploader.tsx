@@ -397,6 +397,7 @@ export function ImageUploader({
     setImages(images.filter((i) => i.uuid !== imageUuid));
   };
 
+  //unused function for now
   const onDeleteFn = async (image: Image) => {
     if (onDelete) {
       await onDelete(image);
