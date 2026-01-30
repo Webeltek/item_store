@@ -1,13 +1,15 @@
 .card {
   background-color: white;
-  border-radius: 6px;
+  border-radius: 0.5rem;
   &.subdued {
     background-color: #fafbfb;
   }
 }
 .card-title {
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
+  color: var(--color-slate-500);
+
 }
 .card-header {
   padding: 1.25rem;

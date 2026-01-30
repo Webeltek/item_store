@@ -22,6 +22,10 @@ html {
     font: clamp(12px, 12px + 0.4vw ,18px)/1.5 Lato, sans-serif;
 }
 
+:root {
+  --divider: #e1e3e5;
+}
+
 
 div#root{
   /* background-color: #f4f4f4; */

@@ -8,7 +8,9 @@ export async function deleteImage(req, res,next) {
     const imageDeleter = config["imagesStorage"] === 'firebaseStorage'
         ? firebaseDeleter
         : localDeleter;
+    //unused    
     const subdir = req.params[0] || '';
+
     const filename = req.body.file;
     try {
         await imageDeleter(filename);
@@ -19,10 +21,10 @@ export async function deleteImage(req, res,next) {
 }
 
 async function localDeleter(filePath) {
-    const fullPath = path.join(CONSTANTS.MEDIAPATH, filePath);
+    const relativePath = filePath.replace(/^\/?assets/, '');
+    const fullPath = path.join(CONSTANTS.MEDIAPATH, relativePath);
     try {
         await fs.unlink(fullPath);
-        res.status(200).json({ message: 'File deleted successfully' });
     } catch (error) {
         throw error;
     }

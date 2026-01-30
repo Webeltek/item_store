@@ -1,57 +1,34 @@
 import { Card } from './Card.js';
 import { Image, ImageUploader } from './ImageUploader.js';
-import React, { useEffect, useState } from 'react';
-import { useFieldArray, useFormContext } from 'react-hook-form';
+import React, { useEffect } from 'react';
+import { useForm, UseFormReturnType } from '@mantine/form';
+import { MediaProps } from '../../add-item/AddItem.js';
 
-interface MediaProps {
-  product?: {
-    image?: {
-      uuid: string;
-      path: string;
-      url: string;
-    };
-    gallery?: {
-      uuid: string;
-      path: string;
-      url: string;
-    }[];
-  };
-}
-export default function Media({ product }: MediaProps) {
-  const control = useFormContext().control;
-  const { fields, append, remove, replace } = useFieldArray({
-    name: 'images',
-    control
-  }) as ReturnType<typeof useFieldArray>;
-  useEffect(() => {
-    const images = product?.image
-      ? [product.image].concat(product?.gallery || [])
-      : [];
-    replace(images);
-  }, []);
+
+export default function Media({ addItemForm }) {
+
   return (
     <Card title="Media">
       <Card.Session>
         <ImageUploader
-          currentImages={
-            product?.image ? [product.image].concat(product?.gallery || []) : []
-          }
+          currentImages={addItemForm.values.images}
           allowDelete={true}
           allowSwap={true}
           onDelete={(image) => {
-            const index = fields.findIndex((img) => img.uuid === image.uuid);
+            const index = addItemForm.values.images.findIndex(
+              (img) => img.uuid === image.uuid
+            );
             if (index !== -1) {
-              remove(index);
+              addItemForm.removeListItem('images', index);
             }
           }}
           onUpload={(images) => {
-            append(images);
+            images.forEach((image) => {
+              addItemForm.insertListItem('images', image);
+            });
           }}
           onSortEnd={(oldIndex, newIndex) => {
-            const newImages = [...fields];
-            const [movedImage] = newImages.splice(oldIndex, 1);
-            newImages.splice(newIndex, 0, movedImage);
-            replace(newImages);
+            addItemForm.reorderListItem('images', { from: oldIndex, to: newIndex });
           }}
           targetPath={`catalog/${
             Math.floor(Math.random() * (9999 - 1000)) + 1000

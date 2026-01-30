@@ -28,8 +28,7 @@ const localUploader = {
   ) => {
     // Assumming the we are using MemoryStorage for multer. Now we need to write the files to disk.
     // The files argument is an array of files from multer.
-    const mediaPath = CONSTANTS.MEDIAPATH;
-    const destination = path.join(mediaPath, destinationPath);
+    const destination = path.join(CONSTANTS.MEDIAPATH, destinationPath);
     // Create the destination folder if it does not exist
     await fs.mkdir(destination, { recursive: true });
     // Save the files to disk asynchrously
