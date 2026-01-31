@@ -164,7 +164,7 @@ export default function AddItem() {
     return (
     <>
 
-    <section className="flex-col  shadow-xl rounded-xl w-[35rem] my-8 mx-[calc((100%-35rem)/2)] p-4 bg-white">
+    <section className="flex-col  shadow-xl rounded-xl w-[28rem] md:w-[35rem] my-8 mx-[calc((100%-28rem)/2)] md:mx-[calc((100%-35rem)/2)] p-4 bg-white">
         <Title c="gray.5" ta="center" order={2}>Add product to the catalog</Title>
         <form className="flex flex-col gap-[0.5rem] mx-8" onSubmit={form.onSubmit(submitData)}>
             <TextInput variant="default"  label="Product name:" 
