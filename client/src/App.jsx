@@ -1,7 +1,7 @@
 import UserProvider from './providers/UserProvider'
-import { Button, ConfigProvider } from 'antd'
+import { ConfigProvider } from 'antd'
 import '@mantine/core/styles.css';
-import { MantineProvider, NumberInput, PasswordInput, TextInput, createTheme } from '@mantine/core';
+import { MantineProvider, NumberInput, PasswordInput, TextInput, createTheme, Button } from '@mantine/core';
 import { createClient, Provider as UrqlProvider, dedupExchange, cacheExchange, fetchExchange } from 'urql'
 import Layout from './Layout'
 import { Provider } from 'react-redux';
@@ -30,14 +30,17 @@ function App() {
       fontFamily: 'Lato, sans-serif',
       defaultRadius: '0.5rem',
       components: {
-        Button : {
+        Button : Button.extend({
           defaultProps: {
             color: "ocean-blue.5",
             radius: '5rem',
             // variant: 'gradient',
             //   gradient: { from: '#00a6fb', to: '#0582ca', deg: 135 },
+          },
+          classNames: {
+            root: classes.button
           }
-        },
+        }),
         TextInput : TextInput.extend({
           classNames: {
             input: classes.input,

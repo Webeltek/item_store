@@ -44,7 +44,7 @@ export default function Layout() {
         }}
         withBorder={false}
         header={{
-            height: "90",
+            height: 120,
         }}
         navbar={{
             width: 250,
