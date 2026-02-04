@@ -73,7 +73,7 @@ export default function ItemDetails() {
                         { item.imageFile &&
                             <img src={`${imagesUrl}/${item.imageFile}`} alt="Phone" />
                         }
-                        <img src={item.image} alt="Tv"/>
+                        <img src={item.image ? item.image : item.images && item.images.length > 0 ? item.images[0].url : ''} alt="Tv"/>
                     </div>
                     <div className="product-info">
                         <h3>Model: {item.model}</h3>

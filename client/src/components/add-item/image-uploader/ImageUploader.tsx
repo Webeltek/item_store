@@ -458,11 +458,13 @@ export function ImageUploader({
   useEffect(() => {
     if (error ) {
       if(error.networkError){
-        // handle 401/403 (redirect to login, show message...)
+        //unused: handle 401/403 (redirect to login, show message...)
         const status = (error.networkError as any).status || (error.networkError as any).statusCode;
-        showErrorMsg(error.message);
+        showErrorMsg(error.networkError.message);
       }
-      if (error.graphQLErrors?.length) {}
+      if (error.graphQLErrors?.length) {
+        showErrorMsg(error.graphQLErrors[0].message);
+      }
     }
   }, [error, showErrorMsg]);
 

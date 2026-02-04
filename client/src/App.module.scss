@@ -49,9 +49,9 @@
 
 .button {
   /* Mobile-first: Set 'xl' dimensions as base */
-  --button-height: 3.75rem; /* 60px */
-  --button-fz: 1.25rem;     /* 20px */
-  --button-padding-x: 2rem;  /* 32px */
+  --button-height: 3.25rem; 
+  --button-fz: 1.15rem;     
+  --button-padding-x: 1.5rem; 
 
     /* Desktop: Override variables at the 768px (48em) breakpoint */
     @media (min-width: 48em) {

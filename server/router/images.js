@@ -4,8 +4,7 @@ import { imageUploadController, imageDeleteController } from '../controllers/ind
 
 const router = express.Router();
 
-router.post('/upload/*',(req,res,next)=>{
-    //console.log('Received upload request for subdir:', req.params[0]);
+router.post(/^\/upload\/(.*)$/, (req,res,next)=>{
     next();
 }, auth(), 
     imageUploadController.validatePath, 
@@ -13,7 +12,7 @@ router.post('/upload/*',(req,res,next)=>{
     imageUploadController.upload, 
     imageUploadController.verifyImages);
 
-router.delete('/delete/*', auth(), 
+router.delete(/^\/delete\/(.*)$/, auth(), 
     imageDeleteController.deleteImage);
               
 

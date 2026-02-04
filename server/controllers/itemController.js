@@ -79,66 +79,15 @@ function createItem(req, res, next) {
     const { _id: userId } = req.user;
 
     const itemData = req.body;
-    const { model, screenSize, description, price,image} = itemData;
+    const { name, description, price,images} = itemData;
     //using appliaction/json body
     if(itemData && contentType==='application/json'){
-        return itemModel.create({ model, screenSize, description, price: Number(price),image, owner: userId })
+        return itemModel.create({ name, description, price: Number(price),images, owner: userId })
         .then(item => {
             res.status(200).json(item)
         })
         .catch(next)
     }
-    //using formidable form.parse from multipart/form-data
-
-    const uploadDir = path.join(__dirname, '../uploads');
-
-    if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir);
-    }
-
-    const form = formidable({
-        uploadDir,
-        keepExtensions: true
-    })
-    
-    form.parse(req, (err,fields,files)=>{
-        if (err){
-            next(err);
-            return;
-        }
-        console.log({itemControllerFields: fields});
-        
-
-        const [ model] = fields.model;
-        const [screenSize] = fields.screenSize;
-        const [ price] = fields.price;
-        const [ image] = fields.image;
-        const [description] = fields.description;
-
-
-        if(files.imageFile){
-            const [persistentFile] = files.imageFile;
-            const webPath = `${persistentFile.originalFilename}`;
-            const newPath = path.join(form.uploadDir, persistentFile.originalFilename);
-            
-            fs.rename(persistentFile.filepath, newPath,()=>{
-                //console.log("Formidable fields, files", {fields, files});
-                return itemModel.create({ model, screenSize, description, price: Number(price),image,imageFile: webPath , owner: userId })
-                    .then(item => {
-                        res.status(200).json(item)
-                    })
-                    .catch(next)
-            })
-        } else {
-            return itemModel.create({ model, screenSize, description, price: Number(price),image, owner: userId })
-                    .then(item => {
-                        res.status(200).json(item)
-                    })
-                    .catch(next)
-        }
-        
-
-    })
 
 }
 
@@ -161,76 +110,6 @@ function editItem(req, res, next) {
         })
         .catch(next)
     }
-
-    const uploadDir = path.join(__dirname, '../uploads');
-    
-    const form = formidable({
-        uploadDir,
-        keepExtensions: true
-    })
-
-    form.parse(req, (err,fields,files)=>{
-        if (err){
-            next(err);
-            return;
-        }
-        const [ model] = fields.model;
-        const [screenSize] = fields.screenSize;
-        const [ price] = fields.price;
-        const [ image] = fields.image;
-        const [description] = fields.description;
-
-        if(files.imageFile){
-            const [persistentFile] = files.imageFile;
-            const webPath = `${persistentFile.originalFilename}`;
-            const newPath = path.join(form.uploadDir, persistentFile.originalFilename);
-            
-            fs.rename(persistentFile.filepath, newPath,(err)=>{
-                if(err){
-                    console.log({editItemCopyFileErr: err})
-                }
-                // if the userId is not the same as this one of the item, the item will not be updated
-                itemModel.findOneAndUpdate(
-                    { _id: itemId, owner: userId }, 
-                    { model, screenSize, description, price: Number(price),image,imageFile: webPath , owner: userId }, 
-                    { new: true })
-                    .then(updatedItem => {
-                        if (updatedItem) {
-                            res.status(200).json(updatedItem);
-                        }
-                        else {
-                            res.status(401).json({ message: `Not allowed!`,
-                                err: {
-                                    message: `Not allowed!`
-                                }
-                             });
-                        }
-                    })
-                    .catch(next);
-            })
-        } else {
-            // if the userId is not the same as this one of the item, the item will not be updated
-            itemModel.findOneAndUpdate(
-                { _id: itemId, owner: userId }, 
-                { model, screenSize, description, price: Number(price),image ,imageFile: '', owner: userId }, 
-                { new: true })
-                .then(updatedItem => {
-                    if (updatedItem) {
-                        res.status(200).json(updatedItem);
-                    }
-                    else {
-                        res.status(401).json({ message: `Not allowed!`,
-                            err: {
-                                message: `Not allowed!`
-                            }
-                         });
-                    }
-                })
-                .catch(next);
-        }
-        
-    })
-
 }
 
 function deleteItem(req, res, next) {
@@ -260,12 +139,12 @@ function deleteItem(req, res, next) {
                     console.log('Item without image file deleted successfuly!');
                 }
                 //returning updated collection instead of deleted item
-                itemModel.find().then(items => {
-                    res.status(200).json(items);
+                return itemModel.find().then(items => {
+                    return res.status(200).json(items);
                 })
                 // res.status(200).json(deletedOne)
             } else {
-                res.status(401).json({ message: `Not allowed!`,
+                return res.status(401).json({ message: `Not allowed!`,
                     err: {
                         message: `Not allowed!`
                     }
