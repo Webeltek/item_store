@@ -2,15 +2,10 @@ import mongoose from 'mongoose';
 const { Schema, model, Types } = mongoose;
 
 const itemSchema = new Schema({
-    model: {
+    name: {
         type: String,
         required:true,
         minLength: 5
-    },
-    screenSize: {
-        type: String,
-        required:true,
-        minLength: 1
     },
     description: {
         type: String,
@@ -27,11 +22,19 @@ const itemSchema = new Schema({
             message: 'Must be positive num'
         }
     },
-    image: {
-        type: String,
-        required:true,
-        validate : /https?:\/\// 
-    },
+    images: [{
+        type: {
+            uuid: String,
+            path: String,
+            url: String,
+            },
+        required:false,
+        validate : function(v){
+        // implementation
+        },
+        message: 'Invalid image object'
+            
+    }],
     imageFile: {
         type: String,
         required: false,

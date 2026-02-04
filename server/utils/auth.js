@@ -28,12 +28,22 @@ function auth(redirectUnauthenticated = true) {
                     })
             })
             .catch(err => {
-                
                 if (!redirectUnauthenticated) {
                     next();
                     return;
                 }
+
                 if (['jwt expired', 'blacklisted token', 'jwt must be provided'].includes(err.message)) {
+                    // If this request is for the GraphQL endpoint, forward the auth error
+                    // to the GraphQL middleware by attaching it to the request and calling next().
+                    // Apollo's context can then convert it to a GraphQLError.
+                    const isGraphql = req.originalUrl && req.originalUrl.startsWith('/api/graphql');
+                    if (isGraphql) {
+                        req.authError = err;
+                        next();
+                        return;
+                    }
+
                     if(req.url !== '/profile'){
                         process.env.NODE_ENV === 'development' &&
                         console.error(err); // prevent frontend getProfile error logs when guest access 

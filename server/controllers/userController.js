@@ -2,6 +2,7 @@ import { userModel, tokenBlacklistModel } from '../models/index.js';
 import firebaseAdmin from 'firebase-admin';
 import * as utils from '../utils/index.js';
 import appConfig from '../app-config.js';
+import { log } from 'console';
 
 const { authCookieName } = appConfig;
 
@@ -22,26 +23,26 @@ function verifyGtoken(req, res, next){
 
     firebaseAdmin.auth().verifyIdToken(idToken)
     .then( decodedToken => {
-        
         const { uid, email, name } = decodedToken;
         userModel.findOne({ email} )
-            .then( result => {
-                if(result === null){
+            .then( foundUser => {
+                if(foundUser === null){
                     userModel.create({ username : name, email: email, password: uid, isFirebaseUser: true })
                         .then( createdUser => {
                             createdUser = bsonToJson(createdUser);
                             createdUser = removePassword(createdUser);
-                            const token = utils.jwt.createToken({ id: createdUser._id });
-                            res.status(200)
-                            .send({...createdUser, accessToken: token}); 
+                            return utils.jwt.createToken({ id: createdUser._id })
+                                .then(token => { 
+                                    return res.status(200).send({...createdUser, accessToken: token}) 
+                                })
+                                .catch(next);
                         }).catch(next); 
                 } else {
-                    foundUser = result
                     foundUser = bsonToJson(foundUser);
                     foundUser = removePassword(foundUser);
-                    const token = utils.jwt.createToken({ id: foundUser._id });
-                            res.status(200)
-                            .send({...foundUser, accessToken: token}); 
+                    return utils.jwt.createToken({ id: foundUser._id })
+                        .then(token => { return res.status(200).send({...foundUser, accessToken: token}) })
+                        .catch(next);
                 }
             }).catch(next)
     }).catch(next)
@@ -81,17 +82,17 @@ function register(req, res, next) {
                 createdUser = bsonToJson(createdUser);
                 createdUser = removePassword(createdUser);
 
-                const token = utils.jwt.createToken({ id: createdUser._id });
-    //using authorization header instead of cookie
-
-                // if (process.env.NODE_ENV === 'production') {
-                //     res.cookie(authCookieName, token, { httpOnly: true, sameSite: 'none', secure: true })
-                // } else {
-                //     res.cookie(authCookieName, token, { httpOnly: true })
-                // }
-
-                res.status(200)
-                    .send({...createdUser, accessToken: token});
+                return utils.jwt.createToken({ id: createdUser._id })
+                    .then(token => {
+                        //using authorization header instead of cookie
+                        // if (process.env.NODE_ENV === 'production') {
+                        //     res.cookie(authCookieName, token, { httpOnly: true, sameSite: 'none', secure: true })
+                        // } else {
+                        //     res.cookie(authCookieName, token, { httpOnly: true })
+                        // }
+                        return res.status(200).send({...createdUser, accessToken: token});
+                    })
+                    .catch(next);
             })
             .catch(err => {
                 if (err.name === 'MongoError' && err.code === 11000) {
@@ -136,16 +137,16 @@ function login(req, res, next) {
             user = bsonToJson(user);
             user = removePassword(user);
 
-            const token = utils.jwt.createToken({ id: user._id });
-
-            // if (process.env.NODE_ENV === 'production') {
-            //     res.cookie(authCookieName, token, { httpOnly: true, sameSite: 'none', secure: true })
-            // } else {
-            //     res.cookie(authCookieName, token, { httpOnly: true })
-            // }
-
-            res.status(200)
-                .send({ ...user, accessToken: token});
+            return utils.jwt.createToken({ id: user._id })
+                .then(token => {
+                    // if (process.env.NODE_ENV === 'production') {
+                    //     res.cookie(authCookieName, token, { httpOnly: true, sameSite: 'none', secure: true })
+                    // } else {
+                    //     res.cookie(authCookieName, token, { httpOnly: true })
+                    // }
+                    return res.status(200).send({ ...user, accessToken: token});
+                })
+                .catch(next);
         })
         .catch(next);
 }
@@ -184,7 +185,7 @@ function getProfileInfo(req, res, next) {
     const { _id: userId } = req.user;
 
     userModel.findOne({ _id: userId }, { password: 0, __v: 0 }) //finding by Id and returning without password and __v
-        .then(user => { res.status(200).json(user) })
+        .then(user => { return res.status(200).json(user) })
         .catch(next);
 }
 
@@ -228,7 +229,7 @@ function editProfileInfo(req, res, next) {
             user = bsonToJson(user);
             user = removePassword(user);
                 
-            res.status(200).json({ ...user, accessToken: token}) })
+            return res.status(200).json({ ...user, accessToken: token}) })
         .catch( error => {
             if( error.message === "Wrong password!"){
                 return res.status(401).send({ 

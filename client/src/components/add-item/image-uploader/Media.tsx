@@ -2,10 +2,10 @@ import { Card } from './Card.js';
 import { Image, ImageUploader } from './ImageUploader.js';
 import React, { useEffect } from 'react';
 import { useForm, UseFormReturnType } from '@mantine/form';
-import { MediaProps } from '../../add-item/AddItem.js';
+import { FormValues } from '../AddItem.js';
 
 
-export default function Media({ addItemForm }) {
+export default function Media({ addItemForm }: { addItemForm: UseFormReturnType<FormValues> }) {
 
   return (
     <Card title="Media">

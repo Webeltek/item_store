@@ -8,39 +8,31 @@ import { nanoid } from 'nanoid'
 import Media from "./image-uploader/Media";
 import classes from './AddItem.module.scss'
 import { NumberInput, TextInput, Title, Textarea, Button } from "@mantine/core";
-import { IconBrandProducthunt } from "@tabler/icons-react";
+import { IconBrandProducthunt, IconCurrencyDollar } from "@tabler/icons-react";
 
-export interface MediaProps {
-  product?: {
-    image?: {
-      uuid: string;
-      path: string;
-      url: string;
-    };
-    gallery?: {
+export interface FormValues {
+    name: string;
+    price: string;
+    images?: {
       uuid: string;
       path: string;
       url: string;
     }[];
-  },
+    description: string;
 }
 
 export default function AddItem() {
-    const [errorMsg, setErrorMsg] = useState();
     const [pending, setPending] = useState<undefined | boolean>();
     const navigate = useNavigate();
     const { create } = useCreateItem();
-    const [product, setProduct] = useState<MediaProps['product'] | null>(null);
+    const [product, setProduct] = useState<FormValues | null>(null);
 
-    const form = useForm({
+    const form = useForm<FormValues>({
         mode: 'controlled',
         initialValues: {
             name: '',
             price: '',
-            images: product?.image
-                ? [product.image].concat(product?.gallery || [])
-                : [],
-            product: {} as MediaProps,
+            images: product?.images || [],
             description: '',
         },
         validate: {
@@ -61,7 +53,7 @@ export default function AddItem() {
 
 
 
-    const createEvershopProd = (name, price, desc, images)=>{
+    const createEvershopProd = (name, price, description, images)=>{
         return {
             "name": name,
             "sku": "32123",
@@ -84,7 +76,7 @@ export default function AddItem() {
                                         "id": nanoid(10),
                                         "type": "paragraph",
                                         "data": {
-                                            "text": desc
+                                            "text": description
                                         }
                                     }
                                 ],
@@ -171,7 +163,7 @@ export default function AddItem() {
                 leftSection={<IconBrandProducthunt />}
             {...form.getInputProps('name')}  
             />
-            <NumberInput variant="default" label="Price:" 
+            <NumberInput leftSection={<IconCurrencyDollar />} variant="default" label="Price:" 
             classNames={{ root: classes.numberImput }} {...form.getInputProps('price')}
             />    
             <Media addItemForm={form} />

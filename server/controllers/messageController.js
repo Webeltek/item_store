@@ -20,7 +20,7 @@ function getLatestMessages(req, res, next) {
         .limit(limit)
         .populate('authorId')
         .then(messages => {
-            res.status(200).json(messages)
+            return res.status(200).json(messages)
         })
         .catch(next);
 }
@@ -30,7 +30,7 @@ function getMessages(req, res, next){
     messageModel.find({ itemId})
     .populate('authorId')
     .then(messages =>{
-        res.status(200).json(messages)
+        return res.status(200).json(messages)
     })
     .catch(next)
 }
@@ -75,9 +75,9 @@ function deleteMessage(req, res, next) {
     ])
         .then(([deletedOne, _, __]) => {
             if (deletedOne) {
-                res.status(200).json(deletedOne)
+                return res.status(200).json(deletedOne)
             } else {
-                res.status(401).json({ message: `Not allowed!` });
+                return res.status(401).json({ message: `Not allowed!` });
             }
         })
         .catch(next);

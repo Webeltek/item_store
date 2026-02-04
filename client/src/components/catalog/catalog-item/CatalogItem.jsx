@@ -5,10 +5,10 @@ const IMAGES_URL = import.meta.env.VITE_IMAGES_URL;
 export default function CatalogItem({
     imageFile,
     image,
-    model,
+    images,
+    name,
     price,
     description,
-    screenSize,
     _id
 }) {
     return (
@@ -22,7 +22,7 @@ export default function CatalogItem({
                 }
                 <img className="w-full aspect-4/3 object-center object-cover"
                 sizes="(min-width: 1300px) 306px, (min-width: 1010px) 316px, (min-width: 768px) 33vw, (min-width: 480px) 50vw, 100vw" 
-                src={image}
+                src={image ? image : images && images.length > 0 ? images[0].url :''} 
                     alt="" />
               <div className="h-1/2 p-4 sm:p-9 md:p-7 xl:p-9 duration-500 group-hover:bg-gray-100">
                 <h3 className="text-base font-semibold
@@ -31,10 +31,8 @@ export default function CatalogItem({
                 </h3>
                 <h3 className="line-clamp-1 text-base font-semibold
                  text-gray-900 group-hover:text-blue-600 ">
-                    {model}
+                    {name}
                 </h3>
-                <p className="text-base leading-[1.65] font-semibold text-slate-500">
-                    Best before: {screenSize} </p>
                 <p
                   className="line-clamp-2 text-base leading-[1.65] text-slate-500"
                 >

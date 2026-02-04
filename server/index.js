@@ -8,7 +8,8 @@ import express from 'express';
 import firebaseAdmin from 'firebase-admin';
 import errorHandler from './utils/errHandler.js';
 import { ApolloServer } from "@apollo/server";
-import { expressMiddleware } from "@as-integrations/express4";
+import { expressMiddleware } from "@as-integrations/express5";
+import { GraphQLError } from 'graphql';
 import typeDefs from './graphql/schema.js';
 import resolvers from './graphql/resolvers.js';
 import auth from './utils/auth.js';
@@ -52,9 +53,13 @@ dbConnector()
     apolloServer.start().then( () => {
       app.use(
         '/api/graphql',
-        auth(),
+        auth(true),
         expressMiddleware(apolloServer, {
           context: ({ req, res }) => {
+            if (req && req.authError) {
+              throw new GraphQLError(req.authError.message, { extensions: { code: 'UNAUTHENTICATED' } });
+            }
+
             return Promise.resolve({
               user: req.user,
               isLogged: req.isLogged || false
