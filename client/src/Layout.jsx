@@ -18,7 +18,7 @@ import { AppShell, Burger, Group, Stack, rem } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks'
 import Navbar from './components/navbar/Navbar'
 import { useClickOutside } from '@mantine/hooks';
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import EditProfile from './components/profile/edit-profile/EditProfile'
 import ProfileProducts from './components/profile/profile-products/ProfileProducts'
 import ProfileOrders from './components/profile/profile-orders/ProfileOrders'
@@ -71,7 +71,7 @@ export default function Layout() {
               <Navbar ref={setNavbar} toggleBurger={toggleBurger} />
             </AppShell.Navbar>
             <AppShell.Main  >
-              <div className='flex flex-col h-dvh'>
+              <div className='flex flex-col h-dvh mx-auto max-w-[1200px] md:px-[3rem]'>
               <Routes>
                     <Route index element={ <Home />} />
                     <Route path="/items" element={ <Catalog />} />
