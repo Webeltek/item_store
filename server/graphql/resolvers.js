@@ -19,8 +19,13 @@ const resolvers = {
             default:
               throw new Error('Invalid routeId');
           }
+        },
+        userState: (parent,args,context) => {
+          return {
+            isLogged: context.isLogged
+          }
         }
-    }
+      }
 }
 
 export default resolvers;

@@ -1,0 +1,56 @@
+  
+  .detailsTitle {
+    margin: 1em 0;
+    text-transform: none;
+  }
+
+  .productDescription {
+    margin: 0.5em 0;
+  }
+
+  .detailsTitleDescription {
+    margin: 0.5em 0;
+    text-transform: none;
+  }
+
+
+  
+  .breadcrumbs {
+    text-align: center;
+  }
+
+  /* comment */
+
+.comment {
+  margin-top: 1em;
+  border: 1px solid #999;
+  border-radius: 0.5em;
+  display: flex;
+  flex-direction: column;
+  padding: 1em;
+  background-color: #ffffff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.comment .header p {
+  padding: 0.5em;
+  
+  background-color: #0073e6;
+  border-radius: 5px;
+  border-bottom: 1px dashed #999;
+  color: white;
+}
+
+.comment-main {
+  margin: 1em;
+  display: flex;
+}
+
+.post-content p {
+  padding-left: 1.5em;
+  color: black;
+}
+
+
+
+  

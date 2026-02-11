@@ -37,10 +37,10 @@ export default function Home(){
                         items.map( item=> 
                             <div key={item._id} className="product-item">
                                 { item.imageFile && (
-                                    <img src={imagesUrl + item.imageFile} alt="Phone" />
+                                    <img src={item.imageFile ? item.imageFile : ''} alt="Phone" />
                                 )}
                                 
-                                <img src={item.image} />
+                                <img src={item.image ? item.image : item.images && item.images && item.images.length > 0 ? item.images[0].url : ''} />
                                 <p>Added: {fromIsoDateString(item.created_at) }</p>
                                 <h3> {item.model}</h3>
                                 <p>${item.price}</p>

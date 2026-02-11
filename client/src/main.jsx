@@ -1,6 +1,6 @@
 import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
+import './index.css'  // @import "tailwindcss" 
+import App from './App.jsx'  // mantine styles
 import { BrowserRouter } from 'react-router-dom'
 
 

@@ -459,6 +459,7 @@ export function ImageUploader({
     if (error ) {
       if(error.networkError){
         //unused: handle 401/403 (redirect to login, show message...)
+        // error.networkError happens before responce is parced if server unreachable or responce is not json, so we can not rely on error code or message from server, but we can show generic message
         const status = (error.networkError as any).status || (error.networkError as any).statusCode;
         showErrorMsg(error.networkError.message);
       }
