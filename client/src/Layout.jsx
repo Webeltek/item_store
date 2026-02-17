@@ -1,15 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import Home from './components/home/Home'
-import Catalog from './components/catalog/Catalog'
-import About from './components/about/About'
-import Login from './components/login/Login'
-import Register from './components/register/Register'
-import AddItem from './components/add-item/AddItem'
-import Footer from './components/footer/Footer'
-import Header from './components/header/Header'
-import Logout from './components/logout/Logout'
-import ItemDetails from './components/item-details/ItemDetails'
-import EditItem from './components/edit-item/EditItem'
+import { lazy } from 'react'
 import AuthGuard from './components/guards/AuthGuard'
 import GuestGuard from './components/guards/GuestGuard'
 import PrivacyPolicy from './components/privacy-policy/PrivacyPolicy'
@@ -18,17 +8,62 @@ import { AppShell, Burger, Group, Stack, rem } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks'
 import Navbar from './components/navbar/Navbar'
 import { useClickOutside } from '@mantine/hooks';
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import EditProfile from './components/profile/edit-profile/EditProfile'
 import ProfileProducts from './components/profile/profile-products/ProfileProducts'
 import ProfileOrders from './components/profile/profile-orders/ProfileOrders'
 import classes from './Layout.module.css'
+import { useQuery } from 'urql'
+import { UserContext } from './contexts/UserContext'
+import { useSelector } from 'react-redux'
+
+const Home = lazy(() => import('./components/home/Home') )
+const Catalog = lazy(() => import('./components/catalog/Catalog') )
+const About = lazy(() => import('./components/about/About') )
+const Login = lazy(() => import('./components/login/Login') )
+const Register = lazy(() => import('./components/register/Register') )
+const AddItem = lazy(() => import('./components/add-item/AddItem') )
+const Footer = lazy(() => import('./components/footer/Footer') )
+const Header = lazy(() => import('./components/header/Header') )
+const Logout = lazy(() => import('./components/logout/Logout') )
+const ItemDetails = lazy(() => import('./components/item-details/ItemDetails') )
+const EditItem = lazy(() => import('./components/edit-item/EditItem') )
 
 export default function Layout() {
+  const { userLogoutHandler, showErrorMsg } = useContext(UserContext);
   const [burgerOpened, { toggle: toggleBurger }] = useDisclosure();
   const isMobile = useMediaQuery('(max-width: 48em)');
   const [navbar, setNavbar] = useState()
   const [headerWithBurger, setHeaderWithBurger]= useState();
+  const userStateIsLogged = useSelector( state => state.user.isLogged);
+  const GetUserStateQuery = `
+  query getUserState {
+    userState {
+        isLogged
+      }
+    }
+  `;
+  const [result] = useQuery({
+      query: GetUserStateQuery,
+    });
+  
+  const { data, fetching, error } = result;
+  useEffect(() => {
+    if (userStateIsLogged &&data && data.userState && !data.userState.isLogged) {
+      userLogoutHandler();
+    }
+    if (error ) {
+      if(error.networkError){
+        //unused: handle 401/403 (redirect to login, show message...)
+        // error.networkError happens before responce is parced if server unreachable or responce is not json, so we can not rely on error code or message from server, but we can show generic message
+        const status = (error.networkError).status || (error.networkError).statusCode;
+        showErrorMsg(error.networkError.message);
+      }
+      if (error.graphQLErrors?.length) {
+        showErrorMsg(error.graphQLErrors[0].message);
+      }
+    }
+  }, [data, userLogoutHandler, showErrorMsg, error]);    
   
   //trigger on click outside navbar and header
   const ref = useClickOutside(()=> {
@@ -71,7 +106,7 @@ export default function Layout() {
               <Navbar ref={setNavbar} toggleBurger={toggleBurger} />
             </AppShell.Navbar>
             <AppShell.Main  >
-              <div className='flex flex-col h-dvh mx-auto max-w-[1200px] md:px-[3rem]'>
+              <div className='flex flex-col h-dvh mx-auto max-w-[1200px] px-[1rem] md:px-[3rem]'>
               <Routes>
                     <Route index element={ <Home />} />
                     <Route path="/items" element={ <Catalog />} />

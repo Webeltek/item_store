@@ -3,7 +3,7 @@ import { useEditItem, useItem } from "../../api/itemApi";
 import { useActionState, useEffect, useState } from "react";
 import './EditItem.css'
 import useAuth from "../../hooks/useAuth";
-import { useForm } from "react-hook-form";
+import { hasLength, useForm } from '@mantine/form'
 
 export default function EditItem() {
     const [pending, setPending] = useState();

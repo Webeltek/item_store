@@ -22,5 +22,16 @@ export default defineConfig({
     '@': path.resolve('./src'),
     '@components': path.resolve('./src/components')
 
-  }
+  },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return 'vendor'; // all dependencies go into a single chunk named 'vendor'
+          }
+        },
+      },
+    },
+  },
 })

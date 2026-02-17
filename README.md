@@ -56,5 +56,5 @@
 * live deployment: 
     - https://item-store-wlyi.onrender.com/
     - https://tv-store-2025.web.app/
-    - webeltek.org
+    - https://webeltek.org
 

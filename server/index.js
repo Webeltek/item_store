@@ -56,11 +56,12 @@ dbConnector()
         auth(true),
         expressMiddleware(apolloServer, {
           context: ({ req, res }) => {
-            if (req && req.authError) {
-              throw new GraphQLError(req.authError.message, { extensions: { code: 'UNAUTHENTICATED' } });
-            }
+            // if (req && req.authError) {
+            //   throw new GraphQLError(req.authError.message, { extensions: { code: 'UNAUTHENTICATED' } });
+            // }
 
             return Promise.resolve({
+              authError: req.authError,
               user: req.user,
               isLogged: req.isLogged || false
             });

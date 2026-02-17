@@ -1,12 +1,12 @@
 import { useDeleteItem, useItem, useOrderItem } from "../../api/itemApi";
 import CommentsCreate from "../comments-create/CommentsCreate";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams, useLocation } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { useComments } from "../../api/commentApi";
 import { fromIsoDateString } from "../../utils/fromIsoDateString.js";
 import classes from './ItemDetails.module.css'
 import './ItemDetails.scss'
-import { Button, Title } from "@mantine/core";
+import { Breadcrumbs, Button, Title } from "@mantine/core";
 import Slider from 'react-slick';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -70,6 +70,7 @@ export default function ItemDetails({
 }) {
     // const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
     const navigate = useNavigate();
+    const location = useLocation();
     const { email, _id: userId, username, isAuthenticated } = useAuth();
     const { itemId } = useParams();
     const { deleteItem } = useDeleteItem();
@@ -138,16 +139,22 @@ export default function ItemDetails({
             className="object-contain"
           />
         </div>
-      );
-    }
-  };
+        );
+        }
+    };
+
+    const breadcrumbsItems = [
+        { title: "Home", href: "/" },
+        { title: "Catalog", href: "/items" },
+        { title: item?.name || "Item Details", href: location.pathname }
+    ];
 
     return (
         <>
         <Title classNames={ {root: classes.detailsTitle }} c="gray.5" ta="center" order={2}>Details</Title>
-        <section className={classes.breadcrumbs}>
-            
-        </section>
+        <Breadcrumbs c="gray.8" my="md">{breadcrumbsItems.map((item, index) => (
+            <Link className="hover:text-emerald-700" key={index} to={item.href}>{item.title}</Link>
+        ))}</Breadcrumbs>
         <div className="grid grid-cols-1 gap-7 md:grid-cols-2">
             <section className="product-media-container">     
                 <div className="main-image-container">

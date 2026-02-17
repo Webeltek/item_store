@@ -5,17 +5,17 @@ import { hasLength, useForm } from '@mantine/form'
 import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { nanoid } from 'nanoid'
-import Media from "./image-uploader/Media";
+import Media from "../image-uploader/Media";
 import classes from './AddItem.module.scss'
 import { NumberInput, TextInput, Title, Textarea, Button } from "@mantine/core";
-import { IconBrandProducthunt, IconCurrencyDollar } from "@tabler/icons-react";
+import {  IconCurrencyDollar } from "@tabler/icons-react";
 
 export interface FormValues {
     name: string;
     price: string;
     images?: {
       uuid: string;
-      path: string;
+      path?: string;
       url: string;
     }[];
     description: string;
@@ -160,7 +160,6 @@ export default function AddItem() {
         <Title c="gray.5" ta="center" order={2}>Add product to the catalog</Title>
         <form className="flex flex-col gap-[0.5rem] mx-8" onSubmit={form.onSubmit(submitData)}>
             <TextInput variant="default"  label="Product name:" 
-                leftSection={<IconBrandProducthunt />}
             {...form.getInputProps('name')}  
             />
             <NumberInput leftSection={<IconCurrencyDollar />} variant="default" label="Price:" 
