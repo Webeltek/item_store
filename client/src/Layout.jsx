@@ -1,15 +1,5 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
-import Home from './components/home/Home'
-import Catalog from './components/catalog/Catalog'
-import About from './components/about/About'
-import Login from './components/login/Login'
-import Register from './components/register/Register'
-import AddItem from './components/add-item/AddItem'
-import Footer from './components/footer/Footer'
-import Header from './components/header/Header'
-import Logout from './components/logout/Logout'
-import ItemDetails from './components/item-details/ItemDetails'
-import EditItem from './components/edit-item/EditItem'
+import { lazy } from 'react'
 import AuthGuard from './components/guards/AuthGuard'
 import GuestGuard from './components/guards/GuestGuard'
 import PrivacyPolicy from './components/privacy-policy/PrivacyPolicy'
@@ -25,6 +15,19 @@ import ProfileOrders from './components/profile/profile-orders/ProfileOrders'
 import classes from './Layout.module.css'
 import { useQuery } from 'urql'
 import { UserContext } from './contexts/UserContext'
+import { useSelector } from 'react-redux'
+
+const Home = lazy(() => import('./components/home/Home') )
+const Catalog = lazy(() => import('./components/catalog/Catalog') )
+const About = lazy(() => import('./components/about/About') )
+const Login = lazy(() => import('./components/login/Login') )
+const Register = lazy(() => import('./components/register/Register') )
+const AddItem = lazy(() => import('./components/add-item/AddItem') )
+const Footer = lazy(() => import('./components/footer/Footer') )
+const Header = lazy(() => import('./components/header/Header') )
+const Logout = lazy(() => import('./components/logout/Logout') )
+const ItemDetails = lazy(() => import('./components/item-details/ItemDetails') )
+const EditItem = lazy(() => import('./components/edit-item/EditItem') )
 
 export default function Layout() {
   const { userLogoutHandler, showErrorMsg } = useContext(UserContext);
@@ -32,6 +35,7 @@ export default function Layout() {
   const isMobile = useMediaQuery('(max-width: 48em)');
   const [navbar, setNavbar] = useState()
   const [headerWithBurger, setHeaderWithBurger]= useState();
+  const userStateIsLogged = useSelector( state => state.user.isLogged);
   const GetUserStateQuery = `
   query getUserState {
     userState {
@@ -45,7 +49,7 @@ export default function Layout() {
   
   const { data, fetching, error } = result;
   useEffect(() => {
-    if (data && data.userState && !data.userState.isLogged) {
+    if (userStateIsLogged &&data && data.userState && !data.userState.isLogged) {
       userLogoutHandler();
     }
     if (error ) {

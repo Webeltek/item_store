@@ -22,9 +22,9 @@ export default function UserProvider({
       // try to logout firebase user if logged in as firebase user
       try {
         await signOut(auth);
-        console.log('Firebase User signed out');
+        console.log('Standart/Firebase User signed out');
       } catch (error) {
-        console.error('Firebase Error signing out:', error);
+        console.error('Standart/Firebase Error signing out:', error);
       }
       setAuthData({})
     }
