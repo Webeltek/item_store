@@ -22,12 +22,12 @@ import {
   useSortable
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { UserContext } from "../../../contexts/UserContext";
+import { UserContext } from "../../contexts/UserContext";
 
 export interface Image {
   uuid: string;
   url: string;
-  path?: string;
+  path?: string ;
 }
 
 

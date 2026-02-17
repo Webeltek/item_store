@@ -18,17 +18,48 @@ import { AppShell, Burger, Group, Stack, rem } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks'
 import Navbar from './components/navbar/Navbar'
 import { useClickOutside } from '@mantine/hooks';
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import EditProfile from './components/profile/edit-profile/EditProfile'
 import ProfileProducts from './components/profile/profile-products/ProfileProducts'
 import ProfileOrders from './components/profile/profile-orders/ProfileOrders'
 import classes from './Layout.module.css'
+import { useQuery } from 'urql'
+import { UserContext } from './contexts/UserContext'
 
 export default function Layout() {
+  const { userLogoutHandler, showErrorMsg } = useContext(UserContext);
   const [burgerOpened, { toggle: toggleBurger }] = useDisclosure();
   const isMobile = useMediaQuery('(max-width: 48em)');
   const [navbar, setNavbar] = useState()
   const [headerWithBurger, setHeaderWithBurger]= useState();
+  const GetUserStateQuery = `
+  query getUserState {
+    userState {
+        isLogged
+      }
+    }
+  `;
+  const [result] = useQuery({
+      query: GetUserStateQuery,
+    });
+  
+  const { data, fetching, error } = result;
+  useEffect(() => {
+    if (data && data.userState && !data.userState.isLogged) {
+      userLogoutHandler();
+    }
+    if (error ) {
+      if(error.networkError){
+        //unused: handle 401/403 (redirect to login, show message...)
+        // error.networkError happens before responce is parced if server unreachable or responce is not json, so we can not rely on error code or message from server, but we can show generic message
+        const status = (error.networkError).status || (error.networkError).statusCode;
+        showErrorMsg(error.networkError.message);
+      }
+      if (error.graphQLErrors?.length) {
+        showErrorMsg(error.graphQLErrors[0].message);
+      }
+    }
+  }, [data, userLogoutHandler, showErrorMsg, error]);    
   
   //trigger on click outside navbar and header
   const ref = useClickOutside(()=> {
@@ -71,7 +102,7 @@ export default function Layout() {
               <Navbar ref={setNavbar} toggleBurger={toggleBurger} />
             </AppShell.Navbar>
             <AppShell.Main  >
-              <div className='flex flex-col h-dvh mx-auto max-w-[1200px] md:px-[3rem]'>
+              <div className='flex flex-col h-dvh mx-auto max-w-[1200px] px-[1rem] md:px-[3rem]'>
               <Routes>
                     <Route index element={ <Home />} />
                     <Route path="/items" element={ <Catalog />} />

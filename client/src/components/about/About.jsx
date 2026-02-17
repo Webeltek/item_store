@@ -5,7 +5,7 @@ export default function About(){
         <>
         <section className="about-hero">
             <div className="container">
-                <h2>About Tv Store</h2>
+                <h2>About Pi Store</h2>
                 <p>Your trusted source for TVs and accessories.</p>
             </div>
         </section>

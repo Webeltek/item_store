@@ -3,9 +3,9 @@ import config from '../config/config.js';
 const resolvers = {
     Query: {
         url: (parent,args,context) =>{
-          if (!context.isLogged) {
-                throw new Error('You must be logged in to get images upload url.');
-            }
+          if (!context.isLogged && context.authError) {
+            throw new GraphQLError(context.authError.message, { extensions: { code: 'UNAUTHENTICATED' } });
+          }
           const apiUrl = config.expressApiUrl;  
           switch (args.routeId) {
             case 'image-upload':
