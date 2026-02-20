@@ -78,13 +78,13 @@ export default function ItemDetails({
     const { orderItem } = useOrderItem();
     const { comments, addComment } = useComments(itemId);
 
-    const isOwner = userId === item.owner;
-    const isOrdered = item.orderList?.some( orderUserId =>
+    const isOwner = userId === item?.owner;
+    const isOrdered = item?.orderList?.some( orderUserId =>
         orderUserId === userId
     )
 
     const itemDeleteHandler = async ()=>{
-        const hasConfirm =  confirm(`Are you sure you want to delete ${item.model} `);
+        const hasConfirm =  confirm(`Are you sure you want to delete ${item?.name} `);
         if (!hasConfirm){
             return;
         }
@@ -151,7 +151,7 @@ export default function ItemDetails({
 
     return (
         <>
-        <Title classNames={ {root: classes.detailsTitle }} c="gray.5" ta="center" order={2}>Details</Title>
+        {/* <Title classNames={ {root: classes.detailsTitle }} c="gray.5" ta="center" order={2}>Details</Title> */}
         <Breadcrumbs c="gray.8" my="md">{breadcrumbsItems.map((item, index) => (
             <Link className="hover:text-emerald-700" key={index} to={item.href}>{item.title}</Link>
         ))}</Breadcrumbs>
@@ -176,10 +176,11 @@ export default function ItemDetails({
                 </div>
             </section>    
             <section className="text-gray-700 leading-12">
-                <Title order={3} mb="lg"> {item.name}</Title>
+                <Title order={3} mb="lg"> {item?.name}</Title>
                 <p><strong>SKU:</strong> modify 231212</p>
-                <p><strong>Price:</strong> ${item.price}</p>
-                <p><strong>Added:</strong> {fromIsoDateString(item.created_at) }</p>
+                <p><strong>In Stock:</strong> {item?.stock}</p>
+                <p><strong>Price:</strong> ${item?.price}</p>
+                <p><strong>Added:</strong> {fromIsoDateString(item?.created_at) }</p>
                 { email && 
                     <div className="mt-4 grid grid-cols-2 gap-4">
                         { isOwner 
@@ -199,7 +200,7 @@ export default function ItemDetails({
             </section>
             <section className={classes.productDescription}>
                 <Title classNames={ {root: classes.detailsTitleDescription }} c="gray.7"  order={3}>Description</Title>
-                <p>{item.description}</p>
+                <p>{item?.description}</p>
             </section>
             {/* <section className="col-span-full">        
             { comments.length > 0 

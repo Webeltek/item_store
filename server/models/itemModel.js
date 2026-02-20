@@ -11,7 +11,16 @@ const itemSchema = new Schema({
         type: String,
         required: true,
     },
-    
+    stock: {
+        type: Number,
+        required:true,
+        validate: {
+            validator : function(value){
+                return value >= 0;
+            },
+            message: 'Stock must be non-negative num'
+        }
+    },
     price: {
         type: Number,
         required:true,

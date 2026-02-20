@@ -59,7 +59,7 @@ export default function FinishSignIn() {
   <>
   <EmailPrompt isOpen={opened} confirmHandler={handleConfirm}/>
   {emailToUse && <p>You entered: {emailToUse}</p>}
-  <p  className="mt-[280px] text-2xl font-semibold text-center text-gray-700 mb-4">{ emailLinkError ? emailLinkError :  "Completing sign-in..."}</p>;
+  <p  className="mt-[280px] text-2xl font-semibold text-center text-gray-700 mb-4">{ emailLinkError ? emailLinkError :  "Completing sign-in..."}</p>
   </>
   )
 }

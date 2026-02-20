@@ -98,12 +98,12 @@ function editItem(req, res, next) {
     const { _id: userId } = req.user;
 
     const itemData = req.body;
-    const { model, screenSize, description, price,image} = itemData;
+    const { name, description, price,images} = itemData;
     //using appliaction/json body
     if(itemData && contentType==='application/json'){
         return itemModel.findOneAndUpdate(
             { _id: itemId },
-            { model, screenSize, description, price: Number(price),image, owner: userId },
+            { name, description, price: Number(price),images, owner: userId },
             { new: true })
         .then(item => {
             res.status(200).json(item)

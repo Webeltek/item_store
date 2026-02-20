@@ -4,7 +4,7 @@ const secret = process.env.SECRET || 'SoftSecret';
 
 function createToken(data) {
     return new Promise((resolve, reject) => {
-        jwt.sign(data, secret, { expiresIn: '12h', algorithm: 'HS256' }, (err, token) => {
+        jwt.sign(data, secret, { expiresIn: '1h', algorithm: 'HS256' }, (err, token) => {
             if (err) return reject(err);
             resolve(token);
         });

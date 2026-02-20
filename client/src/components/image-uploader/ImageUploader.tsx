@@ -367,13 +367,17 @@ export function ImageUploader({
   targetPath,
   onSortEnd
 }: ImageUploaderProps) {
-  const [images, setImages] = React.useState<Image[]>(
-    currentImages.map((image) => ({
-      uuid: image.uuid,
-      url: image.url,
-      path: image.path
-    }))
-  );
+  const [images, setImages] = React.useState<Image[]>([]);
+
+  useEffect(() => {
+    setImages(
+      currentImages.map((image) => ({
+        uuid: image.uuid,
+        url: image.url,
+        path: image.path
+      }))
+    );
+  }, [currentImages]);
 
   const handleSortEnd = (oldIndex: number, newIndex: number) => {
     setImages((items) => {

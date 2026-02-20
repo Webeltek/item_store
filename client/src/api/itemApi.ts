@@ -3,6 +3,7 @@ import request from "../utils/request"
 import useAuth from "../hooks/useAuth";
 import { UserContext } from "../contexts/UserContext";
 import { useLocation } from "react-router-dom";
+import { ItemShape } from "src/interfaces/ItemInterfaces";
 
 const baseUrl = `${import.meta.env.VITE_API_URL}/items`;
 
@@ -83,7 +84,7 @@ export const useItems = ()=> {
 
 export const useItem = (itemId) => {
     const { showErrorMsg } = useContext(UserContext);
-    const [item, setItem ] = useState({});
+    const [item, setItem ] = useState<ItemShape | null>(null);
 
     useEffect(()=> {
         request.get(`${baseUrl}/${itemId}`)
