@@ -1,0 +1,31 @@
+.numberImput {
+    align-self: flex-start;
+}
+
+.editProductBtn {
+    align-self: center;
+}
+
+.textAreaLabel {
+    margin: 0.2rem 0;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-slate-500);
+    line-height: 1.5;
+}
+
+.textArea {
+    &:focus {
+        border-color: var(--mantine-color-ocean-blue-6);
+        box-shadow: 0 0 0 5px rgba(59, 130, 246, 0.1),
+          0 0 0 2px rgb(59, 130, 246);
+    }
+    &[data-error="true"] {
+        @apply border-red-500;
+        &:focus {
+            border-color: rgb(239, 68, 68);
+            box-shadow: 0 0 0 5px rgba(239, 68, 68, 0.1),
+                0 0 0 2px rgb(239, 68, 68);
+        }
+    }
+}

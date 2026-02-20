@@ -20,8 +20,8 @@ export default function Home(){
         <>
             <section className="hero">
                 <div className="container">
-                    <h2>Your One-Stop Pi Store</h2>
-                    <p>Find the best deals on the latest tv and accessories.</p>
+                    <h2>Pi Boards with Monitoring</h2>
+                    <p>Find the best deals on pi boards with monitoring capabilities and accessories.</p>
                     <Link to="/items" className="btn">Shop Now</Link>
                 </div>
             </section>

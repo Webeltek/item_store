@@ -9,7 +9,7 @@ function EmailPrompt({
   
     return (
       <>
-        <Modal centered="true" opened={isOpen} onClose={() => {}} title="Confirm email">
+        <Modal size="auto" centered="true" opened={isOpen} onClose={() => {}} title="Confirm email">
           <TextInput
             placeholder="Your email"
             value={value}

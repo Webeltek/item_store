@@ -9,34 +9,31 @@ import Media from "../image-uploader/Media";
 import classes from './AddItem.module.scss'
 import { NumberInput, TextInput, Title, Textarea, Button } from "@mantine/core";
 import {  IconCurrencyDollar } from "@tabler/icons-react";
+import { ItemFormValues } from "src/interfaces/ItemInterfaces";
 
-export interface FormValues {
-    name: string;
-    price: string;
-    images?: {
-      uuid: string;
-      path?: string;
-      url: string;
-    }[];
-    description: string;
-}
 
 export default function AddItem() {
     const [pending, setPending] = useState<undefined | boolean>();
     const navigate = useNavigate();
     const { create } = useCreateItem();
-    const [product, setProduct] = useState<FormValues | null>(null);
+    const [product, setProduct] = useState<ItemFormValues | null>(null);
 
-    const form = useForm<FormValues>({
+    const form = useForm<ItemFormValues>({
         mode: 'controlled',
         initialValues: {
             name: '',
             price: '',
+            stock: '1',
             images: product?.images || [],
             description: '',
         },
         validate: {
             name: (value) => (!value ? 'Name is required!' : value.length < 5 ? 'Model must be at least 5 characters!' : null),
+            stock: (value) => {
+                if (Number(value) < 0 ){ return 'Stock must be positive number!'}
+                if (value === '') { return 'Stock is required!'}
+                return null;
+            },
             price: (value) => {
                 if (Number(value) < 0 ){ return 'Price must be positive number!'}
                 if (value === '') { return 'Price is required!'}
@@ -161,6 +158,9 @@ export default function AddItem() {
         <form className="flex flex-col gap-[0.5rem] mx-8" onSubmit={form.onSubmit(submitData)}>
             <TextInput variant="default"  label="Product name:" 
             {...form.getInputProps('name')}  
+            />
+            <NumberInput variant="default" label="In Stock:" 
+            classNames={{ root: classes.numberImput }} {...form.getInputProps('stock')}
             />
             <NumberInput leftSection={<IconCurrencyDollar />} variant="default" label="Price:" 
             classNames={{ root: classes.numberImput }} {...form.getInputProps('price')}

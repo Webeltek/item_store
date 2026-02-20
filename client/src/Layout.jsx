@@ -35,7 +35,7 @@ export default function Layout() {
   const isMobile = useMediaQuery('(max-width: 48em)');
   const [navbar, setNavbar] = useState()
   const [headerWithBurger, setHeaderWithBurger]= useState();
-  const userStateIsLogged = useSelector( state => state.user.isLogged);
+  const hasReduxUser = useSelector( state => state.user.username);
   const GetUserStateQuery = `
   query getUserState {
     userState {
@@ -43,13 +43,18 @@ export default function Layout() {
       }
     }
   `;
-  const [result] = useQuery({
+  const [result, reexecuteQuery] = useQuery({
       query: GetUserStateQuery,
+      pause: !hasReduxUser,
+      requestPolicy: 'network-only',
     });
   
   const { data, fetching, error } = result;
-  useEffect(() => {
-    if (userStateIsLogged &&data && data.userState && !data.userState.isLogged) {
+  // Ensure user state is in sync with server on app load and when user state changes to logged out - if server says user is not logged in but we have user in redux, then logout and show message from server
+  useEffect( () => {
+    if (!hasReduxUser) return;
+    if (fetching) return;
+    if (data && !data.userState?.isLogged) {
       userLogoutHandler();
     }
     if (error ) {
@@ -63,7 +68,7 @@ export default function Layout() {
         showErrorMsg(error.graphQLErrors[0].message);
       }
     }
-  }, [data, userLogoutHandler, showErrorMsg, error]);    
+  }, [data, userLogoutHandler, showErrorMsg, error, hasReduxUser,fetching]);    
   
   //trigger on click outside navbar and header
   const ref = useClickOutside(()=> {
