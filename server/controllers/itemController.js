@@ -79,10 +79,10 @@ function createItem(req, res, next) {
     const { _id: userId } = req.user;
 
     const itemData = req.body;
-    const { name, description, price,images} = itemData;
+    const { name, description, price,images, stock} = itemData;
     //using appliaction/json body
     if(itemData && contentType==='application/json'){
-        return itemModel.create({ name, description, price: Number(price),images, owner: userId })
+        return itemModel.create({ name, description, stock, price: Number(price),images, owner: userId })
         .then(item => {
             res.status(200).json(item)
         })
@@ -98,12 +98,12 @@ function editItem(req, res, next) {
     const { _id: userId } = req.user;
 
     const itemData = req.body;
-    const { name, description, price,images} = itemData;
+    const { name, description, price,images, stock} = itemData;
     //using appliaction/json body
     if(itemData && contentType==='application/json'){
         return itemModel.findOneAndUpdate(
             { _id: itemId },
-            { name, description, price: Number(price),images, owner: userId },
+            { name, description, price: Number(price),images, stock, owner: userId },
             { new: true })
         .then(item => {
             res.status(200).json(item)

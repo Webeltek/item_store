@@ -11,11 +11,11 @@ const Navbar = forwardRef( ({toggleBurger }, ref)=> {
         { label : 'Home', link: '/', icon: IconHome},
         { label: 'Catalog', icon: IconList,
             links: [
-               { label: 'TVs', link: '/items'},
+               { label: 'Boards', link: '/items'},
 
             ]
         },
-        ...(isAuthenticated ?  [{ label: 'Add TV', link: '/add-item', icon: IconPackage}] : []),
+        ...(isAuthenticated ?  [{ label: 'Add product', link: '/add-item', icon: IconPackage}] : []),
         { label: 'About', link: '/about', icon: IconInfoCircle}
     ]
 
