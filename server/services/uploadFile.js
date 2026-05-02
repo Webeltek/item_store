@@ -62,6 +62,8 @@ const firebaseUploader = {
     const bucket = firebaseAdmin.storage().bucket();
     const results = await Promise.all(
       files.map(async (file) => {
+        //console.log('destinationPath', destinationPath)
+        console.log('upload image joined path:',path.join(destinationPath, file.filename))
         const fileUpload = bucket.file(path.join(destinationPath, file.filename));
 
         await fileUpload.save(file.buffer, {

@@ -3,15 +3,16 @@ import request from "../utils/request"
 import useAuth from "../hooks/useAuth";
 import { UserContext } from "../contexts/UserContext";
 import { useLocation } from "react-router-dom";
-import { ItemShape } from "src/interfaces/ItemInterfaces";
+import { ItemShape } from "../interfaces/ItemInterfaces";
 
-const baseUrl = `${import.meta.env.VITE_API_URL}/items`;
+const itemsBaseUrl = `${import.meta.env.VITE_API_URL}/items`;
+const imagesBaseUrl = `${import.meta.env.VITE_API_URL}/images`;
 
 export const useCreateItem = ()=> {
     const { request } = useAuth();
     
     const create = (itemData) => {
-        return request.post(baseUrl, itemData)
+        return request.post(itemsBaseUrl, itemData)
     }
 
     return {
@@ -23,7 +24,7 @@ export const useEditItem = () => {
     const { request} = useAuth()
 
     const edit = (itemId, itemData) => {
-        return request.put(`${baseUrl}/${itemId}`, {...itemData, _id: itemId});
+        return request.put(`${itemsBaseUrl}/${itemId}`, {...itemData, _id: itemId});
     }
 
     return {
@@ -33,9 +34,10 @@ export const useEditItem = () => {
 
 export const useDeleteItem = ()=> {
     const { request } = useAuth();
-
+    const { deleteImages } = useDeleteImages();
     const deleteItem = (itemId) => {
-        return request.delete(`${baseUrl}/${itemId}`)
+
+        return request.delete(`${itemsBaseUrl}/${itemId}`)
     }
 
     return {
@@ -43,11 +45,27 @@ export const useDeleteItem = ()=> {
     }
 }
 
+export const useDeleteImages = () => {
+    const { request } = useAuth();
+    const deleteImages = (images: any[]) => {
+        // Send file URLs as query params instead of request body
+        const searchParams = new URLSearchParams();
+        images.forEach((imageUrl, index) => {
+            searchParams.append('files', imageUrl);
+        });
+        //console.log({ searchParams: searchParams.toString() });
+        return request.delete(`${imagesBaseUrl}/delete?${searchParams.toString()}`)
+    }
+    return {
+        deleteImages,
+     }   
+}
+
 export const useOrderItem = () => {
     const { request } = useAuth();
 
     const orderItem = (itemId)=> {
-        return request.put(`${baseUrl}/${itemId}/order`);
+        return request.put(`${itemsBaseUrl}/${itemId}/order`);
     }
 
     return { orderItem };
@@ -64,7 +82,7 @@ export const useItems = ()=> {
         if(!location.state?.items){
         
             setIsPending(true);
-            request.get(`${baseUrl}`)
+            request.get(`${itemsBaseUrl}`)
             .then( result =>{
                 setIsPending(false);
                 setItems(result);
@@ -87,11 +105,11 @@ export const useItem = (itemId) => {
     const [item, setItem ] = useState<ItemShape | null>(null);
 
     useEffect(()=> {
-        request.get(`${baseUrl}/${itemId}`)
+        request.get(`${itemsBaseUrl}/${itemId}`)
         .then(result => {
             // console.log(result);
             setItem(result)
-        }).catch(err=> showErrorMsg(err.message))
+        }).catch((err: { message: any; err: any})=> showErrorMsg(err.message))
     },[itemId, showErrorMsg]);
 
     return {
@@ -112,7 +130,7 @@ export const useLatestItems = (size) => {
             limit: size
         })
         setIsPending(true);
-        request.get(`${baseUrl}/latest?${searchParams.toString()}`)
+        request.get(`${itemsBaseUrl}/latest?${searchParams.toString()}`)
         .then(result => {
             setIsPending(false);
             setLatestItems(result);
@@ -139,8 +157,8 @@ export const useOrderedOwnedItems = ()=>{
         }
 
         Promise.all([
-            request.get(`${baseUrl}/owned`,null),
-            request.get(`${baseUrl}/ordered`,null)])
+            request.get(`${itemsBaseUrl}/owned`,null),
+            request.get(`${itemsBaseUrl}/ordered`,null)])
         .then(([ownedResult,orderedResult]) =>{
             setIsPending(false);
             setOwnedItems(ownedResult);
@@ -169,7 +187,7 @@ export const useOwnedItems = ()=> {
         }
 
 
-        request.get(`${baseUrl}/owned`,null)
+        request.get(`${itemsBaseUrl}/owned`,null)
         .then( result =>{
             setIsPending(false);
             setOwnedItems(result);
@@ -195,7 +213,7 @@ export const useOrderedItems = ()=> {
         }
 
 
-        request.get(`${baseUrl}/ordered`,null)
+        request.get(`${itemsBaseUrl}/ordered`,null)
         .then( result =>{
             setIsPending(false);
             setOrderedItems(result);

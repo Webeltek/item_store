@@ -1,6 +1,6 @@
 import { Navigate, useNavigate, useParams } from "react-router-dom";
 import { useEditItem, useItem } from "../../api/itemApi";
-import { useActionState, useEffect, useState } from "react";
+import { useActionState, useContext, useEffect, useState } from "react";
 import  classes from './EditItem.module.scss'
 import useAuth from "../../hooks/useAuth";
 import { hasLength, useForm } from '@mantine/form'
@@ -8,8 +8,10 @@ import { ItemFormValues } from "../../interfaces/ItemInterfaces"
 import { Button, NumberInput, Textarea, TextInput, Title } from "@mantine/core";
 import { IconCurrencyDollar } from "@tabler/icons-react";
 import  Media from "../image-uploader/Media";
+import { UserContext } from "../../contexts/UserContext";
 
 export default function EditItem() {
+    const { showErrorMsg } = useContext(UserContext);
     const [pending, setPending] = useState<undefined | boolean>(undefined);
     const { _id: userId} = useAuth()
     const navigate = useNavigate();
@@ -17,7 +19,7 @@ export default function EditItem() {
     const { itemId } = useParams();
     const { item } = useItem(itemId);
     const form = useForm<ItemFormValues>({
-        mode: 'controlled',
+    mode: 'controlled',
         initialValues: {
             name: '',
             price: '',
@@ -39,7 +41,7 @@ export default function EditItem() {
             },
             description: (value) => (!value ? 'Description is required!' : value.length < 10 ? 'Description must be at least 10 characters!' : null),
         },
-            });
+    });
 
     useEffect(() => {
         if (item) {
@@ -53,15 +55,16 @@ export default function EditItem() {
         }
     }, [item]);        
 
-    const submitData = async ( data)=>{
+    const submitData = async (data: ItemFormValues) => {
         try {
             setPending(true);
             await edit(itemId, data);
             setPending(false);
             navigate('/items');
-        } catch (err) {
+        } catch (err: unknown) {
             setPending(false);
-            
+            const message = err instanceof Error ? err.message : String(err);
+            showErrorMsg(message);
         }
     }
 

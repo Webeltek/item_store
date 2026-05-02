@@ -19,9 +19,10 @@ export default defineConfig({
     },
   },
   resolve: {
-    '@': path.resolve('./src'),
-    '@components': path.resolve('./src/components')
-
+    alias: {
+      '@': path.resolve('./src'),
+      '@components': path.resolve('./src/components')
+    } 
   },
   build: {
     rollupOptions: {

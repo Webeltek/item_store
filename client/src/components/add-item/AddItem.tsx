@@ -1,53 +1,53 @@
 import { useNavigate } from "react-router-dom";
 import SubmitBtn from "./SubmitBtn";
-import { useCreateItem } from "../../api/itemApi";
+import { useCreateItem, useDeleteImages } from "../../api/itemApi";
 import { hasLength, useForm } from '@mantine/form'
 import { useEffect, useRef, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import { nanoid } from 'nanoid'
 import Media from "../image-uploader/Media";
 import classes from './AddItem.module.scss'
-import { NumberInput, TextInput, Title, Textarea, Button } from "@mantine/core";
+import { NumberInput, TextInput, Title, Textarea, Button, SegmentedControl } from "@mantine/core";
 import {  IconCurrencyDollar } from "@tabler/icons-react";
-import { ItemFormValues } from "src/interfaces/ItemInterfaces";
-
+import { ItemFormValues, ImageShape } from "../../interfaces/ItemInterfaces";
 
 export default function AddItem() {
     const [pending, setPending] = useState<undefined | boolean>();
     const navigate = useNavigate();
     const { create } = useCreateItem();
-    const [product, setProduct] = useState<ItemFormValues | null>(null);
+    const { deleteImages } = useDeleteImages();
+    const wasSubmitted = useRef(false);
+    //const [product, setProduct] = useState<ItemFormValues | null>(null);
 
     const form = useForm<ItemFormValues>({
-        mode: 'controlled',
-        initialValues: {
-            name: '',
-            price: '',
-            stock: '1',
-            images: product?.images || [],
-            description: '',
+    mode: 'controlled',
+    initialValues: {
+        name: '',
+        price: '',
+        stock: '1',
+        images: [] as ImageShape[],
+        description: '',
+    },
+    validate: {
+        name: (value) => (!value ? 'Name is required!' : value.length < 5 ? 'Model must be at least 5 characters!' : null),
+        stock: (value) => {
+            if (Number(value) < 0 ){ return 'Stock must be positive number!'}
+            if (value === '') { return 'Stock is required!'}
+            return null;
         },
-        validate: {
-            name: (value) => (!value ? 'Name is required!' : value.length < 5 ? 'Model must be at least 5 characters!' : null),
-            stock: (value) => {
-                if (Number(value) < 0 ){ return 'Stock must be positive number!'}
-                if (value === '') { return 'Stock is required!'}
-                return null;
-            },
-            price: (value) => {
-                if (Number(value) < 0 ){ return 'Price must be positive number!'}
-                if (value === '') { return 'Price is required!'}
-                return null;
-            },
-            // image: (value) => {
-            //     if (!value) return 'Image address is required!';
-            //     if (!/^https:\/\/.*$/.test(value)) return 'Image address must start with https://!';
-            //     return null;
-            // },
-            description: (value) => (!value ? 'Description is required!' : value.length < 10 ? 'Description must be at least 10 characters!' : null),
+        price: (value) => {
+            if (Number(value) < 0 ){ return 'Price must be positive number!'}
+            if (value === '') { return 'Price is required!'}
+            return null;
         },
-		});
-
+        // image: (value) => {
+        //     if (!value) return 'Image address is required!';
+        //     if (!/^https:\/\/.*$/.test(value)) return 'Image address must start with https://!';
+        //     return null;
+        // },
+        description: (value) => (!value ? 'Description is required!' : value.length < 10 ? 'Description must be at least 10 characters!' : null),
+    },
+    });
 
 
     const createEvershopProd = (name, price, description, images)=>{
@@ -115,20 +115,48 @@ export default function AddItem() {
                 }
             ]
             }
+    }
+
+    const imagesRef = useRef(form.values.images);
+
+    const clearData = async () => {
+        const imagesUrlsToDelete = imagesRef.current?.map(image => image.url);
+        try {
+            if (imagesUrlsToDelete && imagesUrlsToDelete.length > 0) {
+                await deleteImages(imagesUrlsToDelete);
+            }
+        } catch (err) {
+            console.error('Error deleting images:', err);
         }
+    }
+
+    useEffect(() => {
+        imagesRef.current = form.values.images;
+    }, [form.values.images]);
+
+    useEffect(() => {
+        return () => {
+            if (!wasSubmitted.current) {
+                clearData();
+            }
+        }
+    }, [])
 
     const submitData = async (data)=>{
 		// using react hook form - data parameter contains form values;	
 		try {
             setPending(true);
+            wasSubmitted.current = true;
             await create(data);
             setPending(false);
             navigate('/items');
 				
         } catch (err) {
+            wasSubmitted.current = false;
             setPending(false);
         }
     }
+
 
     const testProdSubmit = async (data) => {
         const evershProd = createEvershopProd(data.name, data.price,data.description, data.images);
@@ -183,7 +211,7 @@ export default function AddItem() {
                 type="submit"
                 >Create Product
             </Button>
-            <button
+            {/* <button
                 onClick={() => form.onSubmit(testProdSubmit)}  
                 className="btn"
                 type="button"
@@ -192,7 +220,7 @@ export default function AddItem() {
                     marginTop: '3em'
                     }}
                 >Create Evershop Test Product
-            </button>
+            </button> */}
         </form>
     </section>    
     </>    
