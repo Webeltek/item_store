@@ -16,6 +16,7 @@ import {
   DragEndEvent
 } from '@dnd-kit/core';
 import {
+  arrayMove,
   SortableContext,
   sortableKeyboardCoordinates,
   useSortable
@@ -245,6 +246,7 @@ export interface ImageUploaderProps {
   onSortEnd?: (oldIndex: number, newIndex: number) => void;
 }
 interface ImagesProps extends ImageUploaderProps {
+  addImage: (imageArray: Image[]) => void;
   imageUploadUrl: string;
   onDelete: (image: Image) => void | Promise<void>;
   onUpload: (images: Image[]) => void | Promise<void>;
@@ -366,16 +368,46 @@ export function ImageUploader({
   targetPath,
   onSortEnd
 }: ImageUploaderProps) {
+  const [images, setImages] = React.useState<Image[]>([]);
+
+  useEffect(() => {
+    setImages(
+      currentImages.map((image) => ({
+        uuid: image.uuid,
+        url: image.url,
+        path: image.path
+      }))
+    );
+  }, [currentImages]);
+
   const handleSortEnd = (oldIndex: number, newIndex: number) => {
+    setImages((items) => {
+      return arrayMove(items, oldIndex, newIndex);
+    });
     if (onSortEnd) {
       onSortEnd(oldIndex, newIndex);
     }
   };
 
+  const addImage = (imageArray: Image[]) => {
+    if (!isMultiple) {
+      // For single image mode, replace the current image
+      setImages(imageArray);
+    } else {
+      setImages(images.concat(imageArray));
+    }
+  };
+
+  const removeImage = (imageUuid) => {
+    setImages(images.filter((i) => i.uuid !== imageUuid));
+  };
+
+  //unused function for now
   const onDeleteFn = async (image: Image) => {
     if (onDelete) {
       await onDelete(image);
     }
+    removeImage(image.uuid);
   };
 
   const onDeleteFn2 = async (image: Image) => {
@@ -408,6 +440,7 @@ export function ImageUploader({
       if (onDelete) {
         await onDelete(image);
       }
+      removeImage(image.uuid);
     };
 
   // disabled functionality for now
@@ -415,6 +448,7 @@ export function ImageUploader({
     if (onUpload) {
       await onUpload(imageArray);
     }
+    addImage(imageArray);
   };
 
   const { showErrorMsg, accessToken } = useContext(UserContext);
@@ -453,7 +487,8 @@ export function ImageUploader({
           className={isMultiple ? 'image-list' : ''}
         >
           <Images
-            currentImages={currentImages}
+            currentImages={images}
+            addImage={addImage}
             imageUploadUrl={data.imageUploadUrl}
             targetPath={targetPath}
             onDelete={onDeleteFn2}

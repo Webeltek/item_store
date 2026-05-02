@@ -55,16 +55,15 @@ export default function EditItem() {
         }
     }, [item]);        
 
-    const submitData = async (data: ItemFormValues) => {
+    const submitData = async ( data)=>{
         try {
             setPending(true);
             await edit(itemId, data);
             setPending(false);
             navigate('/items');
-        } catch (err: unknown) {
+        } catch (err : any) {
             setPending(false);
-            const message = err instanceof Error ? err.message : String(err);
-            showErrorMsg(message);
+            showErrorMsg(err.message)
         }
     }
 
