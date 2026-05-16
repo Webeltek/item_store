@@ -15,10 +15,10 @@ export default function Media({ addItemForm }: { addItemForm: UseFormReturnType<
           allowDelete={true}
           allowSwap={true}
           onDelete={(image) => {
-            const index = addItemForm.values.images.findIndex(
+            const index = addItemForm.values.images?.findIndex(
               (img) => img.uuid === image.uuid
             );
-            if (index !== -1) {
+            if (index !== undefined && index !== -1) {
               addItemForm.removeListItem('images', index);
             }
           }}

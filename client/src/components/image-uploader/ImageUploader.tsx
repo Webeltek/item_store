@@ -38,7 +38,7 @@ const Upload: React.FC<{
   isSingleMode?: boolean;
 }> = ({ imageUploadUrl, targetPath, onUpload, isSingleMode }) => {
   const [uploading, setUploading] = React.useState(false);
-  const { accessToken } = useContext(UserContext);
+  const { accessToken, showErrorMsg } = useContext(UserContext);
 
   const onChange = (e) => {
     setUploading(true);
@@ -48,7 +48,7 @@ const Upload: React.FC<{
       formData.append('images', e.target.files[i]);
     }
     formData.append('targetPath', targetPath || '');
-    fetch(imageUploadUrl + (targetPath || ''), {
+    fetch(imageUploadUrl + '/' + (targetPath || ''), {
       method: 'POST',
       body: formData,
       credentials: 'include',
@@ -75,11 +75,12 @@ const Upload: React.FC<{
             }))
           );
         } else {
-          toast.error(get(response, 'error.message', 'Failed!'));
+          toast.error(String(get(response, 'error.message', 'Failed!')));
         }
       })
       .catch((error) => {
-        toast.error(error.message);
+        toast.error(String(error.message));
+        showErrorMsg(error.err?.message || "Err prop missing in response!");
       })
       .finally(() => {
         e.target.value = null;
@@ -412,14 +413,14 @@ export function ImageUploader({
   const onDeleteFn2 = async (image: Image) => {
       if (data && data.imageDeleteUrl && image.url) {
         try {
-          const response = await fetch(data.imageDeleteUrl, {
+          const url = new URL(data.imageDeleteUrl);
+          url.searchParams.append('file', image.url);
+          const response = await fetch(url.toString(), {
             method: 'DELETE',
-            body: JSON.stringify({ file: image.url }),
             credentials: 'include',
             headers: {
               'X-Requested-With': 'XMLHttpRequest',
-              'X-Authorization': accessToken,
-              'Content-Type': 'application/json'
+              'X-Authorization': accessToken
             }
           });
 
@@ -431,8 +432,8 @@ export function ImageUploader({
             );
           }
           toast.success('Image deleted successfully');
-        } catch (e) {
-          toast.error(e.message);
+        } catch (e: any) {
+          toast.error(String(e.message));
           return; // Do not remove from UI if server deletion fails
         }
       }

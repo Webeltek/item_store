@@ -12,7 +12,7 @@ router.post(/^\/upload\/(.*)$/, (req,res,next)=>{
     imageUploadController.upload, 
     imageUploadController.verifyImages);
 
-router.delete(/^\/delete\/(.*)$/, auth(), 
+router.delete(/^\/delete(.*)$/, auth(), 
     imageDeleteController.deleteImage);
               
 

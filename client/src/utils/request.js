@@ -29,10 +29,10 @@ const request = async ( method ,url,data,options = {} ) =>{
 
     try {
         const response = await fetch(url, options);
-        if(!response.ok){
+        if(!response.ok || response.status == 401){
             const errorData = await response.json();
             
-            throw new Error(errorData.err.message);
+            throw new Error(errorData.err?.message || errorData.message );
         }
         if(response.status == 204){
             return response;

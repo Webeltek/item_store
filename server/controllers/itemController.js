@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
+import { deleteImagesByItem } from './imageDeleteController.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -115,43 +116,31 @@ function editItem(req, res, next) {
 function deleteItem(req, res, next) {
     const { itemId } = req.params;
     const { _id: userId } = req.user;
-
-    const uploadDir = path.join(__dirname, '../uploads');
-
     Promise.all([
         itemModel.findOneAndDelete({ _id: itemId, owner: userId }),
         userModel.findOneAndUpdate({ _id: userId }, { $pull: { items: itemId } }),
         messageModel.deleteMany({ itemId: itemId }),
     ])
-        .then(([deletedOne, _, __]) => {
-            if (deletedOne) {
-                const imageFilePath = uploadDir + '/'+ deletedOne.imageFile;
-                console.log({imageFilePath: imageFilePath})
-                if (fs.existsSync(imageFilePath) && deletedOne.imageFile) {
-                    fs.unlink(imageFilePath, (err) => {
-                    if (err) {
-                        console.error('Error deleting file:', err);
-                        return;
-                    }
-                    console.log('Item and image file deleted successfully!');
-                    });
-                } else {
-                    console.log('Item without image file deleted successfuly!');
-                }
+    .then(([deletedOne, _, __]) => {
+        if (deletedOne) {
+            // call deleteImages by url for each image in the item
+            return deleteImagesByItem(deletedOne).then((deleteImagesByItemResult) => {
                 //returning updated collection instead of deleted item
                 return itemModel.find().then(items => {
                     return res.status(200).json(items);
                 })
-                // res.status(200).json(deletedOne)
-            } else {
-                return res.status(401).json({ message: `Not allowed!`,
-                    err: {
-                        message: `Not allowed!`
-                    }
-                 });
-            }
-        })
-        .catch(next);
+            }).catch(err => {
+                return res.status(500).json({ message: err.message, failed: err.failedFiles || [] });
+            });
+        } else {
+            return res.status(401).json({ message: `Not allowed!`,
+                err: {
+                    message: `Not allowed!`
+                }
+                });
+        }
+    })
+    .catch(next);
 }
 
 function order(req, res, next) {

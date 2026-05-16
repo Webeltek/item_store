@@ -19,14 +19,16 @@
 
     "resolveJsonModule": true,
     "isolatedModules": true,
+    "noImplicitAny": false ,
+    "strictNullChecks": true,
 
-    "baseUrl": ".",
-    "paths": {
-      "@components/*": ["src/components/*"],
-    },
+    // "paths": {
+    //   "@/*": ["src/*"],
+    //   "@components/*": ["src/components/*"],
+    // },
     
     "types": ["vite/client"],
-
+    "rootDir": "./src",
     "outDir": "dist"
   },
   "include": ["src"]

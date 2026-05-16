@@ -1,4 +1,5 @@
 import config from '../config/config.js';
+import { GraphQLError } from 'graphql';
 
 const resolvers = {
     Query: {
@@ -10,11 +11,11 @@ const resolvers = {
           switch (args.routeId) {
             case 'image-upload':
               if(args.assetType === 'images'){
-                return apiUrl+'/images/upload/';
+                return apiUrl+'/images/upload';
               }
             case 'image-delete':
               if(args.assetType === 'images'){
-                return apiUrl+'/images/delete/';
+                return apiUrl+'/images/delete';
               }  
             default:
               throw new Error('Invalid routeId');
