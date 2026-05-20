@@ -47,7 +47,7 @@ export async function deleteImage(req, res,next) {
 }
 
 export async function deleteImagesByItem(item){
-    const filesToDelete = item.images?.map((img) => img.path) || [];
+    const filesToDelete = item.images?.map((img) => img.url) || [];
     const results = await Promise.allSettled(
         filesToDelete.map((f) => imageDeleter(f))
     );
