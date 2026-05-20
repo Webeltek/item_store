@@ -12,7 +12,7 @@ export default function ProfileItem({
                 { item.imageFile &&
                     <img className="w-full aspect-4/3 object-center object-cover" src={`${IMAGES_URL}/${item.imageFile}`} alt="image"  />
                 }
-                <img className="w-full aspect-4/3 object-center object-cover" src={item.image}
+                <img className="w-full aspect-4/3 object-center object-cover" src={item?.images.url}
                     alt="" />
                 <div className="h-1/2 p-4 sm:p-9 md:p-7 xl:p-9 duration-500 group-hover:bg-gray-100">
                   <h3 className="mb-4 block text-xl font-semibold text-gray-900 group-hover:text-blue-600 sm:text-[22px] md:text-xl lg:text-[22px] xl:text-xl 2xl:text-[22px]">
