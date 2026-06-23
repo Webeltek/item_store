@@ -6,19 +6,24 @@ import likes from './likes.js';
 import test from './test.js';
 import { userController } from '../controllers/index.js';
 import images from './images.js';
+import createPiMonitor from './piMonitor.js';
 
-const router = express.Router();
+export default function createApiRouter(io) {
+  const router = express.Router();
 
-router.post('/register', userController.register);
-router.post('/login', userController.login);
-router.get('/logout', userController.logout);
-router.post('/verify_gtoken', userController.verifyGtoken)
+  router.post('/register', userController.register);
+  router.post('/login', userController.login);
+  router.get('/logout', userController.logout);
+  router.post('/verify_gtoken', userController.verifyGtoken)
 
-router.use('/users', users);
-router.use('/items', items);
-router.use('/images', images);
-router.use('/messages', messages);
-router.use('/likes', likes);
-router.use('/test', test);
+  router.use('/users', users);
+  router.use('/items', items);
+  router.use('/images', images);
+  router.use('/messages', messages);
+  router.use('/likes', likes);
+  router.use('/test', test);
 
-export default router;
+  router.use('/monitor', createPiMonitor(io));
+
+  return router;
+}

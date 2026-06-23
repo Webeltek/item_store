@@ -1,6 +1,6 @@
 import { ScrollArea } from "@mantine/core";
 import classes from "./Navbar.module.css";
-import { IconHome, IconList, IconInfoCircle ,IconPackage} from "@tabler/icons-react";
+import { IconHome, IconList, IconInfoCircle ,IconPackage, IconBrandCampaignmonitor} from "@tabler/icons-react";
 import { NavbarLinksGroup } from "./NavbarLinksGroup/NavbarLinksGroup";
 import useAuth from "../../hooks/useAuth";
 import { forwardRef } from "react";
@@ -15,7 +15,10 @@ const Navbar = forwardRef( ({toggleBurger }, ref)=> {
 
             ]
         },
-        ...(isAuthenticated ?  [{ label: 'Add product', link: '/add-item', icon: IconPackage}] : []),
+        ...(isAuthenticated ?  [
+            { label: 'Add product', link: '/add-item', icon: IconPackage},
+            { label: 'Pi Monitor', link: '/pi-monitor', icon: IconBrandCampaignmonitor},
+        ] : []),
         { label: 'About', link: '/about', icon: IconInfoCircle}
     ]
 

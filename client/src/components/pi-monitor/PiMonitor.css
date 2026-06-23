@@ -1,0 +1,354 @@
+/* PumpController.css */
+.pump-controller {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Header */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.connection-status {
+    display: inline-block;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.connection-status.connected {
+    background: #d4edda;
+    color: #155724;
+}
+
+.connection-status.disconnected {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.last-synced {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* Cards */
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.card h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #667eea;
+}
+
+/* Pump Status */
+.pump-status {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.pump-status.on {
+    background: #d4edda;
+    color: #155724;
+}
+
+.pump-status.off {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    margin-left: 10px;
+}
+
+.pump-status.on .status-indicator {
+    background: #28a745;
+    animation: pulse 1.5s infinite;
+}
+
+.pump-status.off .status-indicator {
+    background: #dc3545;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+/* Buttons */
+.button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.button-group button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.button-group button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-on {
+    background: #28a745;
+    color: white;
+}
+
+.btn-on:hover:not(:disabled) {
+    background: #218838;
+}
+
+.btn-off {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-off:hover:not(:disabled) {
+    background: #c82333;
+}
+
+.btn-emergency {
+    background: #ff0000;
+    color: white;
+    animation: emergency-pulse 1s infinite;
+}
+
+@keyframes emergency-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Schedule Items */
+.schedule-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.schedule-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.schedule-item:hover {
+    background: #e9ecef;
+}
+
+.schedule-item.disabled {
+    opacity: 0.6;
+    background: #e9ecef;
+}
+
+.schedule-info {
+    flex: 1;
+}
+
+.schedule-time {
+    font-size: 18px;
+    font-weight: bold;
+    color: #667eea;
+}
+
+.running-badge {
+    color: #28a745;
+    font-size: 14px;
+}
+
+.disabled-badge {
+    color: #999;
+    font-size: 14px;
+}
+
+.schedule-duration,
+.schedule-days {
+    font-size: 14px;
+    color: #666;
+    margin-top: 4px;
+}
+
+.schedule-next {
+    font-size: 13px;
+    color: #28a745;
+    margin-top: 4px;
+}
+
+.schedule-actions {
+    display: flex;
+    gap: 8px;
+    margin-left: 10px;
+}
+
+.btn-toggle {
+    background: #ffc107;
+    color: #333;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.btn-toggle:hover {
+    background: #e0a800;
+}
+
+.btn-delete {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.btn-delete:hover {
+    background: #c82333;
+}
+
+/* Schedule Form */
+.schedule-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+.form-group input,
+.form-group select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.btn-add {
+    background: #667eea;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 5px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s;
+    grid-column: 1 / -1;
+}
+
+.btn-add:hover {
+    background: #5a67d8;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+}
+
+/* Loading */
+.loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-size: 24px;
+    color: #667eea;
+}
+
+.loader {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Next Run */
+.next-run {
+    text-align: center;
+    margin-top: 15px;
+    padding: 10px;
+    background: #e3f2fd;
+    border-radius: 8px;
+}
+
+/* Level Indicator */
+.level-indicator {
+    text-align: center;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 10px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .schedule-item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .schedule-actions {
+        margin-left: 0;
+        margin-top: 10px;
+        justify-content: flex-end;
+    }
+    
+    .schedule-form {
+        grid-template-columns: 1fr;
+    }
+    
+    .button-group {
+        flex-wrap: wrap;
+    }
+    
+    .button-group button {
+        flex: 1;
+        min-width: 120px;
+    }
+}
