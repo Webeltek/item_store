@@ -17,11 +17,35 @@ function PumpController() {
     const [isConnected, setIsConnected] = useState(true);
     const [loading, setLoading] = useState(true);
     const [lastSynced, setLastSynced] = useState(null);
+    const [pendingCommands, setPendingCommands] = useState({});
     const [socket, setSocket] = useState(null);
+    const pendingCommandsRef = useRef({});
+    const lastSyncedRef = useRef(null);
     
     // ===== REFS =====
     const socketRef = useRef(null);
     const syncIntervalRef = useRef(null);
+
+    const addPendingCommand = (commandId, commandInfo) => {
+        const next = {
+            ...pendingCommandsRef.current,
+            [commandId]: commandInfo
+        };
+        pendingCommandsRef.current = next;
+        setPendingCommands(next);
+    };
+
+    const removePendingCommand = (commandId) => {
+        const next = { ...pendingCommandsRef.current };
+        delete next[commandId];
+        pendingCommandsRef.current = next;
+        setPendingCommands(next);
+    };
+
+    const markSynced = (date) => {
+        setLastSynced(date);
+        lastSyncedRef.current = date;
+    };
 
     // ===== 1. FETCH FULL STATUS FROM FLASK (via Express) =====
     const syncWithHardware = async () => {
@@ -33,7 +57,7 @@ function PumpController() {
                 setWaterLevel(response.data.pump?.water_level || 'HIGH');
                 setSchedules(response.data.schedules || {});
                 setNextRun(response.data.next_run || null);
-                setLastSynced(new Date());
+                markSynced(new Date());
                 setIsConnected(true);
                 setLoading(false);
             }
@@ -49,19 +73,28 @@ function PumpController() {
         try {
             const response = await axios.post(`${API_URL}${endpoint}`, data);
             console.log('✅ Command sent:', response.data);
-            // Optimistic update - immediately update UI
+            const commandId = response.data?.command_id;
+            if (commandId) {
+                addPendingCommand(commandId, {
+                    endpoint,
+                    data,
+                    submittedAt: new Date().toISOString()
+                });
+            }
+
+            // Optimistic update - immediately update UI and suppress immediate status refresh
             if (endpoint === '/pump/on') {
                 setPumpRunning(true);
+                markSynced(new Date());
             } else if (endpoint === '/pump/off') {
                 setPumpRunning(false);
+                markSynced(new Date());
             }
-            // Then sync to confirm
-            setTimeout(syncWithHardware, 500);
+
             return response.data;
         } catch (error) {
             console.error('❌ Command error:', error);
-            // Revert optimistic update on error
-            syncWithHardware();
+            await syncWithHardware();
             throw error;
         }
     };
@@ -70,23 +103,25 @@ function PumpController() {
     const addSchedule = async (scheduleData) => {
         try {
             const response = await sendCommand('/schedule', scheduleData);
-            // Optimistic update - add schedule to list
+            const scheduleId = response.schedule_id || response.command_id || `pending_${Date.now()}`;
             const newSchedule = {
-                [response.schedule_id]: {
+                [scheduleId]: {
                     hour: scheduleData.hour,
                     minute: scheduleData.minute,
                     duration: scheduleData.duration,
                     days: scheduleData.days || 'daily',
-                    enabled: true
+                    enabled: true,
+                    pending: true
                 }
             };
             setSchedules(prev => ({ ...prev, ...newSchedule }));
-            // Sync to confirm
-            setTimeout(syncWithHardware, 1000);
+            const scheduledAt = new Date();
+            setLastSynced(scheduledAt);
+            lastSyncedRef.current = scheduledAt;
             return response;
         } catch (error) {
             console.error('❌ Add schedule error:', error);
-            syncWithHardware();
+            await syncWithHardware();
             throw error;
         }
     };
@@ -101,10 +136,12 @@ function PumpController() {
                 delete newSchedules[scheduleId];
                 return newSchedules;
             });
-            setTimeout(syncWithHardware, 1000);
+            const now = new Date();
+            setLastSynced(now);
+            lastSyncedRef.current = now;
         } catch (error) {
             console.error('❌ Delete schedule error:', error);
-            syncWithHardware();
+            await syncWithHardware();
         }
     };
 
@@ -120,10 +157,12 @@ function PumpController() {
                     enabled: enabled
                 }
             }));
-            setTimeout(syncWithHardware, 1000);
+            const now = new Date();
+            setLastSynced(now);
+            lastSyncedRef.current = now;
         } catch (error) {
             console.error('❌ Toggle schedule error:', error);
-            syncWithHardware();
+            await syncWithHardware();
         }
     };
 
@@ -132,10 +171,12 @@ function PumpController() {
         try {
             await axios.post(`${API_URL}/pump/emergency`);
             setPumpRunning(false);
-            setTimeout(syncWithHardware, 500);
+            const now = new Date();
+            setLastSynced(now);
+            lastSyncedRef.current = now;
         } catch (error) {
             console.error('❌ Emergency stop error:', error);
-            syncWithHardware();
+            await syncWithHardware();
         }
     };
 
@@ -184,7 +225,6 @@ function PumpController() {
 
         newSocket.on('full-update', (data) => {
             console.log('📡 Full update received:', data);
-            // Full state sync
             if (data.pump) {
                 setPumpRunning(data.pump.running);
                 setWaterLevel(data.pump.water_level);
@@ -195,8 +235,18 @@ function PumpController() {
             if (data.next_run) {
                 setNextRun(data.next_run);
             }
-            setLastSynced(new Date());
+            markSynced(new Date());
             setLoading(false);
+        });
+
+        newSocket.on('command-result', (data) => {
+            console.log('📡 Command result received:', data);
+            if (data?.command_id) {
+                removePendingCommand(data.command_id);
+            }
+            if (data?.success) {
+                syncWithHardware();
+            }
         });
 
         newSocket.on('error', (error) => {
@@ -222,8 +272,13 @@ function PumpController() {
 
         // Set up periodic sync every 10 seconds
         syncIntervalRef.current = setInterval(() => {
-            // Only sync if we haven't received a socket update recently
-            if (!lastSynced || (new Date() - lastSynced) > 10000) {
+            if (Object.keys(pendingCommandsRef.current).length > 0) {
+                console.log('🔄 Skipping periodic sync: commands pending');
+                return;
+            }
+
+            const last = lastSyncedRef.current;
+            if (!last || (new Date() - last) > 10000) {
                 console.log('🔄 Periodic sync triggered');
                 syncWithHardware();
             }
