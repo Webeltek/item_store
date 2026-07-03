@@ -5,6 +5,7 @@ let io = null;
 export function initSocket(httpServer) {
   if (io) return io;
   io = new Server(httpServer, {
+    path: '/api/monitor/socket.io',
     cors: {
       origin: '*',
       methods: ['GET', 'POST'],

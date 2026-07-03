@@ -18,12 +18,12 @@ export default function Home(){
 
     return (
         <>
+            <div className="container">
+                <h2 className="hero-title">Pi Boards with Monitoring</h2>
+                <p>Find the best deals on pi boards with monitoring capabilities and accessories.</p>
+                <Link to="/items" className="btn">Shop Now</Link>
+            </div>
             <section className="hero">
-                <div className="container">
-                    <h2>Pi Boards with Monitoring</h2>
-                    <p>Find the best deals on pi boards with monitoring capabilities and accessories.</p>
-                    <Link to="/items" className="btn">Shop Now</Link>
-                </div>
             </section>
 
             <section className="products">

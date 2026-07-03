@@ -75,9 +75,8 @@ export default function createPiMonitor(io) {
     // Broadcast schedule update
     function broadcastScheduleUpdate(schedules, nextRun) {
         deviceStatus.schedules = schedules;
-        if (nextRun) {
-            deviceStatus.next_run = nextRun;
-        }
+        deviceStatus.next_run = nextRun;
+        
         broadcastUpdate('schedule-update', {
             schedules: schedules,
             next_run: deviceStatus.next_run

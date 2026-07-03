@@ -4,9 +4,10 @@ import io from 'socket.io-client';
 import axios from 'axios';
 import './PiMonitor.css';
 
-const API_URL = import.meta.env.VITE_API_MONITOR_URL;
 // Configuration
-const SOCKET_URL = API_URL
+const API_URL = import.meta.env.VITE_API_MONITOR_URL;
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
+const SOCKET_PATH = import.meta.env.VITE_SOCKET_PATH;
 
 function PumpController() {
     // ===== STATE =====
@@ -14,7 +15,7 @@ function PumpController() {
     const [waterLevel, setWaterLevel] = useState('HIGH');
     const [schedules, setSchedules] = useState({});
     const [nextRun, setNextRun] = useState(null);
-    const [isConnected, setIsConnected] = useState(true);
+    const [isConnected, setIsConnected] = useState(false);
     const [loading, setLoading] = useState(true);
     const [lastSynced, setLastSynced] = useState(null);
     const [pendingCommands, setPendingCommands] = useState({});
@@ -51,15 +52,20 @@ function PumpController() {
     const syncWithHardware = async () => {
         try {
             const response = await axios.get(`${API_URL}/status`);
+            console.log('📊 Full status response:', response.data);
             if (response.data.success) {
                 // Update ALL state from hardware
                 setPumpRunning(response.data.pump?.running || false);
                 setWaterLevel(response.data.pump?.water_level || 'HIGH');
-                setSchedules(response.data.schedules || {});
+                const schedulesData = response.data.schedules || {};
+                console.log('📅 Schedules received:', schedulesData);
+                setSchedules(schedulesData);
                 setNextRun(response.data.next_run || null);
                 markSynced(new Date());
                 setIsConnected(true);
                 setLoading(false);
+            } else {
+                console.warn('⚠️ Status response not successful:', response.data);
             }
         } catch (error) {
             console.error('❌ Sync error:', error);
@@ -184,6 +190,8 @@ function PumpController() {
     useEffect(() => {
         // Create socket connection
         const newSocket = io(SOCKET_URL, {
+            path: SOCKET_PATH,
+            transports: ['websocket', 'polling'],
             reconnection: true,
             reconnectionAttempts: 5,
             reconnectionDelay: 1000
@@ -196,6 +204,15 @@ function PumpController() {
         newSocket.on('connect', () => {
             console.log('🔌 Socket connected');
             setIsConnected(true);
+        });
+        newSocket.on('connect_error', (error) => {
+            console.error('❌ Socket connect_error:', error);
+        });
+        newSocket.on('connect_timeout', (timeout) => {
+            console.error('❌ Socket connect_timeout:', timeout);
+        });
+        newSocket.on('reconnect_failed', () => {
+            console.error('❌ Socket reconnect_failed');
         });
 
         newSocket.on('disconnect', () => {
@@ -216,7 +233,9 @@ function PumpController() {
         newSocket.on('schedule-update', (data) => {
             console.log('📡 Schedule update received:', data);
             // Update schedules
-            setSchedules(data.schedules || {});
+            const newSchedules = data.schedules || {};
+            console.log('📅 Updating schedules to:', newSchedules);
+            setSchedules(newSchedules);
             if (data.next_run) {
                 setNextRun(data.next_run);
             }
@@ -358,7 +377,7 @@ function PumpController() {
             <div className="card">
                 <h2>📅 Active Schedules</h2>
                 <div className="schedule-list">
-                    {Object.keys(schedules).length === 0 ? (
+                    {console.log('🔍 Rendering schedules, state:', schedules) || Object.keys(schedules).length === 0 ? (
                         <div className="empty-state">No schedules configured</div>
                     ) : (
                         Object.entries(schedules).map(([id, schedule]) => (
