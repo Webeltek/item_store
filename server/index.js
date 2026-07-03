@@ -2,9 +2,10 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import dotenv from 'dotenv';
 import dbConnector from './config/db.js';
-import apiRouter from './router/index.js';
 import cors from 'cors';
 import express from 'express';
+import { createServer } from 'http';
+import { initSocket } from './socket.js';
 import firebaseAdmin from 'firebase-admin';
 import errorHandler from './utils/errHandler.js';
 import { ApolloServer } from "@apollo/server";
@@ -56,10 +57,6 @@ dbConnector()
         auth(true),
         expressMiddleware(apolloServer, {
           context: ({ req, res }) => {
-            // if (req && req.authError) {
-            //   throw new GraphQLError(req.authError.message, { extensions: { code: 'UNAUTHENTICATED' } });
-            // }
-
             return Promise.resolve({
               authError: req.authError,
               user: req.user,
@@ -69,11 +66,18 @@ dbConnector()
         }),
       );
 
-      app.use('/api', apiRouter);
+      const httpServer = createServer(app);
+      const io = initSocket(httpServer);
+
+      (async () => {
+        const { default: createApiRouter } = await import('./router/index.js');
+        const apiRouter = createApiRouter(io);
+        app.use('/api', apiRouter);
+        app.use(errorHandler);
+        httpServer.listen(config.port, "0.0.0.0", console.log(`Listening on port ${config.port}!`));
+      })();
   
-      app.use(errorHandler);
-  
-      app.listen(config.port, console.log(`Listening on port ${config.port}!`));
+
     })
 
   })

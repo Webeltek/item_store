@@ -2,32 +2,38 @@
   
   
   .hero {
-    background: url("/home_banner.jpg")
+    background: url("/webeltek_logo3.png")
       no-repeat center center/cover;
-    padding: 280px 0 100px;
+    padding: 420px 0 0px;
     text-align: center;
-    color: #fff;
+    color: #11b7cd;
     font-weight: bold;
   }
 
-  .hero .container {
-    background: rgb(0, 0, 0, 0.3);
+  .container {
+    background: rgba(0, 0, 0, 0);
+    text-align: center;
+    padding-bottom: 1 rem;
   }
   
-  .hero h2 {
-    margin: 0 0 10px;
+  .container h2 {
+    margin: 0 0 0px;
     font-size: 3rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: white;
+    color: #11b7cd;
   }
   
-  .hero p {
+  .container p {
+    color: #11b7cd;
     margin: 0 0 20px;
     font-size: 1.2rem;
   }
   
   .btn {
+    display: block;
+    max-width: 10rem;
+    margin: 1rem auto;
     background: #0073e6;
     color: #fff;
     padding: 10px 20px;

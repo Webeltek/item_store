@@ -16,6 +16,7 @@ import classes from './Layout.module.css'
 import { useQuery } from 'urql'
 import { UserContext } from './contexts/UserContext'
 import { useSelector } from 'react-redux'
+import PiMonitor from './components/pi-monitor/PiMonitor'
 
 const Home = lazy(() => import('./components/home/Home') )
 const Catalog = lazy(() => import('./components/catalog/Catalog') )
@@ -119,6 +120,7 @@ export default function Layout() {
                     <Route path="/items/:itemId/details" element={ <ItemDetails />} />
                     <Route element={ <AuthGuard />}>
                       <Route path="/add-item" element={ <AddItem />} />
+                      <Route path="/pi-monitor" element={ <PiMonitor />} />
                       <Route path="/items/:itemId/edit" element={ <EditItem />} />
                       <Route path="/profile">
                         <Route index element={ <EditProfile />} />
