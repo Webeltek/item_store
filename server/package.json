@@ -11,17 +11,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BoogyHS/REST-api.git"
+    "url": "git+https://github.com/Webeltek/item_store.git"
   },
   "keywords": [
     "rest-api"
   ],
-  "author": "BoogyHS",
+  "author": "Webeltek",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/BoogyHS/REST-api/issues"
+    "url": "https://github.com/Webeltek/item_store/issues"
   },
-  "homepage": "https://github.com/BoogyHS/REST-api#readme",
+  "homepage": "https://github.com/Webeltek/item_store#readme",
   "dependencies": {
     "@apollo/server": "^5.2.0",
     "@as-integrations/express5": "^1.1.0",

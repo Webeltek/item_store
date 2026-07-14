@@ -15,7 +15,8 @@ function PumpController() {
     const [waterLevel, setWaterLevel] = useState('HIGH');
     const [schedules, setSchedules] = useState({});
     const [nextRun, setNextRun] = useState(null);
-    const [isConnected, setIsConnected] = useState(false);
+    const [isServerConnected, setIsServerConnected] = useState(false);
+    const [isDeviceConnected, setIsDeviceConnected] = useState(false);
     const [loading, setLoading] = useState(true);
     const [lastSynced, setLastSynced] = useState(null);
     const [pendingCommands, setPendingCommands] = useState({});
@@ -48,11 +49,13 @@ function PumpController() {
         lastSyncedRef.current = date;
     };
 
-    // ===== 1. FETCH FULL STATUS FROM FLASK (via Express) =====
-    const syncWithHardware = async () => {
+    // ===== 1. FETCH CACHED STATUS FROM EXPRESS if not initial =====
+    // 2. queue full status request command to be pooled from Flask if initial
+    const syncWithHardware = async (isInitialSync = false) => {
         try {
-            const response = await axios.get(`${API_URL}/status`);
-            console.log('📊 Full status response:', response.data);
+            const endpoint = isInitialSync ? '/initial-full-status' : '/status';
+            const response = await axios.get(`${API_URL}${endpoint}`);
+            console.log('📊 Full status response if not initial:', response.data);
             if (response.data.success) {
                 // Update ALL state from hardware
                 setPumpRunning(response.data.pump?.running || false);
@@ -62,14 +65,15 @@ function PumpController() {
                 setSchedules(schedulesData);
                 setNextRun(response.data.next_run || null);
                 markSynced(new Date());
-                setIsConnected(true);
+                setIsServerConnected(true);
+                setIsDeviceConnected(response.data.device_online || false);
                 setLoading(false);
             } else {
                 console.warn('⚠️ Status response not successful:', response.data);
             }
         } catch (error) {
             console.error('❌ Sync error:', error);
-            setIsConnected(false);
+            setIsServerConnected(false);
             setLoading(false);
         }
     };
@@ -121,9 +125,7 @@ function PumpController() {
                 }
             };
             setSchedules(prev => ({ ...prev, ...newSchedule }));
-            const scheduledAt = new Date();
-            setLastSynced(scheduledAt);
-            lastSyncedRef.current = scheduledAt;
+            markSynced(new Date());
             return response;
         } catch (error) {
             console.error('❌ Add schedule error:', error);
@@ -142,9 +144,7 @@ function PumpController() {
                 delete newSchedules[scheduleId];
                 return newSchedules;
             });
-            const now = new Date();
-            setLastSynced(now);
-            lastSyncedRef.current = now;
+            markSynced(new Date());
         } catch (error) {
             console.error('❌ Delete schedule error:', error);
             await syncWithHardware();
@@ -163,9 +163,7 @@ function PumpController() {
                     enabled: enabled
                 }
             }));
-            const now = new Date();
-            setLastSynced(now);
-            lastSyncedRef.current = now;
+            markSynced(new Date());
         } catch (error) {
             console.error('❌ Toggle schedule error:', error);
             await syncWithHardware();
@@ -177,9 +175,7 @@ function PumpController() {
         try {
             await axios.post(`${API_URL}/pump/emergency`);
             setPumpRunning(false);
-            const now = new Date();
-            setLastSynced(now);
-            lastSyncedRef.current = now;
+            markSynced(new Date());
         } catch (error) {
             console.error('❌ Emergency stop error:', error);
             await syncWithHardware();
@@ -203,7 +199,7 @@ function PumpController() {
         // Socket event listeners
         newSocket.on('connect', () => {
             console.log('🔌 Socket connected');
-            setIsConnected(true);
+            setIsServerConnected(true);
         });
         newSocket.on('connect_error', (error) => {
             console.error('❌ Socket connect_error:', error);
@@ -217,29 +213,7 @@ function PumpController() {
 
         newSocket.on('disconnect', () => {
             console.log('🔌 Socket disconnected');
-            setIsConnected(false);
-        });
-
-        newSocket.on('pump-update', (data) => {
-            console.log('📡 Pump update received:', data);
-            // Update only pump-related state
-            setPumpRunning(data.running);
-            if (data.level) {
-                setWaterLevel(data.level);
-            }
-            setLastSynced(new Date());
-        });
-
-        newSocket.on('schedule-update', (data) => {
-            console.log('📡 Schedule update received:', data);
-            // Update schedules
-            const newSchedules = data.schedules || {};
-            console.log('📅 Updating schedules to:', newSchedules);
-            setSchedules(newSchedules);
-            if (data.next_run) {
-                setNextRun(data.next_run);
-            }
-            setLastSynced(new Date());
+            setIsServerConnected(false);
         });
 
         newSocket.on('full-update', (data) => {
@@ -270,7 +244,7 @@ function PumpController() {
 
         newSocket.on('error', (error) => {
             console.error('❌ Socket error:', error);
-            setIsConnected(false);
+            setIsServerConnected(false);
         });
 
         // Cleanup on unmount
@@ -287,7 +261,8 @@ function PumpController() {
     // ===== 8. PERIODIC SYNC (Backup for missed socket events) =====
     useEffect(() => {
         // Initial sync
-        syncWithHardware();
+        const initialSync = true; // Set to true for initial sync
+        syncWithHardware(true);
 
         // Set up periodic sync every 10 seconds
         syncIntervalRef.current = setInterval(() => {
@@ -324,9 +299,9 @@ function PumpController() {
             {/* Header */}
             <div className="header">
                 <h1>💧 Water Pump Controller</h1>
-                <div className={`connection-status ${isConnected ? 'connected' : 'disconnected'}`}>
-                    {isConnected ? '🟢 Connected' : '🔴 Disconnected'}
-                    {!isConnected && (
+                <div className={`connection-status ${isServerConnected ? 'connected' : 'disconnected'}`}>
+                    {isServerConnected ? '🟢 Server Connected' : '🔴 Server Disconnected'}
+                    {!isServerConnected && (
                         <span className="warning"> ⚠️ Reconnecting...</span>
                     )}
                 </div>
@@ -335,6 +310,13 @@ function PumpController() {
                         Last updated: {lastSynced.toLocaleTimeString()}
                     </div>
                 )}
+                <div className={`connection-status ${isDeviceConnected ? 'connected' : 'disconnected'}`}>
+                    {isDeviceConnected ? '🟢 Device Connected' : '🔴 Device Disconnected'}
+                    {!isDeviceConnected && (
+                            <span className="warning"> ⚠️ Reconnecting...</span>
+                        )}
+                </div>
+                
             </div>
 
             {/* Manual Control */}
@@ -464,14 +446,33 @@ function ScheduleForm({ onAdd }) {
         // setDuration(30);
     };
 
+    const handleTimeChange = (e) => {
+        let value = e.target.value.replace(/[^0-9]/g, '');
+        if (value.length >= 2) {
+            var hours = value.substring(0, 2);
+            if (parseInt(hours) > 23) hours = '23';
+            if (value.length >= 3) {
+                var minutes = value.substring(2, 4);
+                if (parseInt(minutes) > 59) minutes = '59';
+                e.target.value = hours + ':' + minutes;
+            } else {
+                e.target.value = hours;
+            }
+        }
+        setTime(e.target.value);
+    }
+
     return (
         <form onSubmit={handleSubmit} className="schedule-form">
             <div className="form-group">
                 <label>Time (24h)</label>
                 <input 
-                    type="time" 
+                    type="text" 
                     value={time} 
-                    onChange={(e) => setTime(e.target.value)} 
+                    onChange={handleTimeChange}
+                    pattern="[0-9]{2}:[0-9]{2}"
+                    maxLength="5"
+                    placeholder="08:00" 
                     required
                 />
             </div>
