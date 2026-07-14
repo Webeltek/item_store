@@ -55,7 +55,7 @@ function PumpController() {
         try {
             const endpoint = isInitialSync ? '/initial-full-status' : '/status';
             const response = await axios.get(`${API_URL}${endpoint}`);
-            console.log('📊 Full status response if not initial:', response.data);
+            console.log(`📊 Full status response if isInitialSync=${isInitialSync}:`, response.data);
             if (response.data.success) {
                 // Update ALL state from hardware
                 setPumpRunning(response.data.pump?.running || false);
