@@ -1,5 +1,20 @@
 import express from 'express';
 
+const DEVICE_ONLINE_TIMEOUT_MS = Number(process.env.PI_MONITOR_DEVICE_TIMEOUT_MS || 30000);
+
+export function isDeviceOnline(lastSeen, timeoutMs = DEVICE_ONLINE_TIMEOUT_MS) {
+    if (!lastSeen) {
+        return false;
+    }
+
+    const lastSeenTime = new Date(lastSeen).getTime();
+    if (Number.isNaN(lastSeenTime)) {
+        return false;
+    }
+
+    return Date.now() - lastSeenTime <= timeoutMs;
+}
+
 export default function createPiMonitor(io) {
     const router = express.Router();
 
@@ -24,6 +39,10 @@ export default function createPiMonitor(io) {
     // Store connected clients
     const connectedClients = new Set();
 
+    function markDeviceActivity() {
+        deviceStatus.lastSeen = new Date().toISOString();
+    }
+
     // ===== SOCKET.IO EVENT HANDLERS =====
     io.on('connection', (socket) => {
         console.log(`🔌 Client connected: ${socket.id}`);
@@ -34,11 +53,9 @@ export default function createPiMonitor(io) {
             pump: deviceStatus.pump,
             schedules: deviceStatus.schedules,
             next_run: deviceStatus.next_run,
-            system: deviceStatus.system
+            system: deviceStatus.system,
+            device_online: isDeviceOnline(deviceStatus.lastSeen)
         });
-
-        // Send pump status separately for redundancy
-        socket.emit('pump-update', deviceStatus.pump);
 
         socket.on('disconnect', () => {
             console.log(`🔌 Client disconnected: ${socket.id}`);
@@ -60,15 +77,14 @@ export default function createPiMonitor(io) {
             ...deviceStatus.pump,
             ...pumpData
         };
-        deviceStatus.lastSeen = new Date().toISOString();
+        markDeviceActivity();
 
-        // Send both individual and full updates
-        broadcastUpdate('pump-update', deviceStatus.pump);
         broadcastUpdate('full-update', {
             pump: deviceStatus.pump,
             schedules: deviceStatus.schedules,
             next_run: deviceStatus.next_run,
-            system: deviceStatus.system
+            system: deviceStatus.system,
+            device_online: isDeviceOnline(deviceStatus.lastSeen)
         });
     }
 
@@ -76,16 +92,14 @@ export default function createPiMonitor(io) {
     function broadcastScheduleUpdate(schedules, nextRun) {
         deviceStatus.schedules = schedules;
         deviceStatus.next_run = nextRun;
+        markDeviceActivity();
         
-        broadcastUpdate('schedule-update', {
-            schedules: schedules,
-            next_run: deviceStatus.next_run
-        });
         broadcastUpdate('full-update', {
             pump: deviceStatus.pump,
             schedules: schedules,
             next_run: deviceStatus.next_run,
-            system: deviceStatus.system
+            system: deviceStatus.system,
+            device_online: isDeviceOnline(deviceStatus.lastSeen)
         });
     }
 
@@ -95,7 +109,8 @@ export default function createPiMonitor(io) {
             pump: deviceStatus.pump,
             schedules: deviceStatus.schedules,
             next_run: deviceStatus.next_run,
-            system: deviceStatus.system
+            system: deviceStatus.system,
+            device_online: isDeviceOnline(deviceStatus.lastSeen)
         });
     }
 
@@ -126,6 +141,7 @@ export default function createPiMonitor(io) {
     router.post('/webhook/pump-status', (req, res) => {
         const { event, data, immediate, updates, batch } = req.body;
 
+        markDeviceActivity();
         console.log(`📨 Webhook received: ${event}`);
 
         if (batch) {
@@ -190,7 +206,7 @@ export default function createPiMonitor(io) {
                 if (data.system) {
                     deviceStatus.system = data.system;
                 }
-                deviceStatus.lastSeen = new Date().toISOString();
+                markDeviceActivity();
                 broadcastFullUpdate();
                 break;
 
@@ -217,7 +233,7 @@ export default function createPiMonitor(io) {
         }
 
         // Update device last seen timestamp
-        deviceStatus.lastSeen = new Date().toISOString();
+        markDeviceActivity();
 
         // Get all pending commands
         const pending = commandQueue.filter(cmd => cmd.status === 'pending');
@@ -365,11 +381,21 @@ export default function createPiMonitor(io) {
         });
     });
 
+    // Get initial full status queing full_status command to Flask
+    router.get('/initial-full-status', (req, res) => {
+        const commandId = queueCommand('react_initial_full_status', {});
+        res.json({
+            success: true,
+            command_id: commandId,
+            message: 'React initial full status request queued'
+        });
+    });
+
     // Get current status (cached - from last webhook update)
     router.get('/status', (req, res) => {
         res.json({
             success: true,
-            device_online: deviceStatus.lastSeen !== null,
+            device_online: isDeviceOnline(deviceStatus.lastSeen),
             last_seen: deviceStatus.lastSeen,
             pump: deviceStatus.pump,
             schedules: deviceStatus.schedules,
