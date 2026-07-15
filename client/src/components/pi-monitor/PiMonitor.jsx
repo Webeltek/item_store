@@ -9,6 +9,39 @@ const API_URL = import.meta.env.VITE_API_MONITOR_URL;
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL;
 const SOCKET_PATH = import.meta.env.VITE_SOCKET_PATH;
 
+// ============================================================
+// TIMEZONE CONVERSION HELPERS
+// Backend times are UTC (hour/minute). Frontend displays LOCAL time.
+// ============================================================
+function getUserTimezoneOffset() {
+    return new Date().getTimezoneOffset();
+}
+
+function localToUtcTime(localHour, localMinute) {
+    const now = new Date();
+    const localDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), localHour, localMinute);
+    const utcHour = localDate.getUTCHours();
+    const utcMinute = localDate.getUTCMinutes();
+    return { hour: utcHour, minute: utcMinute };
+}
+
+function utcToLocalTime(utcHour, utcMinute) {
+    const now = new Date();
+    const utcDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), utcHour, utcMinute));
+    return { hour: utcDate.getHours(), minute: utcDate.getMinutes() };
+}
+
+function formatLocalTime(hour, minute) {
+    return String(hour).padStart(2, '0') + ':' + String(minute).padStart(2, '0');
+}
+
+function utcToLocalDisplay(utcTimeString) {
+    if (!utcTimeString) return 'Unknown';
+    // Ensure treated as UTC
+    const date = new Date(utcTimeString + (utcTimeString.endsWith('Z') ? '' : 'Z'));
+    return date.toLocaleString();
+}
+
 function PumpController() {
     // ===== STATE =====
     const [pumpRunning, setPumpRunning] = useState(false);
@@ -362,55 +395,57 @@ function PumpController() {
                     {console.log('🔍 Rendering schedules, state:', schedules) || Object.keys(schedules).length === 0 ? (
                         <div className="empty-state">No schedules configured</div>
                     ) : (
-                        Object.entries(schedules).map(([id, schedule]) => (
-                            <div 
-                                key={id} 
-                                className={`schedule-item ${schedule.enabled ? '' : 'disabled'}`}
-                            >
-                                <div className="schedule-info">
-                                    <div className="schedule-time">
-                                        ⏰ {String(schedule.hour).padStart(2, '0')}:
-                                        {String(schedule.minute).padStart(2, '0')}
-                                        {schedule.is_running && (
-                                            <span className="running-badge"> 🔄 RUNNING</span>
-                                        )}
-                                        {!schedule.enabled && (
-                                            <span className="disabled-badge"> (Disabled)</span>
-                                        )}
-                                    </div>
-                                    <div className="schedule-duration">
-                                        💧 Duration: {schedule.duration / 60} minutes
-                                    </div>
-                                    <div className="schedule-days">
-                                        📅 Days: {schedule.days === 'daily' ? 'Every day' : schedule.days}
-                                    </div>
-                                    {schedule.next_run_time && (
-                                        <div className="schedule-next">
-                                            ⏭️ Next: {new Date(schedule.next_run_time).toLocaleString()}
+                        Object.entries(schedules).map(([id, schedule]) => {
+                            const local = utcToLocalTime(schedule.hour, schedule.minute);
+                            return (
+                                <div 
+                                    key={id} 
+                                    className={`schedule-item ${schedule.enabled ? '' : 'disabled'}`}
+                                >
+                                    <div className="schedule-info">
+                                        <div className="schedule-time">
+                                            ⏰ {formatLocalTime(local.hour, local.minute)}
+                                            {schedule.is_running && (
+                                                <span className="running-badge"> 🔄 RUNNING</span>
+                                            )}
+                                            {!schedule.enabled && (
+                                                <span className="disabled-badge"> (Disabled)</span>
+                                            )}
                                         </div>
-                                    )}
+                                        <div className="schedule-duration">
+                                            💧 Duration: {schedule.duration / 60} minutes
+                                        </div>
+                                        <div className="schedule-days">
+                                            📅 Days: {schedule.days === 'daily' ? 'Every day' : schedule.days}
+                                        </div>
+                                        {schedule.next_run_time && (
+                                            <div className="schedule-next">
+                                                ⏭️ Next: {utcToLocalDisplay(schedule.next_run_time)}
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="schedule-actions">
+                                        <button 
+                                            className="btn-toggle"
+                                            onClick={() => toggleSchedule(id, !schedule.enabled)}
+                                        >
+                                            {schedule.enabled ? '⏸️ Disable' : '▶️ Enable'}
+                                        </button>
+                                        <button 
+                                            className="btn-delete"
+                                            onClick={() => deleteSchedule(id)}
+                                        >
+                                            🗑️ Delete
+                                        </button>
+                                    </div>
                                 </div>
-                                <div className="schedule-actions">
-                                    <button 
-                                        className="btn-toggle"
-                                        onClick={() => toggleSchedule(id, !schedule.enabled)}
-                                    >
-                                        {schedule.enabled ? '⏸️ Disable' : '▶️ Enable'}
-                                    </button>
-                                    <button 
-                                        className="btn-delete"
-                                        onClick={() => deleteSchedule(id)}
-                                    >
-                                        🗑️ Delete
-                                    </button>
-                                </div>
-                            </div>
-                        ))
+                            );
+                        })
                     )}
                 </div>
                 {nextRun && (
                     <div className="next-run">
-                        ⏰ Next scheduled watering: {new Date(nextRun).toLocaleString()}
+                        ⏰ Next scheduled watering: {utcToLocalDisplay(nextRun)}
                     </div>
                 )}
             </div>
@@ -433,10 +468,12 @@ function ScheduleForm({ onAdd }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         const [hour, minute] = time.split(':').map(Number);
-        
+        // Convert local browser time to UTC hour/minute expected by backend
+        const utc = localToUtcTime(hour, minute);
+
         onAdd({
-            hour,
-            minute,
+            hour: utc.hour,
+            minute: utc.minute,
             duration: duration * 60, // Convert to seconds
             days: days === 'daily' ? null : days
         });
