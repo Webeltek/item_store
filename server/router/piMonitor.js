@@ -77,7 +77,6 @@ export default function createPiMonitor(io) {
             ...deviceStatus.pump,
             ...pumpData
         };
-        markDeviceActivity();
 
         broadcastUpdate('full-update', {
             pump: deviceStatus.pump,
@@ -92,7 +91,6 @@ export default function createPiMonitor(io) {
     function broadcastScheduleUpdate(schedules, nextRun) {
         deviceStatus.schedules = schedules;
         deviceStatus.next_run = nextRun;
-        markDeviceActivity();
         
         broadcastUpdate('full-update', {
             pump: deviceStatus.pump,
@@ -206,7 +204,6 @@ export default function createPiMonitor(io) {
                 if (data.system) {
                     deviceStatus.system = data.system;
                 }
-                markDeviceActivity();
                 broadcastFullUpdate();
                 break;
 
